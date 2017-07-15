@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Riff King</string>
+    <string name="password_hint">Password</string>
+    <string name="email_hint">Email</string>
+    <string name="dummy_logo_description">dummy logo</string>
+    <string name="register_tv_text">Join Now!</string>
+    <string name="register_tv_font_family">casual</string>
+    <string name="login_btn_text">Login</string>
+    <string name="password_et_font_family">casual</string>
+    <string name="login_et_font_family">12sp</string>
+    <string name="email_et_font_family">casual</string>
+    <string name="name_et_font_family">casual</string>
+    <string name="name_hint">Name</string>
+    <string name="register_btn_text">JOIN NOW</string>
+    <string name="login_tv_text">Login</string>
+    <string name="login_tv_font_family">casual</string>
+</resources>

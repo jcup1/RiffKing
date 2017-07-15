@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="login_btn_width">150dp</dimen>
+    <dimen name="login_btn_height">40dp</dimen>
+    <dimen name="register_btn_width">150dp</dimen>
+    <dimen name="register_btn_height">40dp</dimen>
+    <dimen name="email_et_width">150dp</dimen>
+    <dimen name="email_et_height">40dp</dimen>
+    <dimen name="password_et_width">150dp</dimen>
+    <dimen name="password_et_height">40dp</dimen>
+    <dimen name="logo_img_width">150dp</dimen>
+    <dimen name="logo_img_height">150dp</dimen>
+    <dimen name="register_tv_width">150dp</dimen>
+    <dimen name="register_tv_height">40dp</dimen>
+    <dimen name="register_tv_text_size">14sp</dimen>
+    <dimen name="login_tv_width">150dp</dimen>
+    <dimen name="login_tv_height">40dp</dimen>
+    <dimen name="login_tv_text_size">14sp</dimen>
+    <dimen name="login_btn_text_size">14sp</dimen>
+    <dimen name="password_et_text_size">12sp</dimen>
+    <dimen name="login_et_text_size">12sp</dimen>
+    <dimen name="email_et_text_size">12sp</dimen>
+    <dimen name="name_et_width">150dp</dimen>
+    <dimen name="name_et_height">40dp</dimen>
+    <dimen name="name_et_text_size">12sp</dimen>
+    <dimen name="register_btn_text_size">14sp</dimen>
+</resources>
