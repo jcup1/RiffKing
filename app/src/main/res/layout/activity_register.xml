@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_gradient"
-    tools:context="com.example.grazyna.riffking.RegisterActivity">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_gradient"
+            tools:context="com.example.grazyna.riffking.RegisterActivity">
 
     <LinearLayout
         android:id="@+id/register_linear_layout"
@@ -13,19 +13,27 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!--TODO change dummy logo-->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
         <ImageView
             android:id="@+id/register_logo_img"
-            android:layout_width="@dimen/logo_img_width"
-            android:layout_height="@dimen/logo_img_height"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:layout_gravity="center"
-            android:contentDescription="@string/dummy_logo_description"
-            android:src="@drawable/dummy_logo" />
+            android:contentDescription="@string/logo_description"
+            android:src="@drawable/logo"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
 
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="@dimen/email_et_width"
-            android:layout_height="@dimen/email_et_height"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColorHint="@color/text_4">
 
@@ -33,16 +41,18 @@
                 android:id="@+id/register_email_et"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="@string/email_et_font_family"
                 android:hint="@string/email_hint"
+                android:maxLines="1"
+                android:textColor="@color/text_5"
+                android:textColorHint="@color/text_4"
                 android:textSize="@dimen/email_et_text_size"
                 android:textStyle="normal"
-                app:backgroundTint="@color/text_4" />
+                app:backgroundTint="@color/text_4"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="@dimen/password_et_width"
-            android:layout_height="@dimen/password_et_height"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColorHint="@color/text_4">
 
@@ -50,17 +60,19 @@
                 android:id="@+id/register_password_et"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="@string/password_et_font_family"
                 android:hint="@string/password_hint"
+                android:maxLines="1"
+                android:textColor="@color/text_5"
+                android:textColorHint="@color/text_4"
                 android:textSize="@dimen/password_et_text_size"
                 android:textStyle="normal"
-                app:backgroundTint="@color/text_4" />
+                app:backgroundTint="@color/text_4"/>
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="@dimen/name_et_width"
-            android:layout_height="@dimen/name_et_height"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColorHint="@color/text_4">
 
@@ -68,18 +80,25 @@
                 android:id="@+id/register_name_et"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="@string/name_et_font_family"
                 android:hint="@string/name_hint"
+                android:maxLines="1"
+                android:textColor="@color/text_5"
+                android:textColorHint="@color/text_4"
                 android:textSize="@dimen/name_et_text_size"
                 android:textStyle="normal"
-                app:backgroundTint="@color/text_4" />
+                app:backgroundTint="@color/text_4"/>
 
         </android.support.design.widget.TextInputLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+
         <Button
             android:id="@+id/register_register_btn"
-            android:layout_width="@dimen/register_btn_width"
-            android:layout_height="@dimen/register_btn_height"
+            android:layout_width="175dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:background="@color/color_accent"
             android:text="@string/register_btn_text"
@@ -89,15 +108,16 @@
 
         <TextView
             android:id="@+id/register_login_tv"
-            android:layout_width="@dimen/login_tv_width"
-            android:layout_height="@dimen/login_tv_height"
+            android:layout_width="@dimen/register_tv_width"
+            android:layout_height="@dimen/register_tv_height"
             android:layout_gravity="center"
-            android:fontFamily="@string/login_tv_font_family"
+            android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="@string/login_tv_text"
-            android:textColor="@color/text_5"
-            android:textSize="@dimen/login_tv_text_size"
+            android:text="@string/register_tv_text"
+            android:textColor="@color/text_4"
+            android:textSize="@dimen/register_tv_text_size"
             android:textStyle="normal" />
+
 
     </LinearLayout>
 

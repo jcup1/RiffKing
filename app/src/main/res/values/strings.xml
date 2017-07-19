@@ -14,4 +14,15 @@
     <string name="register_btn_text">JOIN NOW</string>
     <string name="login_tv_text">Login</string>
     <string name="login_tv_font_family">casual</string>
+    <string name="logo_description">Riff King Logo</string>
+    <string name="title_activity_home">Home</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

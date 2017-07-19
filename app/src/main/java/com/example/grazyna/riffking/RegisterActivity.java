@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -33,28 +34,31 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    @OnClick(R.id.register_login_tv)
+    public void login() {
+
+        startLoginActivity();
+    }
+
     private void tryToRegister(TextInputEditText emailEt, TextInputEditText passwordEt) {
 
         //TODO Wroclaw
 
     }
 
-    @OnClick(R.id.register_login_tv)
-    public void login() {
-
-        startLoginActivity();
-
-    }
 
     private void startLoginActivity() {
         Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(loginIntent);
         finish();
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        ButterKnife.bind(this);
     }
 }

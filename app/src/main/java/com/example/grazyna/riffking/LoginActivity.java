@@ -4,10 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,6 +25,7 @@ import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity {
     public static final int REQUEST_SIGNUP = 0;
+    private static final String TAG = "LoginActivity";
 
     @BindView(R.id.login_logo_img)
     ImageView logoImg;
@@ -27,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.login_register_tv)
     TextView registerTv;
     private String login_url = "http://theandroiddev.com/login.php";
+    private String get_user_id_url = "http://theandroiddev.com/get_user_id.php";
     private boolean loggedIn;
 
     @OnClick(R.id.login_login_btn)
@@ -66,7 +78,86 @@ public class LoginActivity extends AppCompatActivity {
 
     private void authenticate(final String email, final String password) {
         //TODO Wroclaw
+        loginBtn.setEnabled(false);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                login_url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                if (response.contains("Login failed")) {
+                    onLoginFailed();
+
+                } else {
+                    onLoginSuccess(Integer.parseInt(response), email);
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(LoginActivity.this, "Error checking", Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+                onLoginFailed();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("email", email);
+                params.put("password", password);
+                return params;
+            }
+        };
+
+
+        MySingleton.getmInstance(LoginActivity.this).addToRequestQueue(stringRequest);
+
     }
+
+//    private void getUserId(final String email, final String password){
+//
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+//                get_user_id_url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                Log.d(TAG, "onResponse: " + response);
+//
+//                if (TextUtils.isEmpty(response)) {
+//                    onGetIdFailed();
+//
+//                }else {
+//
+//                }
+//
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Toast.makeText(LoginActivity.this, "Error checking", Toast.LENGTH_SHORT).show();
+//                error.printStackTrace();
+//                onLoginFailed();
+//            }
+//        }) {
+//
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("email", email);
+//                params.put("password", password);
+//                return params;
+//            }
+//        };
+//
+//
+//        MySingleton.getmInstance(LoginActivity.this).addToRequestQueue(stringRequest);
+
+//    }
+
 
     public boolean validate(String email, String password) {
         boolean valid = true;
@@ -88,6 +179,28 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
+    public void onLoginSuccess(int id, String email) {
+        if (loginBtn != null) {
+            loginBtn.setEnabled(true);
+        }
+
+//        getUserId(email, password);
+
+        SharedPrefManager.getInstance(this).userLogin(id, email);
+
+        nextActivity();
+    }
+
+    private void nextActivity() {
+
+        Intent intent;
+        intent = new Intent(LoginActivity.this, HomeActivity.class);
+        finish();
+        startActivity(intent);
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,9 +220,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startMainActivity() {
-        Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(mainIntent);
+        Intent mainIntent = new Intent(LoginActivity.this, HomeActivity.class);
         finish();
+        startActivity(mainIntent);
     }
 
     private void onNotLoggedIn() {
@@ -120,13 +233,22 @@ public class LoginActivity extends AppCompatActivity {
 
         Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivityForResult(registerIntent, REQUEST_SIGNUP);
+        finish();
+
 
     }
 
     public boolean isLoggedIn() {
 
         //TODO SHARED PREF
-        return true;
+        if (SharedPrefManager.getInstance(this).isLoggedIn()) {
+            return true;
+        } else {
+            Log.e(TAG, "isLoggedIn: user is not logged in!");
+            return false;
+
+        }
+
     }
 
 }
