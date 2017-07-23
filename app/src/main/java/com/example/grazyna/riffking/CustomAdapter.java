@@ -1,6 +1,7 @@
 package com.example.grazyna.riffking;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -20,9 +20,10 @@ import java.util.ArrayList;
  * Created by jakub on 18.07.17.
  */
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>
+        implements AsyncResponse {
     private static final String TAG = "CustomAdapter";
-
+    Bitmap icon_val;
     private ArrayList<Thread> threads;
     private Context context;
 
@@ -44,22 +45,25 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
 
-        holder.getTextView().setText(threads.get(position).getTitle());
+        holder.getSingleTitle().setText(threads.get(position).getTitle());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, String.valueOf(position), Toast.LENGTH_SHORT).show();
                 openThread(position);
             }
         });
 
+        new GetThumbnail(threads.get(position).getURL(), holder.singleThumbnail).execute();
+
     }
+
 
     private void openThread(int position) {
 
         Bundle bundle = new Bundle();
-        bundle.putString("position", String.valueOf(position));
+        bundle.putString("position", String.valueOf(threads.get(position).getId()));
 
         android.support.v4.app.Fragment threadFragment = new ThreadFragment();
         threadFragment.setArguments(bundle);
@@ -74,15 +78,27 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         }
     }
 
+
     @Override
     public int getItemCount() {
         return threads.size();
     }
 
+    @Override
+    public void processFinish(Bitmap output) {
+
+
+    }
+
+    private void setThumbnailURL(ImageView singleThumbnail) {
+
+
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView textView;
-        private final ImageView videoImg;
+        private final TextView singleTitle;
+        private final ImageView singleThumbnail;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -94,12 +110,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                     Log.d(TAG, "Element " + getAdapterPosition() + " clicked");
                 }
             });
-            textView = (TextView) itemView.findViewById(R.id.textView);
-            videoImg = (ImageView) itemView.findViewById(R.id.imageView);
+            singleTitle = (TextView) itemView.findViewById(R.id.text_view);
+            singleThumbnail = (ImageView) itemView.findViewById(R.id.thumnail_img);
+
         }
 
-        public TextView getTextView() {
-            return textView;
+        public TextView getSingleTitle() {
+            return singleTitle;
         }
     }
 

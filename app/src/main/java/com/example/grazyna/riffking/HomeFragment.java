@@ -7,15 +7,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -44,6 +51,7 @@ public class HomeFragment extends Fragment {
     protected CustomAdapter customAdapter;
     protected RecyclerView.LayoutManager layoutManager;
     protected ArrayList<Thread> threads;
+    private String getThreadsURL = "http://theandroiddev.com/get_threads.php";
     private LayoutManagerType recyclerViewLayoutManager;
     private boolean logShown;
     // TODO: Rename and change types of parameters
@@ -55,36 +63,6 @@ public class HomeFragment extends Fragment {
 
     public HomeFragment() {
         // Required empty public constructor
-    }
-
-    public void setRecyclerViewLayoutManager(LayoutManagerType recyclerViewLayoutManager) {
-
-        int scrollPosition = 0;
-
-        if (recyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).
-                    findFirstCompletelyVisibleItemPosition();
-        }
-
-        switch (recyclerViewLayoutManager) {
-
-            case GRID_LAYOUT_MANAGER:
-                layoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
-                currentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINIEAR_LAYOUT_MANAGER:
-                layoutManager = new LinearLayoutManager(getActivity());
-                currentLayoutManagerType = LayoutManagerType.LINIEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                layoutManager = new LinearLayoutManager(getActivity());
-                currentLayoutManagerType = LayoutManagerType.LINIEAR_LAYOUT_MANAGER;
-
-        }
-
-        recyclerView.setLayoutManager(layoutManager);
-        currentLayoutManagerType = LayoutManagerType.LINIEAR_LAYOUT_MANAGER;
-
     }
 
     /**
@@ -105,18 +83,12 @@ public class HomeFragment extends Fragment {
         args.putString(ARG_PARAM4, param4);
         fragment.setArguments(args);
 
-        initDataset();
-        //threadToInsert(param1, param2, param3, param4);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "onCreate: ");
-
-        initDataset();
-
 
     }
 
@@ -151,18 +123,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-//    private void threadToInsert(String id, String title, String author, String URL) {
-//
-//
-//
-//        int id_num = Integer.parseInt(id);
-//
-//        Thread threadToInsert = new Thread(id_num, title, author, URL);
-//
-//        threads.add(threadToInsert);
-//        Log.e(TAG, "threadToInsert: CREATIN" );
-//        customAdapter.notifyDataSetChanged();
-//    }
 
     private void insertThread() {
 
@@ -170,7 +130,7 @@ public class HomeFragment extends Fragment {
 
         FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content_home, insertThreadFragment).addToBackStack("state3");
+        transaction.replace(R.id.content_home, insertThreadFragment).addToBackStack(null);
         transaction.commit();
 
     }
@@ -188,12 +148,13 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.recyler_view_frag, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         rootView.setTag(TAG);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+
 //        currentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
 //
 //        if (savedInstanceState != null) {
@@ -201,8 +162,6 @@ public class HomeFragment extends Fragment {
 //
 //        }
 //        setRecyclerViewLayoutManager(currentLayoutManagerType);
-        Toast.makeText(getContext(), "ASDASD", Toast.LENGTH_SHORT).show();
-
         if (getArguments() != null) {
             id = getArguments().getString("id");
             title = getArguments().getString("title");
@@ -213,11 +172,9 @@ public class HomeFragment extends Fragment {
             //threadToInsert(id, title, author, URL);
         }
 
-        if (customAdapter == null) {
-            customAdapter = new CustomAdapter(inflater.getContext(), threads);
+        initDataset();
 
-        }
-        recyclerView.setAdapter(customAdapter);
+
 
 
         return rootView;
@@ -256,14 +213,58 @@ public class HomeFragment extends Fragment {
     private void initDataset() {
 
         threads = new ArrayList<>();
+        threads = getList();
 
-        customAdapter = new CustomAdapter(getContext(), threads);
+    }
+
+    public ArrayList<Thread> getList() {
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST,
+                getThreadsURL, (String) null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                int count = 0;
+                while (count < response.length()) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(count);
+                        Thread thread = new Thread(jsonObject.getString("title"),
+                                jsonObject.getString("name"),
+                                jsonObject.getString("comments"),
+                                jsonObject.getString("URL"),
+                                jsonObject.getInt("thread_id"),
+                                jsonObject.getInt("likes"),
+                                jsonObject.getInt("views"));
+                        threads.add(thread);
+                        count++;
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                customAdapter = new CustomAdapter(getContext(), threads);
+                recyclerView.setAdapter(customAdapter);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+
+            }
+        });
+
+        MySingleton.getmInstance(getContext()).addToRequestQueue(jsonArrayRequest);
+        return threads;
+    }
 
 
-        for (int i = 0; i < DATASET_COUNT; i++) {
-            threads.add(new Thread());
-            threads.get(i).setTitle("This is element #" + i);
-        }
+    private void onGetThreadFailed() {
+
+        Toast.makeText(getContext(), "Error getting threads", Toast.LENGTH_SHORT).show();
     }
 
     private enum LayoutManagerType {

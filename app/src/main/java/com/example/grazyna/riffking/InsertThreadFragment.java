@@ -122,6 +122,7 @@ public class InsertThreadFragment extends Fragment {
                 insert_thread_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.d(TAG, "onResponse: " + response);
 
                 if (response.contains("Thread insert failed")) {
                     onInsertThreadFailed();
@@ -174,7 +175,7 @@ public class InsertThreadFragment extends Fragment {
         try {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content_home, homeFragment).addToBackStack(null);
+            transaction.replace(R.id.content_home, homeFragment);
             transaction.commit();
 
         } catch (ClassCastException e) {
@@ -209,6 +210,7 @@ public class InsertThreadFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_insert_thread, container, false);
     }
@@ -218,7 +220,9 @@ public class InsertThreadFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -251,4 +255,6 @@ public class InsertThreadFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

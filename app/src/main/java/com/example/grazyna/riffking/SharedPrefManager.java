@@ -3,8 +3,6 @@ package com.example.grazyna.riffking;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.ArrayList;
-
 /**
  * Created by jakub on 18.07.17.
  */
@@ -16,8 +14,6 @@ public class SharedPrefManager {
     private static final String KEY_USER_ID = "userid";
     private static SharedPrefManager mInstance;
     private static Context mCtx;
-    private static ArrayList<Thread> sKey;
-
 
     private SharedPrefManager(Context context) {
         mCtx = context;

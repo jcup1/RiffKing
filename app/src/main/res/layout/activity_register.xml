@@ -113,7 +113,7 @@
             android:layout_gravity="center"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="@string/register_tv_text"
+            android:text="@string/login_tv_text"
             android:textColor="@color/text_4"
             android:textSize="@dimen/register_tv_text_size"
             android:textStyle="normal" />

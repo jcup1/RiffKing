@@ -5,10 +5,24 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -23,6 +37,7 @@ public class ThreadFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "position";
+    private static final String TAG = "ThreadFragment";
 
     TextView position_tv;
 
@@ -30,6 +45,7 @@ public class ThreadFragment extends Fragment {
     private String position;
 
     private OnFragmentInteractionListener mListener;
+    private String getThreadURL = "http://theandroiddev.com/get_thread.php";
 
     public ThreadFragment() {
         // Required empty public constructor
@@ -55,9 +71,7 @@ public class ThreadFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            position = getArguments().getString(ARG_PARAM1);
-        }
+
 
     }
 
@@ -65,6 +79,13 @@ public class ThreadFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        if (getArguments() != null) {
+            position = getArguments().getString(ARG_PARAM1);
+            Log.e(TAG, "onCreateView: pospos" + position);
+            getJSON(position);
+        }
+
         return inflater.inflate(R.layout.fragment_thread, container, false);
     }
 
@@ -82,6 +103,64 @@ public class ThreadFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    public void getJSON(final String threadId) {
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+                getThreadURL, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+
+                Log.e(TAG, "onResponse: " + jsonObject);
+
+                try {
+                    //JSONObject jsonObject = response.getJSONObject(1);
+                    Thread thread = new Thread(jsonObject.getString("title"),
+                            jsonObject.getString("name"),
+                            jsonObject.getString("comments"),
+                            jsonObject.getString("URL"),
+                            jsonObject.getInt("thread_id"),
+                            jsonObject.getInt("likes"),
+                            jsonObject.getInt("views"));
+
+                    initData(thread);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+
+            }
+        }
+
+        ) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                Log.e(TAG, "getParams: " + threadId);
+
+                params.put("threadid", threadId);
+                return params;
+            }
+
+
+        };
+
+        MySingleton.getmInstance(getContext()).addToRequestQueue(jsonObjectRequest);
+
+
+    }
+
+    private void initData(Thread thread) {
+        position_tv.setText(thread.getTitle());
     }
 
     @Override

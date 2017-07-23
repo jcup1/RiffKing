@@ -14,8 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Title"/>
+        android:hint="Thread Title"
+        android:inputType="textPersonName"/>
 
     <EditText
         android:id="@+id/author_et"
@@ -23,15 +23,16 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Author"/>
+        android:text="Author"
+        android:visibility="gone"/>
 
     <EditText
         android:id="@+id/URL_et"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="URL"/>
+        android:hint="Video URL"
+        android:inputType="textPersonName"/>
 
     <Button
         android:id="@+id/insert_btn"

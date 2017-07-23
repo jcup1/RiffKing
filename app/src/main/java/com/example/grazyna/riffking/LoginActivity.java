@@ -38,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.login_register_tv)
     TextView registerTv;
     private String login_url = "http://theandroiddev.com/login.php";
-    private String get_user_id_url = "http://theandroiddev.com/get_user_id.php";
     private boolean loggedIn;
 
     @OnClick(R.id.login_login_btn)

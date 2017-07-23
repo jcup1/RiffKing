@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -23,7 +23,8 @@
             android:gravity="center"
             android:text="Thrash metal riff"
             android:textSize="18sp"
-            app:layout_constraintLeft_toRightOf="@+id/video_img"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/thumnail_img"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
@@ -33,7 +34,7 @@
             android:layout_marginTop="4dp"
             android:text="jakubpchas"
             android:textSize="10sp"
-            app:layout_constraintLeft_toRightOf="@+id/video_img"
+            app:layout_constraintLeft_toRightOf="@+id/thumnail_img"
             app:layout_constraintTop_toBottomOf="@+id/textView2"/>
 
         <TextView
@@ -44,11 +45,11 @@
             android:layout_marginTop="4dp"
             android:text="adsadw"
             android:textSize="10sp"
-            app:layout_constraintLeft_toRightOf="@+id/video_img"
-            app:layout_constraintTop_toBottomOf="@+id/textView"/>
+            app:layout_constraintLeft_toRightOf="@+id/thumnail_img"
+            app:layout_constraintTop_toBottomOf="@+id/text_view"/>
 
         <ImageView
-            android:id="@+id/video_img"
+            android:id="@+id/thumnail_img"
             android:layout_width="75dp"
             android:layout_height="72dp"
             android:layout_marginBottom="4dp"
@@ -56,8 +57,7 @@
             android:layout_marginTop="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/video"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/stats_tv"
