@@ -22,6 +22,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +50,7 @@ public class InsertThreadFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
+    private String currentDate;
 
     public InsertThreadFragment() {
         // Required empty public constructor
@@ -150,6 +154,7 @@ public class InsertThreadFragment extends Fragment {
                 params.put("title", title);
                 params.put("author", author);
                 params.put("URL", URL);
+                params.put("date", getDateTime());
                 return params;
             }
         };
@@ -241,6 +246,11 @@ public class InsertThreadFragment extends Fragment {
         mListener = null;
     }
 
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

@@ -86,4 +86,7 @@ class Thread {
         this.views = views;
     }
 
+    public String getDate() {
+        return date;
+    }
 }

@@ -55,7 +55,22 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             }
         });
 
+        holder.statsTv.setText(initStats(threads.get(position)));
+        holder.dateTv.setText(initDate(threads.get(position)));
+
         new GetThumbnail(threads.get(position).getURL(), holder.singleThumbnail).execute();
+
+    }
+
+    private String initStats(Thread thread) {
+
+        return thread.getViews() + " views " + thread.getLikes() + " likes";
+
+    }
+
+    private String initDate(Thread thread) {
+
+        return thread.getDate();
 
     }
 
@@ -90,14 +105,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     }
 
-    private void setThumbnailURL(ImageView singleThumbnail) {
 
-
-    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView singleTitle;
+        private final TextView singleTitle, statsTv;
+        private final TextView dateTv;
         private final ImageView singleThumbnail;
 
         public ViewHolder(View itemView) {
@@ -112,6 +125,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             });
             singleTitle = (TextView) itemView.findViewById(R.id.text_view);
             singleThumbnail = (ImageView) itemView.findViewById(R.id.thumnail_img);
+            statsTv = (TextView) itemView.findViewById(R.id.stats_tv);
+            dateTv = (TextView) itemView.findViewById(R.id.date_tv);
 
         }
 
