@@ -247,7 +247,7 @@ public class InsertThreadFragment extends Fragment {
     }
 
     private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         Date date = new Date();
         return dateFormat.format(date);
     }

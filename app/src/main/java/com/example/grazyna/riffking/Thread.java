@@ -6,10 +6,10 @@ package com.example.grazyna.riffking;
 
 class Thread {
 
-    String title, author, comments, URL;
+    String title, author, comments, URL, date;
     int id, likes, views;
 
-    public Thread(String title, String author, String comments, String URL, int id, int likes, int views) {
+    public Thread(String title, String author, String comments, String URL, int id, int likes, int views, String date) {
         this.title = title;
         this.author = author;
         this.comments = comments;
@@ -17,6 +17,7 @@ class Thread {
         this.id = id;
         this.likes = likes;
         this.views = views;
+        this.date = date;
     }
 
     public Thread(int id, String title, String author, String URL) {
@@ -87,6 +88,9 @@ class Thread {
     }
 
     public String getDate() {
+
         return date;
     }
+
+
 }

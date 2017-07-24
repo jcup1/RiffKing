@@ -21,8 +21,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 
 /**
@@ -122,7 +126,8 @@ public class ThreadFragment extends Fragment {
                             jsonObject.getString("URL"),
                             jsonObject.getInt("thread_id"),
                             jsonObject.getInt("likes"),
-                            jsonObject.getInt("views"));
+                            jsonObject.getInt("views"),
+                            jsonObject.getString("date"));
 
                     initData(thread);
 
@@ -156,6 +161,16 @@ public class ThreadFragment extends Fragment {
 
         MySingleton.getmInstance(getContext()).addToRequestQueue(jsonObjectRequest);
 
+
+    }
+
+    public String getCurrentDate() {
+
+
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        return df.format(Calendar.getInstance().getTime());
 
     }
 

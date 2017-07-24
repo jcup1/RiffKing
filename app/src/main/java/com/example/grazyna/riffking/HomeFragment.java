@@ -24,7 +24,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 
 /**
@@ -233,7 +237,8 @@ public class HomeFragment extends Fragment {
                                 jsonObject.getString("URL"),
                                 jsonObject.getInt("thread_id"),
                                 jsonObject.getInt("likes"),
-                                jsonObject.getInt("views"));
+                                jsonObject.getInt("views"),
+                                jsonObject.getString("date"));
                         threads.add(thread);
                         count++;
 
@@ -259,6 +264,17 @@ public class HomeFragment extends Fragment {
 
         MySingleton.getmInstance(getContext()).addToRequestQueue(jsonArrayRequest);
         return threads;
+    }
+
+    public String getCurrentDate() {
+
+
+        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String currentDate = df.format(Calendar.getInstance().getTime());
+
+        return currentDate;
+
     }
 
 

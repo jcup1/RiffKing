@@ -33,15 +33,21 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
 
         String URLLink = "https://www.youtube.com/watch?v=HwXsFPZp3fQ";
         URLLink = thumbURL;
-        String ytId = URLLink.substring(URLLink.indexOf("?v=") + 3, URLLink.length());
-        ytId = ytId.substring(0, YTIDLENGTH);
+        if (URLLink.contains("?v=") && URLLink.length() > 15) {
+            String ytId = URLLink.substring(URLLink.indexOf("?v=") + 3, URLLink.length());
+            if (ytId.length() >= 11) {
 
-        try {
-            URL thumbnailURL = new URL("https://img.youtube.com/vi/" + ytId + "/0.jpg");
-            icon_val = BitmapFactory.decodeStream(thumbnailURL.openConnection().getInputStream());
 
-        } catch (IOException e) {
-            e.printStackTrace();
+                ytId = ytId.substring(0, YTIDLENGTH);
+
+                try {
+                    URL thumbnailURL = new URL("https://img.youtube.com/vi/" + ytId + "/0.jpg");
+                    icon_val = BitmapFactory.decodeStream(thumbnailURL.openConnection().getInputStream());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return null;
