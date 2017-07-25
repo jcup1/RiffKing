@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +85,6 @@ public class ThreadFragment extends Fragment {
 
         if (getArguments() != null) {
             position = getArguments().getString(ARG_PARAM1);
-            Log.e(TAG, "onCreateView: pospos" + position);
             getJSON(position);
         }
 
@@ -111,14 +109,14 @@ public class ThreadFragment extends Fragment {
 
     public void getJSON(final String threadId) {
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-                getThreadURL, new Response.Listener<JSONObject>() {
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,
+                getThreadURL, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject jsonObject) {
-
-                Log.e(TAG, "onResponse: " + jsonObject);
+            public void onResponse(String response) {
 
                 try {
+                    JSONObject jsonObject = new JSONObject(response);
+
                     //JSONObject jsonObject = response.getJSONObject(1);
                     Thread thread = new Thread(jsonObject.getString("title"),
                             jsonObject.getString("name"),
@@ -150,8 +148,6 @@ public class ThreadFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                Log.e(TAG, "getParams: " + threadId);
-
                 params.put("threadid", threadId);
                 return params;
             }

@@ -3,10 +3,27 @@ package com.example.grazyna.riffking;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -22,7 +39,10 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    ImageView profileImg, profileMoneyImg, profileFollowersImg, profileMessagesImg, profilePmImg;
+    TextView profileNameTv, profileDescTv, profileEmailTv, profileMoneyTv, profileFollowersTv, profileLikesTv;
+    Button profileFollowBtn;
+    private String getUserURL = "http://theandroiddev.com/get_user.php";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -58,6 +78,88 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        profileNameTv = (TextView) getView().findViewById(R.id.profile_name_tv);
+        profileDescTv = (TextView) getView().findViewById(R.id.profile_desc_tv);
+        profileEmailTv = (TextView) getView().findViewById(R.id.profile_email_tv);
+        profileMoneyTv = (TextView) getView().findViewById(R.id.profile_money_tv);
+        profileFollowersTv = (TextView) getView().findViewById(R.id.profile_followers_tv);
+        profileLikesTv = (TextView) getView().findViewById(R.id.profile_likes_tv);
+
+        getUser(String.valueOf(SharedPrefManager.getInstance(getContext()).getId()));
+
+    }
+
+    public void getUser(final String userId) {
+
+        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,
+                getUserURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+
+                    //JSONObject jsonObject = response.getJSONObject(1);
+                    User user = new User(
+                            jsonObject.getString("name"),
+                            jsonObject.getString("age"),
+                            jsonObject.getString("details"),
+                            jsonObject.getInt("email"),
+                            jsonObject.getInt("likes"),
+                            jsonObject.getInt("reps"),
+                            jsonObject.getString("followers"));
+
+                    initData(user);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+
+            }
+        }
+
+        ) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("userid", userId);
+                return params;
+            }
+
+
+        };
+
+        MySingleton.getmInstance(getContext()).addToRequestQueue(jsonObjectRequest);
+
+
+    }
+
+    private void initData(User user) {
+
+        profileNameTv.setText(user.getName());
+        profileDescTv.setText(user.getDetails());
+        profileEmailTv.setText(user.getEmail());
+        profileMoneyTv.setText(user.getReps());
+        profileFollowersTv.setText(user.getFollowers());
+        profileLikesTv.setText(user.getLikes());
+
+
+
     }
 
     @Override
