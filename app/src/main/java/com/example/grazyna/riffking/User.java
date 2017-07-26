@@ -6,11 +6,11 @@ package com.example.grazyna.riffking;
 
 class User {
 
-    private String name, age, details, followers;
-    private int email, likes, reps;
+    private String name, details, email;
+    private int likes, reps, age, followers;
 
 
-    public User(String name, String age, String details, int email, int likes, int reps, String followers) {
+    public User(String name, int age, String details, String email, int likes, int reps, int followers) {
 
         this.name = name;
         this.age = age;
@@ -30,14 +30,6 @@ class User {
         this.name = name;
     }
 
-    public String getAge() {
-        return age;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
-    }
-
     public String getDetails() {
         return details;
     }
@@ -46,19 +38,11 @@ class User {
         this.details = details;
     }
 
-    public String getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(String followers) {
-        this.followers = followers;
-    }
-
-    public int getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(int email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -76,5 +60,21 @@ class User {
 
     public void setReps(int reps) {
         this.reps = reps;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(int followers) {
+        this.followers = followers;
     }
 }

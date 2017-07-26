@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
+    private static final String TAG = "ProfileFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -46,6 +49,7 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private FragmentTabHost tabHost;
 
     private OnFragmentInteractionListener mListener;
 
@@ -109,12 +113,12 @@ public class ProfileFragment extends Fragment {
                     //JSONObject jsonObject = response.getJSONObject(1);
                     User user = new User(
                             jsonObject.getString("name"),
-                            jsonObject.getString("age"),
+                            jsonObject.getInt("age"),
                             jsonObject.getString("details"),
-                            jsonObject.getInt("email"),
+                            jsonObject.getString("email"),
                             jsonObject.getInt("likes"),
-                            jsonObject.getInt("reps"),
-                            jsonObject.getString("followers"));
+                            jsonObject.getInt("rep"),
+                            jsonObject.getInt("followers"));
 
                     initData(user);
 
@@ -136,6 +140,7 @@ public class ProfileFragment extends Fragment {
         ) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                Log.e(TAG, "getParams: passed data" + userId);
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("userid", userId);
                 return params;
@@ -154,9 +159,9 @@ public class ProfileFragment extends Fragment {
         profileNameTv.setText(user.getName());
         profileDescTv.setText(user.getDetails());
         profileEmailTv.setText(user.getEmail());
-        profileMoneyTv.setText(user.getReps());
-        profileFollowersTv.setText(user.getFollowers());
-        profileLikesTv.setText(user.getLikes());
+        profileMoneyTv.setText(String.valueOf(user.getReps()));
+        profileFollowersTv.setText(String.valueOf(user.getFollowers()));
+        profileLikesTv.setText(String.valueOf(user.getLikes()));
 
 
 
@@ -166,7 +171,20 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+
+        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        tabHost = (FragmentTabHost) rootView.findViewById(android.R.id.tabhost);
+        tabHost.setup(getActivity(), getChildFragmentManager(), R.id.tab_container);
+
+        tabHost.addTab(tabHost.newTabSpec("fragmentb").setIndicator("Fragment B"),
+                FragmentB.class, null);
+        tabHost.addTab(tabHost.newTabSpec("fragmentc").setIndicator("Fragment C"),
+                FragmentC.class, null);
+        tabHost.addTab(tabHost.newTabSpec("fragmentd").setIndicator("Fragment D"),
+                FragmentD.class, null);
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -192,6 +210,7 @@ public class ProfileFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

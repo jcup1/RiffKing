@@ -34,7 +34,8 @@ public class HomeActivity extends AppCompatActivity
         HomeFragment.OnFragmentInteractionListener, RankingFragment.OnFragmentInteractionListener,
         VideosFragment.OnFragmentInteractionListener, UploadFragment.OnFragmentInteractionListener,
         ThreadFragment.OnFragmentInteractionListener, InsertThreadFragment.OnFragmentInteractionListener,
-        ProfileFragment.OnFragmentInteractionListener {
+        ProfileFragment.OnFragmentInteractionListener, FragmentB.OnFragmentInteractionListener,
+        FragmentC.OnFragmentInteractionListener, FragmentD.OnFragmentInteractionListener {
 
     private static final String TAG = "HomeActivity";
     public FloatingActionButton fab;

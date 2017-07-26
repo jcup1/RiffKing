@@ -14,7 +14,6 @@ public class SharedPrefManager {
     private static final String KEY_USER_ID = "userid";
     private static SharedPrefManager mInstance;
     private static Context mCtx;
-    private int id;
 
     private SharedPrefManager(Context context) {
         mCtx = context;
@@ -29,8 +28,6 @@ public class SharedPrefManager {
     }
 
     public boolean userLogin(int id, String email) {
-
-        this.id = id;
 
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -63,7 +60,8 @@ public class SharedPrefManager {
     }
 
     public int getId() {
-        return id;
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_USER_ID, 0);
     }
 
 }
