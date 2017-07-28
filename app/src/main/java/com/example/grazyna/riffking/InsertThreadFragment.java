@@ -43,7 +43,7 @@ public class InsertThreadFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "InsertThreadFragment";
-    EditText title_et, author_et, URL_et;
+    EditText title_et, URL_et, content_et;
     Button insert_btn;
     private String insert_thread_URL = "http://theandroiddev.com/insert_thread.php";
     // TODO: Rename and change types of parameters
@@ -90,11 +90,10 @@ public class InsertThreadFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         title_et = (EditText) getActivity().findViewById(R.id.title_et);
-        author_et = (EditText) getActivity().findViewById(R.id.author_et);
         URL_et = (EditText) getActivity().findViewById(R.id.URL_et);
+        content_et = (EditText) getActivity().findViewById(R.id.content_et);
         insert_btn = (Button) getActivity().findViewById(R.id.insert_btn);
 
-        setAuthor(author_et);
         insert_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,8 +107,8 @@ public class InsertThreadFragment extends Fragment {
 
         if (validate()) {
 
-            authenticate(title_et.getText().toString(), author_et.getText().toString(),
-                    URL_et.getText().toString());
+            authenticate(title_et.getText().toString(), getAuthor(),
+                    URL_et.getText().toString(), content_et.getText().toString());
 
         } else {
             onInsertThreadFailed();
@@ -118,7 +117,7 @@ public class InsertThreadFragment extends Fragment {
 
     }
 
-    private void authenticate(final String title, final String author, final String URL) {
+    private void authenticate(final String title, final String author, final String URL, final String content) {
 
         insert_btn.setEnabled(false);
 
@@ -153,6 +152,7 @@ public class InsertThreadFragment extends Fragment {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("title", title);
                 params.put("author", author);
+                params.put("content", content);
                 params.put("URL", URL);
                 params.put("date", getDateTime());
                 return params;
@@ -193,8 +193,16 @@ public class InsertThreadFragment extends Fragment {
 
     private boolean validate() {
 
-        return !(TextUtils.isEmpty(title_et.getText().toString()) ||
-                TextUtils.isEmpty(author_et.getText().toString()));
+        if (TextUtils.isEmpty(title_et.getText().toString())) {
+            title_et.setError("Title can't be empty");
+            return false;
+        }
+        if (TextUtils.isEmpty(content_et.getText().toString())) {
+            content_et.setError("Content can't be empty");
+            return false;
+        }
+
+        return true;
 
     }
 
@@ -205,10 +213,11 @@ public class InsertThreadFragment extends Fragment {
 
     }
 
-    private void setAuthor(EditText author_et) {
+    private String getAuthor() {
 
         String author = SharedPrefManager.getInstance(getActivity()).getEmail();
-        author_et.setText(author);
+
+        return author;
 
     }
 
