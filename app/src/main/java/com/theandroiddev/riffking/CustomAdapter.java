@@ -1,4 +1,4 @@
-package com.example.grazyna.riffking;
+package com.theandroiddev.riffking;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -106,7 +106,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     }
 
-
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 

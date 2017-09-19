@@ -1,4 +1,4 @@
-package com.example.grazyna.riffking;
+package com.theandroiddev.riffking;
 
 import android.content.Context;
 import android.net.Uri;

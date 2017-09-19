@@ -1,4 +1,4 @@
-package com.example.grazyna.riffking;
+package com.theandroiddev.riffking;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,22 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 
 
@@ -81,22 +69,23 @@ public class ThreadFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this
+        // fragment
 
         if (getArguments() != null) {
             position = getArguments().getString(ARG_PARAM1);
-            getJSON(position);
+
         }
 
-        return inflater.inflate(R.layout.fragment_thread, container, false);
+        return inflater.inflate(com.theandroiddev.riffking.R.layout.fragment_thread, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        position_tv = (TextView) getView().findViewById(R.id.position_tv);
-        position_tv.setText(position);
+//
+//        position_tv = (TextView) getView().findViewById(R.id.position_tv);
+//        position_tv.setText(position);
 
     }
 
@@ -107,58 +96,6 @@ public class ThreadFragment extends Fragment {
         }
     }
 
-    public void getJSON(final String threadId) {
-
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,
-                getThreadURL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-
-                    //JSONObject jsonObject = response.getJSONObject(1);
-                    Thread thread = new Thread(jsonObject.getString("title"),
-                            jsonObject.getString("name"),
-                            jsonObject.getString("comments"),
-                            jsonObject.getString("URL"),
-                            jsonObject.getInt("thread_id"),
-                            jsonObject.getInt("likes"),
-                            jsonObject.getInt("views"),
-                            jsonObject.getString("date"));
-
-                    initData(thread);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-                error.printStackTrace();
-
-            }
-        }
-
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("threadid", threadId);
-                return params;
-            }
-
-
-        };
-
-        MySingleton.getmInstance(getContext()).addToRequestQueue(jsonObjectRequest);
-
-
-    }
 
     public String getCurrentDate() {
 
@@ -171,7 +108,8 @@ public class ThreadFragment extends Fragment {
     }
 
     private void initData(Thread thread) {
-        position_tv.setText(thread.getTitle());
+
+//        position_tv.setText(thread.getTitle());
     }
 
     @Override

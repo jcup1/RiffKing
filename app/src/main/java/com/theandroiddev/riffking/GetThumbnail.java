@@ -1,4 +1,4 @@
-package com.example.grazyna.riffking;
+package com.theandroiddev.riffking;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,9 +33,9 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
 
         String URLLink = "https://www.youtube.com/watch?v=HwXsFPZp3fQ";
         URLLink = thumbURL;
-        if (URLLink.contains("?v=") && URLLink.length() > 15) {
-            String ytId = URLLink.substring(URLLink.indexOf("?v=") + 3, URLLink.length());
-            if (ytId.length() >= 11) {
+        if (URLLink.length() > 15) {
+            String ytId = URLLink.substring(URLLink.length() - 11, URLLink.length());
+            if (ytId.length() >= YTIDLENGTH) {
 
 
                 ytId = ytId.substring(0, YTIDLENGTH);
@@ -48,6 +48,7 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
                     e.printStackTrace();
                 }
             }
+
         }
 
         return null;

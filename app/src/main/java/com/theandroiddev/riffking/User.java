@@ -1,4 +1,4 @@
-package com.example.grazyna.riffking;
+package com.theandroiddev.riffking;
 
 /**
  * Created by jakub on 25.07.17.

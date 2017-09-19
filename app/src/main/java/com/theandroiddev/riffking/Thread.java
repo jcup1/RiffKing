@@ -1,4 +1,7 @@
-package com.example.grazyna.riffking;
+package com.theandroiddev.riffking;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by jakub on 19.07.17.
@@ -6,10 +9,10 @@ package com.example.grazyna.riffking;
 
 class Thread {
 
-    String title, author, comments, URL, date;
-    int id, likes, views;
+    String id, title, author, comments, URL, date, content;
+    int likes, views;
 
-    public Thread(String title, String author, String comments, String URL, int id, int likes, int views, String date) {
+    public Thread(String title, String author, String comments, String URL, String id, int likes, int views, String date) {
         this.title = title;
         this.author = author;
         this.comments = comments;
@@ -20,11 +23,14 @@ class Thread {
         this.date = date;
     }
 
-    public Thread(int id, String title, String author, String URL) {
-        this.id = id;
+    public Thread(String title, String author, String URL, String content) {
         this.title = title;
         this.author = author;
         this.URL = URL;
+        this.content = content;
+        this.likes = 0;
+        this.views = 0;
+        this.date = getCurrentDate();
     }
 
     public Thread() {
@@ -63,11 +69,11 @@ class Thread {
         this.URL = URL;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -92,5 +98,20 @@ class Thread {
         return date;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getCurrentDate() {
+        Date currentTime = Calendar.getInstance().getTime();
+        return currentTime.toString();
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.grazyna.riffking;
+package com.theandroiddev.riffking;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,29 +26,29 @@ import butterknife.OnClick;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
-    @BindView(R.id.register_logo_img)
+    @BindView(com.theandroiddev.riffking.R.id.register_logo_img)
     ImageView logoImg;
-    @BindView(R.id.register_email_et)
+    @BindView(com.theandroiddev.riffking.R.id.register_email_et)
     TextInputEditText emailEt;
-    @BindView(R.id.register_password_et)
+    @BindView(com.theandroiddev.riffking.R.id.register_password_et)
     TextInputEditText passwordEt;
-    @BindView(R.id.register_name_et)
+    @BindView(com.theandroiddev.riffking.R.id.register_name_et)
     TextInputEditText nameEt;
-    @BindView(R.id.register_register_btn)
+    @BindView(com.theandroiddev.riffking.R.id.register_register_btn)
     Button registerBtn;
-    @BindView(R.id.register_login_tv)
+    @BindView(com.theandroiddev.riffking.R.id.register_login_tv)
     TextView loginTv;
     String email, password, name;
     private String userRegisterURL = "http://theandroiddev.com/register.php";
 
-    @OnClick(R.id.register_register_btn)
+    @OnClick(com.theandroiddev.riffking.R.id.register_register_btn)
     public void register() {
 
         tryToRegister(emailEt, passwordEt);
 
     }
 
-    @OnClick(R.id.register_login_tv)
+    @OnClick(com.theandroiddev.riffking.R.id.register_login_tv)
     public void login() {
 
         startLoginActivity();
@@ -161,7 +161,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(com.theandroiddev.riffking.R.layout.activity_register);
 
         ButterKnife.bind(this);
 

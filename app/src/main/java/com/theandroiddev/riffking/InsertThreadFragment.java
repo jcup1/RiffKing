@@ -1,4 +1,4 @@
-package com.example.grazyna.riffking;
+package com.theandroiddev.riffking;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,17 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -45,8 +40,9 @@ public class InsertThreadFragment extends Fragment {
     private static final String TAG = "InsertThreadFragment";
     EditText title_et, URL_et, content_et;
     Button insert_btn;
-    private String insert_thread_URL = "http://theandroiddev.com/insert_thread.php";
-    // TODO: Rename and change types of parameters
+    String URL;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference mDatabase;
     private String mParam1;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
@@ -78,9 +74,11 @@ public class InsertThreadFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = getArguments().getString("URL");
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
     }
@@ -101,14 +99,19 @@ public class InsertThreadFragment extends Fragment {
             }
         });
 
+        URL_et.setText(mParam1);
+        Toast.makeText(getContext(), mParam1, Toast.LENGTH_SHORT).show();
+
     }
+
 
     private void insertThread() {
 
         if (validate()) {
 
-            authenticate(title_et.getText().toString(), getAuthor(),
-                    URL_et.getText().toString(), content_et.getText().toString());
+            Thread thread = new Thread(title_et.getText().toString(), getAuthor(), URL_et.getText().toString(), content_et.getText().toString());
+            mDatabase.child("threads").push().setValue(thread);
+
 
         } else {
             onInsertThreadFailed();
@@ -117,52 +120,6 @@ public class InsertThreadFragment extends Fragment {
 
     }
 
-    private void authenticate(final String title, final String author, final String URL, final String content) {
-
-        insert_btn.setEnabled(false);
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                insert_thread_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "onResponse: " + response);
-
-                if (response.contains("Thread insert failed")) {
-                    onInsertThreadFailed();
-
-                } else {
-                    Toast.makeText(getContext(), "SUCCESS! " + response, Toast.LENGTH_SHORT).show();
-                    onInsertThreadSuccess(response, title, author, URL);
-
-                }
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), "Error checking", Toast.LENGTH_SHORT).show();
-                error.printStackTrace();
-                onInsertThreadFailed();
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("title", title);
-                params.put("author", author);
-                params.put("content", content);
-                params.put("URL", URL);
-                params.put("date", getDateTime());
-                return params;
-            }
-        };
-
-
-        MySingleton.getmInstance(getContext()).addToRequestQueue(stringRequest);
-
-    }
 
     private void onInsertThreadSuccess(String id, String title1, String author, String URL) {
 
@@ -215,7 +172,9 @@ public class InsertThreadFragment extends Fragment {
 
     private String getAuthor() {
 
+        //TODO GET FROM AUTH
         String author = SharedPrefManager.getInstance(getActivity()).getEmail();
+
 
         return author;
 
@@ -224,6 +183,7 @@ public class InsertThreadFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_insert_thread, container, false);
