@@ -1,6 +1,9 @@
 package com.theandroiddev.riffking;
 
-import java.util.Calendar;
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -8,8 +11,9 @@ import java.util.Date;
  */
 
 class Thread {
+    private static final String TAG = "Thread";
 
-    String id, title, author, comments, URL, date, content;
+    String id, title, author, email, comments, URL, date, content;
     int likes, views;
 
     public Thread(String title, String author, String comments, String URL, String id, int likes, int views, String date) {
@@ -23,17 +27,19 @@ class Thread {
         this.date = date;
     }
 
-    public Thread(String title, String author, String URL, String content) {
+    public Thread(String title, String author, String email, String URL, String content, String date) {
         this.title = title;
         this.author = author;
+        this.email = email;
         this.URL = URL;
         this.content = content;
         this.likes = 0;
         this.views = 0;
-        this.date = getCurrentDate();
+        this.date = date;
     }
 
     public Thread() {
+
 
     }
 
@@ -110,8 +116,31 @@ class Thread {
         this.content = content;
     }
 
-    public String getCurrentDate() {
-        Date currentTime = Calendar.getInstance().getTime();
-        return currentTime.toString();
+    public String getEmail() {
+        return email;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFormattedDate() {
+
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+        //TODO FORMAT MORE http://www.ocpsoft.org/prettytime/
+
+        Date date = null;
+        try {
+            date = outputFormat.parse(getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (date != null) {
+            return date.toString();
+        }
+        Log.e(TAG, "getFormattedDate: DATE ERROR!");
+        return getDate();
+    }
+
 }

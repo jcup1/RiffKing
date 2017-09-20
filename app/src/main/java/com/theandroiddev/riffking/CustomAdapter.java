@@ -71,7 +71,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     private String initDate(Thread thread) {
 
-        return thread.getDate();
+        return thread.getFormattedDate();
 
     }
 

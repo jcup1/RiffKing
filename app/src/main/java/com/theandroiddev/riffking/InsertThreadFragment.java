@@ -1,6 +1,7 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,12 +17,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 /**
@@ -100,7 +104,7 @@ public class InsertThreadFragment extends Fragment {
         });
 
         URL_et.setText(mParam1);
-        Toast.makeText(getContext(), mParam1, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), mParam1, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -109,8 +113,10 @@ public class InsertThreadFragment extends Fragment {
 
         if (validate()) {
 
-            Thread thread = new Thread(title_et.getText().toString(), getAuthor(), URL_et.getText().toString(), content_et.getText().toString());
+            Thread thread = new Thread(title_et.getText().toString(), getAuthor()[0], getAuthor()[1], URL_et.getText().toString(), content_et.getText().toString(), getCurrentDate());
             mDatabase.child("threads").push().setValue(thread);
+            getActivity().onBackPressed();
+
 
 
         } else {
@@ -129,8 +135,8 @@ public class InsertThreadFragment extends Fragment {
         bundle.putString("author", author);
         bundle.putString("URL", URL);
 
-        Toast.makeText(getContext(), id + " " + title1 + " " + author + " " + URL,
-                Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), id + " " + title1 + " " + author + " " + URL,
+        //        Toast.LENGTH_SHORT).show();
 
         HomeFragment homeFragment = new HomeFragment();
         homeFragment.setArguments(bundle);
@@ -142,7 +148,7 @@ public class InsertThreadFragment extends Fragment {
 
         } catch (ClassCastException e) {
             Log.e(TAG, "cant get fragment manager");
-            Toast.makeText(getContext(), "Cant get fragment manager!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "Cant get fragment manager!", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -168,12 +174,25 @@ public class InsertThreadFragment extends Fragment {
         insert_btn.setEnabled(true);
         Toast.makeText(getContext(), "Error inserting thread!", Toast.LENGTH_SHORT).show();
 
-    }
+    }//https://youtu.be/cChsHZ6RVgY?t=5m51s
 
-    private String getAuthor() {
+    private String[] getAuthor() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String[] author = new String[0];
 
         //TODO GET FROM AUTH
-        String author = SharedPrefManager.getInstance(getActivity()).getEmail();
+        if (user != null) {
+            author = new String[]{user.getDisplayName(), user.getEmail()};
+
+
+        } else {
+            Toast.makeText(getContext(), "Lost Connection", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
+
 
 
         return author;
@@ -215,10 +234,16 @@ public class InsertThreadFragment extends Fragment {
         mListener = null;
     }
 
-    private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-        Date date = new Date();
-        return dateFormat.format(date);
+    public String getCurrentDate() {
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat(
+                "HH:mm MMM dd", Locale.getDefault());
+        //"EEE MMM dd HH:mm:ss 'GMT' yyyy", Locale.getDefault());
+        inputFormat.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+        //inputFormat.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+
+        return inputFormat.format(Calendar.getInstance().getTime());
+
     }
     /**
      * This interface must be implemented by activities that contain this

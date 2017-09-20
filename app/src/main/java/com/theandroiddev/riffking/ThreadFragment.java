@@ -10,11 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,21 +91,6 @@ public class ThreadFragment extends Fragment {
         }
     }
 
-
-    public String getCurrentDate() {
-
-
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-        return df.format(Calendar.getInstance().getTime());
-
-    }
-
-    private void initData(Thread thread) {
-
-//        position_tv.setText(thread.getTitle());
-    }
 
     @Override
     public void onAttach(Context context) {

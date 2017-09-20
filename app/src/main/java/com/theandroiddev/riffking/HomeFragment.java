@@ -148,7 +148,7 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot child : children) {
                     Thread thread = child.getValue(Thread.class);
                     thread.setId(child.getKey());
-                    threads.add(thread);
+                    threads.add(0, thread);
 
                 }
                 mCustomAdapter.notifyDataSetChanged();
@@ -177,7 +177,7 @@ public class HomeFragment extends Fragment {
             Log.d(TAG, "remove: " + threadsToRemove + " " + threadsToRemove.size());
 
             mDatabase.child("threads").child(threadsToRemove.get(0).getId()).removeValue();
-            Toast.makeText(getContext(), threadsToRemove.get(0).getId(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), threadsToRemove.get(0).getId(), Toast.LENGTH_SHORT).show();
             threadsToRemove.remove(0);
 
         }
