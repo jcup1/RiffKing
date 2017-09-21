@@ -1,6 +1,8 @@
 package com.theandroiddev.riffking;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -38,6 +48,22 @@ public class HomeActivity extends AppCompatActivity
     String urlLink = "";
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
+    private DatabaseReference mDatabase;
+
+    public static List<Thread> loadSharedPreferencesLogList(Context context) {
+        List<Thread> callLog = new ArrayList<Thread>();
+        SharedPreferences mPrefs = context.getSharedPreferences("threadsSaved", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = mPrefs.getString("myJson", "");
+        if (json.isEmpty()) {
+            callLog = new ArrayList<Thread>();
+        } else {
+            Type type = new TypeToken<List<Thread>>() {
+            }.getType();
+            callLog = gson.fromJson(json, type);
+        }
+        return callLog;
+    }
 
     @Override
     protected void onStart() {
@@ -49,9 +75,14 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+        //TODO CHECK IS CONNECTED TO THE INTERNET
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -110,17 +141,6 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-
-    private void openProfileFragment(View headerView) {
-
-        ProfileFragment profileFragment = new ProfileFragment();
-
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_home, profileFragment).addToBackStack(null);
-        fragmentTransaction.commit();
-
-    }
-
 //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -145,6 +165,16 @@ public class HomeActivity extends AppCompatActivity
 //        }
 //
 //    }
+
+    private void openProfileFragment(View headerView) {
+
+        ProfileFragment profileFragment = new ProfileFragment();
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_home, profileFragment).addToBackStack(null);
+        fragmentTransaction.commit();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -239,6 +269,42 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        loadQueued();
+
+    }
+
+    public void loadQueued() {
+        List<Thread> threadsInQueue = loadSharedPreferencesLogList(this);
+
+        Toast.makeText(this, "on RESUME" + threadsInQueue.toString(), Toast.LENGTH_SHORT).show();
+        if (!threadsInQueue.isEmpty() && userIsConnected()) {
+
+            //HomeActivity homeActivity = (HomeActivity) getActivity();
+
+            for (int i = 0; i < threadsInQueue.size(); i++) {
+                Toast.makeText(this, "adding", Toast.LENGTH_SHORT).show();
+                mDatabase.child("threads").push().setValue(threadsInQueue.get(i));
+                threadsInQueue.remove(i);
+            }
+        }
+    }
+
+    private boolean userIsConnected() {
+
+        return Utility.isNetworkAvailable(this);
+//        String textt = "";
+//
+//        if(mFirebaseAuth.isC() != null) {
+//            textt = mFirebaseAuth.getCurrentUser().getEmail();
+//        }
+//
+//        Toast.makeText(getContext(),textt , Toast.LENGTH_SHORT).show();
+
+    }
 
     @Override
     public void onAttachFragment(Fragment fragment) {
@@ -251,6 +317,7 @@ public class HomeActivity extends AppCompatActivity
         else if (fragment instanceof ProfileFragment) id = R.id.nav_profile_img;
         else return;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getHeaderView(id);
         navigationView.setCheckedItem(id);
     }
 

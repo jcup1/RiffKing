@@ -246,9 +246,26 @@ public class HomeFragment extends Fragment {
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    private boolean userIsConnected() {
+
+        return Utility.isNetworkAvailable(getContext());
+//        String textt = "";
+//
+//        if(mFirebaseAuth.isC() != null) {
+//            textt = mFirebaseAuth.getCurrentUser().getEmail();
+//        }
+//
+//        Toast.makeText(getContext(),textt , Toast.LENGTH_SHORT).show();
+
+    }
     @Override
     public void onResume() {
         super.onResume();
+
+        if (!userIsConnected()) {
+            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+        }
+
 
         mCustomAdapter.notifyDataSetChanged();
 

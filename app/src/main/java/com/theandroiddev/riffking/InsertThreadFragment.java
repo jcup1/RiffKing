@@ -2,6 +2,7 @@ package com.theandroiddev.riffking;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,9 +22,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -44,12 +50,16 @@ public class InsertThreadFragment extends Fragment {
     private static final String TAG = "InsertThreadFragment";
     EditText titleEt, urlEt, contentEt;
     String URL;
+
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabase;
+    private FirebaseAuth mFirebaseAuth;
     private String urlLink;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
     private String currentDate;
+
+    private List<Thread> threadsInQueue;
 
     public InsertThreadFragment() {
         // Required empty public constructor
@@ -73,15 +83,46 @@ public class InsertThreadFragment extends Fragment {
         return fragment;
     }
 
+    public static void saveSharedPreferencesLogList(Context context, List<Thread> callLog) {
+        SharedPreferences mPrefs = context.getSharedPreferences("threadsSaved", Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(callLog);
+        prefsEditor.putString("myJson", json);
+        prefsEditor.commit();
+    }
+
+    public static Object readArrayListFromSD(Context mContext, String filename) {
+        try {
+            FileInputStream fis = mContext.openFileInput(filename + ".dat");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Object obj = ois.readObject();
+            fis.close();
+            return obj;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Object>();
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             urlLink = getArguments().getString("URL");
             mParam2 = getArguments().getString(ARG_PARAM2);
 
         }
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
     }
 
@@ -100,7 +141,11 @@ public class InsertThreadFragment extends Fragment {
         homeActivity.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertThread();
+                if (userIsConnected()) {
+                    insertThread();
+                } else {
+                    insertThreadToQueue();
+                }
 
             }
         });
@@ -110,6 +155,34 @@ public class InsertThreadFragment extends Fragment {
 
     }
 
+    private void insertThreadToQueue() {
+
+        if (validate()) {
+
+            Thread thread = new Thread(titleEt.getText().toString(), getAuthor()[0], getAuthor()[1], urlEt.getText().toString(), contentEt.getText().toString(), getCurrentDate());
+
+            if (threadsInQueue == null)
+                threadsInQueue = new ArrayList<>();
+
+            threadsInQueue.add(thread);
+            Toast.makeText(getContext(), "No Internet Connection. Added to queue.", Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
+
+        }
+    }
+
+    private boolean userIsConnected() {
+
+        return Utility.isNetworkAvailable(getContext());
+//        String textt = "";
+//
+//        if(mFirebaseAuth.isC() != null) {
+//            textt = mFirebaseAuth.getCurrentUser().getEmail();
+//        }
+//
+//        Toast.makeText(getContext(),textt , Toast.LENGTH_SHORT).show();
+
+    }
 
     private void insertThread() {
 
@@ -126,7 +199,6 @@ public class InsertThreadFragment extends Fragment {
 
 
     }
-
 
     private void onInsertThreadSuccess(String id, String title1, String author, String URL) {
 
@@ -163,11 +235,35 @@ public class InsertThreadFragment extends Fragment {
             return false;
         }
         if (TextUtils.isEmpty(urlEt.getText().toString())) {
-            contentEt.setError("Video URL can't be empty");
+            urlEt.setError("Video URL can't be empty");
+            return false;
+        }
+        if (urlEt.getText().toString().length() < 11) {
+            urlEt.setError("Video URL is not proper");
+            return false;
+        }
+
+        if (!urlEt.getText().toString().equals(".com") && !urlEt.getText().toString().equals("youtu") && !urlEt.getText().toString().equals("/")
+                && linkIdIsProper(urlEt)) {
+            urlEt.setError("Vide URL is not proper");
             return false;
         }
 
         return true;
+
+    }
+
+    private boolean linkIdIsProper(EditText urlEt) {
+
+        //TODO CHECK LAST IF 11 last CHARACTERS CONTAIN
+
+        String ytId = urlEt.getText().toString().substring(urlEt.length() - 11, urlEt.length());
+
+        Toast.makeText(getContext(), ytId, Toast.LENGTH_SHORT).show();
+
+
+        return !ytId.contains("/");
+
 
     }
 
@@ -223,7 +319,6 @@ public class InsertThreadFragment extends Fragment {
 
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -233,6 +328,18 @@ public class InsertThreadFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (threadsInQueue != null) {
+
+            saveSharedPreferencesLogList(getContext(), threadsInQueue);
+            Toast.makeText(getContext(), threadsInQueue.toString() + "added to queue", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
