@@ -13,12 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -42,12 +42,11 @@ public class InsertThreadFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "InsertThreadFragment";
-    EditText title_et, URL_et, content_et;
-    Button insert_btn;
+    EditText titleEt, urlEt, contentEt;
     String URL;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabase;
-    private String mParam1;
+    private String urlLink;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
     private String currentDate;
@@ -78,12 +77,11 @@ public class InsertThreadFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString("URL");
+            urlLink = getArguments().getString("URL");
             mParam2 = getArguments().getString(ARG_PARAM2);
 
         }
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
 
     }
 
@@ -91,20 +89,24 @@ public class InsertThreadFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        title_et = (EditText) getActivity().findViewById(R.id.title_et);
-        URL_et = (EditText) getActivity().findViewById(R.id.URL_et);
-        content_et = (EditText) getActivity().findViewById(R.id.content_et);
-        insert_btn = (Button) getActivity().findViewById(R.id.insert_btn);
+        titleEt = (EditText) getActivity().findViewById(R.id.title_et);
+        urlEt = (EditText) getActivity().findViewById(R.id.URL_et);
+        contentEt = (EditText) getActivity().findViewById(R.id.content_et);
 
-        insert_btn.setOnClickListener(new View.OnClickListener() {
+        //TODO GET RID OF IT IF FAB WORKS
+
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.fab.setImageResource(R.drawable.ic_check_24dp);
+        homeActivity.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 insertThread();
+
             }
         });
 
-        URL_et.setText(mParam1);
-        //Toast.makeText(getContext(), mParam1, Toast.LENGTH_SHORT).show();
+        urlEt.setText(urlLink);
+        //Toast.makeText(getContext(), urlLink, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -113,14 +115,13 @@ public class InsertThreadFragment extends Fragment {
 
         if (validate()) {
 
-            Thread thread = new Thread(title_et.getText().toString(), getAuthor()[0], getAuthor()[1], URL_et.getText().toString(), content_et.getText().toString(), getCurrentDate());
+            Thread thread = new Thread(titleEt.getText().toString(), getAuthor()[0], getAuthor()[1], urlEt.getText().toString(), contentEt.getText().toString(), getCurrentDate());
             mDatabase.child("threads").push().setValue(thread);
+            urlLink = "";
+            HomeActivity homeActivity = (HomeActivity) getActivity();
+            homeActivity.urlLink = "";
             getActivity().onBackPressed();
 
-
-
-        } else {
-            onInsertThreadFailed();
         }
 
 
@@ -148,6 +149,7 @@ public class InsertThreadFragment extends Fragment {
 
         } catch (ClassCastException e) {
             Log.e(TAG, "cant get fragment manager");
+            FirebaseCrash.log("can't get fragment manager");
             //Toast.makeText(getContext(), "Cant get fragment manager!", Toast.LENGTH_SHORT).show();
         }
 
@@ -156,12 +158,12 @@ public class InsertThreadFragment extends Fragment {
 
     private boolean validate() {
 
-        if (TextUtils.isEmpty(title_et.getText().toString())) {
-            title_et.setError("Title can't be empty");
+        if (TextUtils.isEmpty(titleEt.getText().toString())) {
+            titleEt.setError("Title can't be empty");
             return false;
         }
-        if (TextUtils.isEmpty(content_et.getText().toString())) {
-            content_et.setError("Content can't be empty");
+        if (TextUtils.isEmpty(urlEt.getText().toString())) {
+            contentEt.setError("Video URL can't be empty");
             return false;
         }
 
@@ -171,8 +173,8 @@ public class InsertThreadFragment extends Fragment {
 
     private void onInsertThreadFailed() {
 
-        insert_btn.setEnabled(true);
         Toast.makeText(getContext(), "Error inserting thread!", Toast.LENGTH_SHORT).show();
+        FirebaseCrash.log("Error inserting thread!");
 
     }//https://youtu.be/cChsHZ6RVgY?t=5m51s
 
@@ -193,8 +195,6 @@ public class InsertThreadFragment extends Fragment {
             getActivity().finish();
         }
 
-
-
         return author;
 
     }
@@ -203,6 +203,13 @@ public class InsertThreadFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+//        urlEt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //TODO CHANGE TO BUTTERKNIFE
+//
+//            }
+//        });
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_insert_thread, container, false);

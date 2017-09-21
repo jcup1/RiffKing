@@ -13,9 +13,7 @@ import java.net.URL;
  */
 
 public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
-    private static final String TAG = "GetThumbnail";
     public static int YTIDLENGTH = 11;
-    public AsyncResponse delegate = null;
     Bitmap icon_val;
     String thumbURL;
     ImageView singleThumb;
@@ -31,8 +29,7 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
     protected Bitmap doInBackground(String... params) {
 
 
-        String URLLink = "https://www.youtube.com/watch?v=HwXsFPZp3fQ";
-        URLLink = thumbURL;
+        String URLLink = thumbURL;
         if (URLLink.length() > 15) {
             String ytId = URLLink.substring(URLLink.length() - 11, URLLink.length());
             if (ytId.length() >= YTIDLENGTH) {

@@ -79,14 +79,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     private void openThread(int position) {
 
         Bundle bundle = new Bundle();
-        bundle.putString("position", String.valueOf(threads.get(position).getId()));
+        bundle.putString("threadId", String.valueOf(threads.get(position).getId()));
 
         android.support.v4.app.Fragment threadFragment = new ThreadFragment();
         threadFragment.setArguments(bundle);
         try {
             FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content_home, threadFragment).addToBackStack("state2");
+            transaction.replace(R.id.content_home, threadFragment).addToBackStack("stack1");
             transaction.commit();
 
         } catch (ClassCastException e) {

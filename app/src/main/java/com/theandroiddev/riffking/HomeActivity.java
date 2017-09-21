@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -36,10 +35,9 @@ public class HomeActivity extends AppCompatActivity
     public ImageView navProfileImg;
     public TextView navNameTv, navEmailTv;
     DrawerLayout drawer;
-    String value1 = "";
+    String urlLink = "";
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
-    private String get_user_name_URL = "http://theandroiddev.com/get_user_name.php";
 
     @Override
     protected void onStart() {
@@ -67,13 +65,7 @@ public class HomeActivity extends AppCompatActivity
         };
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -108,15 +100,10 @@ public class HomeActivity extends AppCompatActivity
     private void youtubeShareable() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            value1 = extras.getString(Intent.EXTRA_TEXT);
+            urlLink = extras.getString(Intent.EXTRA_TEXT);
 
-            if (value1 != null && !value1.equals("")) {
-                Toast.makeText(this, value1
-                        , Toast.LENGTH_SHORT).show();
-
+            if (urlLink != null && !urlLink.equals("")) {
                 displaySelectedScreen(R.id.nav_upload);
-
-
             }
 
         }
@@ -183,6 +170,12 @@ public class HomeActivity extends AppCompatActivity
             return true;
         }
 
+        if (id == R.id.action_blog) {
+            Intent i = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://theandroiddev.com/"));
+            startActivity(i);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -214,20 +207,24 @@ public class HomeActivity extends AppCompatActivity
                 break;
             case R.id.nav_ranking:
                 fragment = new RankingFragment();
+                Toast.makeText(this, "nic tu nie ma", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_videos:
                 fragment = new VideosFragment();
+                Toast.makeText(this, "niczego tu nie znajdę...", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_upload:
 
                 Bundle bundle = new Bundle();
-                bundle.putString("URL", value1);
+                bundle.putString("URL", urlLink);
                 fragment = new InsertThreadFragment();
                 fragment.setArguments(bundle);
                 break;
             case R.id.nav_share:
+                Toast.makeText(this, "Przed wyruszeniem w drogę, nalezy zebrać drużynę...", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_settings:
+                Toast.makeText(this, "Nie w mieście...", Toast.LENGTH_SHORT).show();
                 break;
 
         }
@@ -241,6 +238,7 @@ public class HomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
 
     }
+
 
     @Override
     public void onAttachFragment(Fragment fragment) {

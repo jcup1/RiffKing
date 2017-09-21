@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -22,13 +23,13 @@ import android.widget.TextView;
 public class ThreadFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "position";
+    private static final String ARG_PARAM1 = "threadId";
     private static final String TAG = "ThreadFragment";
 
     TextView position_tv;
 
     // TODO: Rename and change types of parameters
-    private String position;
+    private String threadId;
 
     private OnFragmentInteractionListener mListener;
     private String getThreadURL = "http://theandroiddev.com/get_thread.php";
@@ -68,7 +69,8 @@ public class ThreadFragment extends Fragment {
         // fragment
 
         if (getArguments() != null) {
-            position = getArguments().getString(ARG_PARAM1);
+            threadId = getArguments().getString(ARG_PARAM1);
+            Toast.makeText(getContext(), threadId, Toast.LENGTH_SHORT).show();
 
         }
 

@@ -271,6 +271,7 @@ public class HomeFragment extends Fragment {
 //        });
 
         HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.fab.setImageResource(R.drawable.ic_add_24dp);
         homeActivity.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
