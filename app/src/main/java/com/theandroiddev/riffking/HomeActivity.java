@@ -65,6 +65,15 @@ public class HomeActivity extends AppCompatActivity
         return callLog;
     }
 
+    public static void saveSharedPreferencesLogList(Context context, List<Thread> callLog) {
+        SharedPreferences mPrefs = context.getSharedPreferences("threadsSaved", Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(callLog);
+        prefsEditor.putString("myJson", json);
+        prefsEditor.commit();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -128,19 +137,6 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    private void youtubeShareable() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            urlLink = extras.getString(Intent.EXTRA_TEXT);
-
-            if (urlLink != null && !urlLink.equals("")) {
-                displaySelectedScreen(R.id.nav_upload);
-            }
-
-        }
-
-    }
-
 //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -165,6 +161,19 @@ public class HomeActivity extends AppCompatActivity
 //        }
 //
 //    }
+
+    private void youtubeShareable() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            urlLink = extras.getString(Intent.EXTRA_TEXT);
+
+            if (urlLink != null && !urlLink.equals("")) {
+                displaySelectedScreen(R.id.nav_upload);
+            }
+
+        }
+
+    }
 
     private void openProfileFragment(View headerView) {
 
@@ -280,16 +289,18 @@ public class HomeActivity extends AppCompatActivity
     public void loadQueued() {
         List<Thread> threadsInQueue = loadSharedPreferencesLogList(this);
 
-        Toast.makeText(this, "on RESUME" + threadsInQueue.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "on RESUME" + threadsInQueue.toString(), Toast.LENGTH_SHORT).show();
         if (!threadsInQueue.isEmpty() && userIsConnected()) {
 
             //HomeActivity homeActivity = (HomeActivity) getActivity();
 
             for (int i = 0; i < threadsInQueue.size(); i++) {
-                Toast.makeText(this, "adding", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "adding", Toast.LENGTH_SHORT).show();
                 mDatabase.child("threads").push().setValue(threadsInQueue.get(i));
                 threadsInQueue.remove(i);
             }
+
+            saveSharedPreferencesLogList(this, threadsInQueue);
         }
     }
 

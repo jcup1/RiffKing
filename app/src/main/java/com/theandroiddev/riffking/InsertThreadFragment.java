@@ -2,7 +2,6 @@ package com.theandroiddev.riffking;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,16 +21,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
 
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import static com.theandroiddev.riffking.HomeActivity.saveSharedPreferencesLogList;
 
 
 /**
@@ -83,28 +81,7 @@ public class InsertThreadFragment extends Fragment {
         return fragment;
     }
 
-    public static void saveSharedPreferencesLogList(Context context, List<Thread> callLog) {
-        SharedPreferences mPrefs = context.getSharedPreferences("threadsSaved", Context.MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(callLog);
-        prefsEditor.putString("myJson", json);
-        prefsEditor.commit();
-    }
 
-    public static Object readArrayListFromSD(Context mContext, String filename) {
-        try {
-            FileInputStream fis = mContext.openFileInput(filename + ".dat");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            Object obj = ois.readObject();
-            fis.close();
-            return obj;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<Object>();
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -259,7 +236,7 @@ public class InsertThreadFragment extends Fragment {
 
         String ytId = urlEt.getText().toString().substring(urlEt.length() - 11, urlEt.length());
 
-        Toast.makeText(getContext(), ytId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), ytId, Toast.LENGTH_SHORT).show();
 
 
         return !ytId.contains("/");
@@ -337,7 +314,7 @@ public class InsertThreadFragment extends Fragment {
         if (threadsInQueue != null) {
 
             saveSharedPreferencesLogList(getContext(), threadsInQueue);
-            Toast.makeText(getContext(), threadsInQueue.toString() + "added to queue", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), threadsInQueue.toString() + "added to queue", Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -11,6 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,9 +31,8 @@ public class ThreadFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "threadId";
     private static final String TAG = "ThreadFragment";
-
     TextView position_tv;
-
+    private DatabaseReference database;
     // TODO: Rename and change types of parameters
     private String threadId;
 
@@ -59,7 +64,7 @@ public class ThreadFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        database = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -70,11 +75,33 @@ public class ThreadFragment extends Fragment {
 
         if (getArguments() != null) {
             threadId = getArguments().getString(ARG_PARAM1);
-            Toast.makeText(getContext(), threadId, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), threadId, Toast.LENGTH_SHORT).show();
+
+            loadThread();
 
         }
 
         return inflater.inflate(com.theandroiddev.riffking.R.layout.fragment_thread, container, false);
+    }
+
+    private void loadThread() {
+
+        DatabaseReference reference = database.child("threads").child(threadId);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Thread thread = dataSnapshot.getValue(Thread.class);
+                Toast.makeText(getContext(), thread.getTitle(), Toast.LENGTH_SHORT).show();
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
