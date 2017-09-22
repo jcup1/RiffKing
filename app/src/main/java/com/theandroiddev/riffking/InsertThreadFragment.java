@@ -220,9 +220,9 @@ public class InsertThreadFragment extends Fragment {
             return false;
         }
 
-        if (!urlEt.getText().toString().equals(".") && !urlEt.getText().toString().equals("youtu") && !urlEt.getText().toString().equals("/")
+        if (!urlEt.getText().toString().contains(".") && !urlEt.getText().toString().contains("youtu") && !urlEt.getText().toString().contains("/")
                 && linkIdIsProper(urlEt)) {
-            urlEt.setError("Vide URL is not proper");
+            urlEt.setError("Video URL is not proper");
             return false;
         }
 
