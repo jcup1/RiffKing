@@ -30,7 +30,7 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
 
 
         String URLLink = thumbURL;
-        if (URLLink.length() > 15) {
+        if (URLLink.length() > YTIDLENGTH) {
             String ytId = URLLink.substring(URLLink.length() - 11, URLLink.length());
             if (ytId.length() >= YTIDLENGTH) {
 

@@ -349,4 +349,7 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    public void addLike(String id) {
+        //TODO IT
+    }
 }

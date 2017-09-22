@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.theandroiddev.riffking.GetThumbnail.YTIDLENGTH;
+
 /**
  * Created by jakub on 19.07.17.
  */
@@ -15,6 +17,7 @@ class Thread {
 
     String id, title, author, email, comments, URL, date, content;
     int likes, views;
+    private String youtubeId;
 
     public Thread(String title, String author, String comments, String URL, String id, int likes, int views, String date) {
         this.title = title;
@@ -143,4 +146,23 @@ class Thread {
         return getDate();
     }
 
+    public String getYoutubeId() {
+
+        if (getURL().length() > YTIDLENGTH) {
+            String ytId = getURL().substring(getURL().length() - YTIDLENGTH, getURL().length());
+            if (ytId.length() >= YTIDLENGTH) {
+
+
+                ytId = ytId.substring(0, YTIDLENGTH);
+
+                return ytId;
+            }
+
+        }
+        return getURL();
+    }
+
+    public void addLike() {
+        likes++;
+    }
 }
