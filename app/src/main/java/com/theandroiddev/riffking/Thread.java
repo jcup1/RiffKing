@@ -15,26 +15,26 @@ import static com.theandroiddev.riffking.GetThumbnail.YTIDLENGTH;
 class Thread {
     private static final String TAG = "Thread";
 
-    String id, title, author, email, comments, URL, date, content;
+    String id, title, author, email, comments, url, date, content;
     int likes, views;
     private String youtubeId;
 
-    public Thread(String title, String author, String comments, String URL, String id, int likes, int views, String date) {
+    public Thread(String title, String author, String comments, String url, String id, int likes, int views, String date) {
         this.title = title;
         this.author = author;
         this.comments = comments;
-        this.URL = URL;
+        this.url = url;
         this.id = id;
         this.likes = likes;
         this.views = views;
         this.date = date;
     }
 
-    public Thread(String title, String author, String email, String URL, String content, String date) {
+    public Thread(String title, String author, String email, String url, String content, String date) {
         this.title = title;
         this.author = author;
         this.email = email;
-        this.URL = URL;
+        this.url = url;
         this.content = content;
         this.likes = 0;
         this.views = 0;
@@ -70,12 +70,12 @@ class Thread {
         this.comments = comments;
     }
 
-    public String getURL() {
-        return URL;
+    public String getUrl() {
+        return url;
     }
 
-    public void setURL(String URL) {
-        this.URL = URL;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getId() {
@@ -148,8 +148,8 @@ class Thread {
 
     public String getYoutubeId() {
 
-        if (getURL().length() > YTIDLENGTH) {
-            String ytId = getURL().substring(getURL().length() - YTIDLENGTH, getURL().length());
+        if (getUrl().length() > YTIDLENGTH) {
+            String ytId = getUrl().substring(getUrl().length() - YTIDLENGTH, getUrl().length());
             if (ytId.length() >= YTIDLENGTH) {
 
 
@@ -159,7 +159,7 @@ class Thread {
             }
 
         }
-        return getURL();
+        return getUrl();
     }
 
     public void addLike() {

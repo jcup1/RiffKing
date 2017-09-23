@@ -59,7 +59,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         holder.statsTv.setText(initStats(threads.get(position)));
         holder.dateTv.setText(initDate(threads.get(position)));
 
-        new GetThumbnail(threads.get(position).getURL(), holder.singleThumbnail).execute();
+        new GetThumbnail(threads.get(position).getUrl(), holder.singleThumbnail).execute();
 
     }
 

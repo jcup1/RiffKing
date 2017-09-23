@@ -144,11 +144,13 @@ public class HomeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 threads.clear();
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                Thread t;
 
                 for (DataSnapshot child : children) {
-                    Thread thread = child.getValue(Thread.class);
-                    thread.setId(child.getKey());
-                    threads.add(0, thread);
+                    t = child.getValue(Thread.class);
+                    t.setId(child.getKey());
+                    Toast.makeText(getContext(), t.getUrl(), Toast.LENGTH_SHORT).show();
+                    threads.add(0, t);
 
                 }
                 mCustomAdapter.notifyDataSetChanged();

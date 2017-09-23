@@ -230,7 +230,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         if (!b) {
-            youTubePlayer.loadVideo(thread.getYoutubeId());
+            youTubePlayer.cueVideo(thread.getYoutubeId());
             youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
         }
     }
@@ -246,6 +246,12 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                     Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @Override
+    public void onPause() {
+        mYoutubePlayerFragment.onPause();
+        super.onPause();
     }
 
     /**
