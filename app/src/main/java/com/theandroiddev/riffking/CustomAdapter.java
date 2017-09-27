@@ -14,6 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 /**
@@ -23,14 +28,19 @@ import java.util.ArrayList;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>
         implements AsyncResponse {
     private static final String TAG = "CustomAdapter";
-    Bitmap icon_val;
+    DatabaseReference databaseReference;
+    User user;
     private ArrayList<Thread> threads;
     private Context context;
 
-    public CustomAdapter(Context context, ArrayList<Thread> threads) {
+
+    public CustomAdapter(Context context, ArrayList<Thread> threads, DatabaseReference databaseReference) {
         this.context = context;
         this.threads = threads;
+        this.databaseReference = databaseReference;
+
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,7 +56,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         Log.d(TAG, "Element " + position + " set.");
 
         holder.getSingleTitle().setText(threads.get(position).getTitle());
-        holder.nickTv.setText(threads.get(position).getAuthor());
+        setThreadCreator((position), holder.nickTv);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +69,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         holder.statsTv.setText(initStats(threads.get(position)));
         holder.dateTv.setText(initDate(threads.get(position)));
 
-        new GetThumbnail(threads.get(position).getUrl(), holder.singleThumbnail).execute();
+        new GetThumbnail(threads.get(position).getVideoUrl(), holder.singleThumbnail).execute();
 
     }
 
@@ -110,6 +120,25 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+
+    public void setThreadCreator(final int position, final TextView tv) {
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user = dataSnapshot.child("users").child(threads.get(position).getUserId()).getValue(User.class);
+                tv.setText(user.getName());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        //TODO HANDLE DATABASE JOINING
+        // databaseReference
+    }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 

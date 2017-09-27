@@ -1,49 +1,43 @@
 package com.theandroiddev.riffking;
 
-import android.util.Log;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static com.theandroiddev.riffking.GetThumbnail.YTIDLENGTH;
-
 /**
  * Created by jakub on 19.07.17.
  */
 
 class Thread {
-    private static final String TAG = "Thread";
 
-    String id, title, author, email, comments, url, date, content;
-    int likes, views;
-    private String youtubeId;
-
-    public Thread(String title, String author, String comments, String url, String id, int likes, int views, String date) {
-        this.title = title;
-        this.author = author;
-        this.comments = comments;
-        this.url = url;
-        this.id = id;
-        this.likes = likes;
-        this.views = views;
-        this.date = date;
-    }
-
-    public Thread(String title, String author, String email, String url, String content, String date) {
-        this.title = title;
-        this.author = author;
-        this.email = email;
-        this.url = url;
-        this.content = content;
-        this.likes = 0;
-        this.views = 0;
-        this.date = date;
-    }
+    private String id, userId, title, videoUrl, description, category, date;
+    private int likes, views;
 
     public Thread() {
 
+    }
 
+    public Thread(String userId, String title, String videoUrl, String description, String category, String date, int likes, int views) {
+        this.userId = userId;
+        this.title = title;
+        this.videoUrl = videoUrl;
+        this.description = description;
+        this.category = category;
+        this.date = date;
+        this.likes = likes;
+        this.views = views;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -54,36 +48,36 @@ class Thread {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
-    public String getComments() {
-        return comments;
+    public String getDescription() {
+        return description;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getUrl() {
-        return url;
+    public String getCategory() {
+        return category;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getId() {
-        return id;
+    public String getDate() {
+        return date;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public int getLikes() {
@@ -102,67 +96,20 @@ class Thread {
         this.views = views;
     }
 
-    public String getDate() {
+    //    public String getYoutubeId() {
+//
+//        if (getURL().length() > YTIDLENGTH) {
+//            String ytId = getURL().substring(getURL().length() - YTIDLENGTH, getURL().length());
+//            if (ytId.length() >= YTIDLENGTH) {
+//
+//
+//                ytId = ytId.substring(0, YTIDLENGTH);
+//
+//                return ytId;
+//            }
+//
+//        }
+//        return getURL();
+//    }
 
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFormattedDate() {
-
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-        //TODO FORMAT MORE http://www.ocpsoft.org/prettytime/
-
-        Date date = null;
-        try {
-            date = outputFormat.parse(getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (date != null) {
-            return date.toString();
-        }
-        Log.e(TAG, "getFormattedDate: DATE ERROR!");
-        return getDate();
-    }
-
-    public String getYoutubeId() {
-
-        if (getUrl().length() > YTIDLENGTH) {
-            String ytId = getUrl().substring(getUrl().length() - YTIDLENGTH, getUrl().length());
-            if (ytId.length() >= YTIDLENGTH) {
-
-
-                ytId = ytId.substring(0, YTIDLENGTH);
-
-                return ytId;
-            }
-
-        }
-        return getUrl();
-    }
-
-    public void addLike() {
-        likes++;
-    }
 }

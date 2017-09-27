@@ -154,6 +154,7 @@ public class HomeFragment extends Fragment {
 
                 }
                 mCustomAdapter.notifyDataSetChanged();
+                Log.e(TAG, "onDataChange:QWE ");
 
             }
 
@@ -179,7 +180,6 @@ public class HomeFragment extends Fragment {
             Log.d(TAG, "remove: " + threadsToRemove + " " + threadsToRemove.size());
 
             mDatabase.child("threads").child(threadsToRemove.get(0).getId()).removeValue();
-            //Toast.makeText(getContext(), threadsToRemove.get(0).getId(), Toast.LENGTH_SHORT).show();
             threadsToRemove.remove(0);
 
         }
@@ -203,10 +203,14 @@ public class HomeFragment extends Fragment {
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
-        mCustomAdapter = new CustomAdapter(getContext(), threads);
+        mCustomAdapter = new CustomAdapter(getContext(), threads, mDatabase);
         mRecyclerView.setAdapter(mCustomAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
+        if (HomeActivity.user.getEmail().equals("jakubpchmiel@gmail.com")) {
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+            itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        }
+
 
         setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
 
@@ -364,6 +368,7 @@ public class HomeFragment extends Fragment {
         GRID_LAYOUT_MANAGER,
         LINEAR_LAYOUT_MANAGER
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
