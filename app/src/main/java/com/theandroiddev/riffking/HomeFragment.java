@@ -144,16 +144,15 @@ public class HomeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 threads.clear();
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                Thread t;
 
                 for (DataSnapshot child : children) {
-                    t = child.getValue(Thread.class);
-                    t.setId(child.getKey());
-                    Toast.makeText(getContext(), t.getUrl(), Toast.LENGTH_SHORT).show();
-                    threads.add(0, t);
+                    Thread thread = child.getValue(Thread.class);
+                    thread.setId(child.getKey());
+                    threads.add(0, thread);
 
                 }
                 mCustomAdapter.notifyDataSetChanged();
+                Log.e(TAG, "onDataChange:QWE ");
 
             }
 
@@ -179,7 +178,6 @@ public class HomeFragment extends Fragment {
             Log.d(TAG, "remove: " + threadsToRemove + " " + threadsToRemove.size());
 
             mDatabase.child("threads").child(threadsToRemove.get(0).getId()).removeValue();
-            //Toast.makeText(getContext(), threadsToRemove.get(0).getId(), Toast.LENGTH_SHORT).show();
             threadsToRemove.remove(0);
 
         }
@@ -203,10 +201,14 @@ public class HomeFragment extends Fragment {
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
-        mCustomAdapter = new CustomAdapter(getContext(), threads);
+        mCustomAdapter = new CustomAdapter(getContext(), threads, mDatabase);
         mRecyclerView.setAdapter(mCustomAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
+        if (HomeActivity.user.getEmail().equals("jakubpchmiel@gmail.com")) {
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+            itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        }
+
 
         setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
 
@@ -364,6 +366,7 @@ public class HomeFragment extends Fragment {
         GRID_LAYOUT_MANAGER,
         LINEAR_LAYOUT_MANAGER
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

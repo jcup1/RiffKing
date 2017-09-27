@@ -20,6 +20,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,12 +34,14 @@ public class LoginActivity extends AppCompatActivity {
 
     GoogleApiClient mGoogleApiClient;
     FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onStart() {
         super.onStart();
 
         mFirebaseAuth.addAuthStateListener(mAuthListener);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     @OnClick(com.theandroiddev.riffking.R.id.signInButton)
@@ -91,14 +95,17 @@ public class LoginActivity extends AppCompatActivity {
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
+
                 firebaseAuthWithGoogle(account);
+
+
             } else {
                 Toast.makeText(this, "Firebase Auth Error", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount account) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mFirebaseAuth.signInWithCredential(credential)
@@ -107,6 +114,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
+                            if (account != null) {
+                                Log.d(TAG, "onActivityResult: accnt not null");
+                                User user = new User(account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString(), 0, 0, 0, 0);
+                                writeNewUser(user, mFirebaseAuth.getCurrentUser().getUid());
+                            }
                             Log.d(TAG, "signInWithCredential:success");
                             finish();
                             //updateUI(user);
@@ -121,6 +133,11 @@ public class LoginActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    private void writeNewUser(User user, String id) {
+
+        mDatabase.child("users").child(id).setValue(user);
     }
 
 }

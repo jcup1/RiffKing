@@ -41,6 +41,8 @@ public class HomeActivity extends AppCompatActivity
         FragmentC.OnFragmentInteractionListener, FragmentD.OnFragmentInteractionListener {
 
     private static final String TAG = "HomeActivity";
+    static User user;
+    static Thread thread;
     public FloatingActionButton fab;
     public ImageView navProfileImg;
     public TextView navNameTv, navEmailTv;
@@ -87,12 +89,6 @@ public class HomeActivity extends AppCompatActivity
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
-        //TODO CHECK IS CONNECTED TO THE INTERNET
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -104,8 +100,10 @@ public class HomeActivity extends AppCompatActivity
             }
         };
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -132,8 +130,8 @@ public class HomeActivity extends AppCompatActivity
         HomeFragment fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_home, fragment).commit();
-        youtubeShareable();
 
+        youtubeShareable();
 
     }
 
@@ -320,7 +318,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-        int id;
+        int id = R.id.nav_home;
         if (fragment instanceof HomeFragment) id = R.id.nav_home;
         else if (fragment instanceof RankingFragment) id = R.id.nav_ranking;
         else if (fragment instanceof VideosFragment) id = R.id.nav_videos;
@@ -335,7 +333,12 @@ public class HomeActivity extends AppCompatActivity
     public void setName() {
 
         if (mFirebaseAuth.getCurrentUser() != null) {
-            navNameTv.setText(mFirebaseAuth.getCurrentUser().getDisplayName());
+            user = new User();
+            user.setName(mFirebaseAuth.getCurrentUser().getDisplayName());
+            user.setEmail(mFirebaseAuth.getCurrentUser().getEmail());
+            user.setPhotoUrl(mFirebaseAuth.getCurrentUser().getPhotoUrl().toString());
+            navNameTv.setText(user.getName());
+
 
         } else {
             Toast.makeText(this, "Can't get user name", Toast.LENGTH_SHORT).show();
@@ -349,7 +352,4 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    public void addLike(String id) {
-        //TODO IT
-    }
 }

@@ -6,26 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -45,7 +31,6 @@ public class ProfileFragment extends Fragment {
     ImageView profileImg, profileMoneyImg, profileFollowersImg, profileMessagesImg, profilePmImg;
     TextView profileNameTv, profileDescTv, profileEmailTv, profileMoneyTv, profileFollowersTv, profileLikesTv;
     Button profileFollowBtn;
-    private String getUserURL = "http://theandroiddev.com/get_user.php";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -96,63 +81,63 @@ public class ProfileFragment extends Fragment {
         profileFollowersTv = (TextView) getView().findViewById(R.id.profile_followers_tv);
         profileLikesTv = (TextView) getView().findViewById(R.id.profile_likes_tv);
 
-        getUser(String.valueOf(SharedPrefManager.getInstance(getContext()).getId()));
+        //getUser(String.valueOf(SharedPrefManager.getInstance(getContext()).getId()));
 
     }
 
-    public void getUser(final String userId) {
-
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,
-                getUserURL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-
-                    //JSONObject jsonObject = response.getJSONObject(1);
-                    User user = new User(
-                            jsonObject.getString("name"),
-                            jsonObject.getInt("age"),
-                            jsonObject.getString("details"),
-                            jsonObject.getString("email"),
-                            jsonObject.getInt("likes"),
-                            jsonObject.getInt("rep"),
-                            jsonObject.getInt("followers"));
-
-                    initData(user);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
-                error.printStackTrace();
-
-            }
-        }
-
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Log.e(TAG, "getParams: passed data" + userId);
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("userid", userId);
-                return params;
-            }
-
-
-        };
-
-        MySingleton.getmInstance(getContext()).addToRequestQueue(jsonObjectRequest);
-
-
-    }
+//    public void getUser(final String userId) {
+//
+//        StringRequest jsonObjectRequest = new StringRequest(Request.Method.POST,
+//                getUserURL, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                try {
+//                    JSONObject jsonObject = new JSONObject(response);
+//
+//                    //JSONObject jsonObject = response.getJSONObject(1);
+//                    User user = new User(
+//                            jsonObject.getString("name"),
+//                            jsonObject.getInt("age"),
+//                            jsonObject.getString("details"),
+//                            jsonObject.getString("email"),
+//                            jsonObject.getInt("likes"),
+//                            jsonObject.getInt("rep"),
+//                            jsonObject.getInt("followers"));
+//
+//                    initData(user);
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+//                error.printStackTrace();
+//
+//            }
+//        }
+//
+//        ) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Log.e(TAG, "getParams: passed data" + userId);
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("userid", userId);
+//                return params;
+//            }
+//
+//
+//        };
+//
+//        MySingleton.getmInstance(getContext()).addToRequestQueue(jsonObjectRequest);
+//
+//
+//    }
 
     private void initData(User user) {
 

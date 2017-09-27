@@ -1,13 +1,13 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,53 +18,35 @@ import android.widget.Toast;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ThreadFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ThreadFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitializedListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "threadId";
     private static final String TAG = "ThreadFragment";
-    TextView position_tv;
+
+    private static final String ARG_PARAM1 = "threadId";
+    static boolean liked;
     YouTubePlayerSupportFragment mYoutubePlayerFragment;
-    TextView threadTitleTv, threadContentTv, threadLikesNumberTv, threadTodo;
+    TextView threadTitleTv, threadContentTv, threadLikesNumberTv;
     ImageView threadLikeIv;
-    private DatabaseReference database;
-    // TODO: Rename and change types of parameters
+    //DATABASE
+    FirebaseDatabase database;
+    DatabaseReference databaseReference;
+    FirebaseAuth firebaseAuth;
     private String threadId;
     private OnFragmentInteractionListener mListener;
-    private String getThreadURL = "http://theandroiddev.com/get_thread.php";
     private Thread thread;
-    //TODO IMPLEMENT WAS RESTORED
-    private boolean wasRestored = false;
-    private int dummyLikesNumber = 0;
+    private boolean postLiked;
 
     public ThreadFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ThreadFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ThreadFragment newInstance(String param1, String param2) {
         ThreadFragment fragment = new ThreadFragment();
         Bundle args = new Bundle();
@@ -78,8 +60,38 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         super.onCreate(savedInstanceState);
 
         threadId = getArguments().getString(ARG_PARAM1);
+        database = FirebaseDatabase.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = database.getReference();
 
-        database = FirebaseDatabase.getInstance().getReference();
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                thread = dataSnapshot.child("threads").child(threadId).getValue(Thread.class);
+                databaseReference.child("threads").child(threadId).setValue(thread);
+
+                if (dataSnapshot.child("threadLikes").child(getCurrentUserId()).child(getThreadId()).getValue(Boolean.class) != null) {
+                    Log.d(TAG, "onDataChange: " + "already liked");
+                    liked = true;
+                    threadLikeIv.setColorFilter(Color.BLUE);
+
+                } else {
+                    Log.d(TAG, "onDataChange: not liked!");
+                    liked = false;
+                    threadLikeIv.setColorFilter(Color.BLACK);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
         loadThread();
 
     }
@@ -101,24 +113,20 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             threadLikeIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    thread.setLikes(thread.getLikes() + 1);
-                    threadLikesNumberTv.setText(String.valueOf(thread.getLikes()));
-                    //((HomeActivity)getActivity()).addLike(thread.getId());
-                    if (thread.getLikes() >= 2) {
-                        Snackbar snackbar = Snackbar.make(getView(), "It doesn't work well. Punch developer", Snackbar.LENGTH_INDEFINITE)
-                                .setAction("Punch hard", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Toast.makeText(getContext(), "Hard Punch Failed. Your Browser History Shared", Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                        snackbar.show();
+
+                    if (!liked) {
+                        addLike(databaseReference.child("threads").child(threadId).child("likes"));
+                        databaseReference.child("threadLikes").child(getCurrentUserId()).child(threadId).setValue(true);
+
+                    } else {
+                        removeLike(databaseReference.child("threads").child(threadId).child("likes"));
+                        databaseReference.child("threadLikes").child(getCurrentUserId()).child(threadId).removeValue();
+
+
                     }
 
                 }
             });
-
-            //Toast.makeText(getContext(), threadId, Toast.LENGTH_SHORT).show();
 
             mYoutubePlayerFragment = new YouTubePlayerSupportFragment();
             mYoutubePlayerFragment.initialize(PlayerConfig.API_KEY, this);
@@ -127,61 +135,75 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             fragmentTransaction.replace(R.id.fragment_youtube_player, mYoutubePlayerFragment);
             fragmentTransaction.commit();
 
-            //mYoutubeVideoTitle = (TextView)fragmentThreadView.findViewById(R.id.fragment_youtube_title);
-            //mYoutubeVideoDescription = (TextView)fragmentThreadView.findViewById(R.id.fragment_youtube_description);
-
-            //mYoutubeVideoTitle.setText(thread.getTitle());
-            //mYoutubeVideoDescription.setText(thread.getContent());
-
-            //VideoFragment.setTextToShare(thread.getURL());
-
-
             return fragmentThreadView;
-
-
-//            YouTubePlayerSupportFragment youTubePlayerSupportFragment = YouTubePlayerSupportFragment.newInstance();
-//            youTubePlayerSupportFragment.initialize(PlayerConfig.API_KEY, new YouTubePlayer.OnInitializedListener() {
-//                @Override
-//                public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-//                    if(!b) {
-//                        yPlayer = youTubePlayer;
-//                        yPlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-//                        yPlayer.loadVideo(thread.getURL());
-//                        yPlayer.play();
-//                    }
-//                }
-//
-//                @Override
-//                public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-//                    String errorMsg = youTubeInitializationResult.toString();
-//                    Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
-//                    Log.d(TAG, "onInitializationFailure: " + errorMsg);
-//                }
-//            });
-
-
 
         }
 
         return inflater.inflate(com.theandroiddev.riffking.R.layout.fragment_thread, container, false);
     }
 
+    private void addLike(final DatabaseReference postRef) {
+        //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                int likes = mutableData.getValue(Integer.class);
+
+                likes++;
+
+                // Set value and report transaction success
+                mutableData.setValue(likes);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    private void removeLike(final DatabaseReference postRef) {
+        //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
+        postRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                int likes = mutableData.getValue(Integer.class);
+
+                likes--;
+
+                // Set value and report transaction success
+                mutableData.setValue(likes);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
 
     private void loadThread() {
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = database.getReference();
         databaseReference.child("threads").child(threadId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 thread = dataSnapshot.getValue(Thread.class);
 
-                if (thread.getTitle() == null)
-                    thread.setTitle("TITLE WAS WRONG");
-                threadTitleTv.setText(thread.getTitle());
-                threadContentTv.setText(thread.getContent());
-                threadLikesNumberTv.setText(String.valueOf(thread.getLikes()));
+                if (thread == null) {
+                    threadTitleTv.setText("Something went wrong...");
+                } else {
+                    threadTitleTv.setText(thread.getTitle());
+                    setContent();
+                    threadLikesNumberTv.setText(String.valueOf(thread.getLikes()));
+                }
+
 
             }
 
@@ -193,12 +215,10 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-//
-//        position_tv = (TextView) getView().findViewById(R.id.position_tv);
-//        position_tv.setText(position);
+    private void setContent() {
+
+
+        threadContentTv.setText(thread.getDescription());
 
     }
 
@@ -209,6 +229,28 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         }
     }
 
+    @Override
+    public void onPause() {
+
+        mYoutubePlayerFragment.onPause();
+
+        FragmentManager fm = getFragmentManager();
+
+        fm.beginTransaction().remove(mYoutubePlayerFragment).commit();
+
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_youtube_player, mYoutubePlayerFragment);
+        fragmentTransaction.commit();
+
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -225,15 +267,21 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mYoutubePlayerFragment.onDetach();
     }
+
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         if (!b) {
-            youTubePlayer.cueVideo(thread.getYoutubeId());
+            //cue instead of load to stop auto-play
+            youTubePlayer.loadVideo(thread.getVideoUrl());
+
             youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+
         }
     }
+
 
     @Override
     public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
@@ -248,10 +296,13 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
     }
 
-    @Override
-    public void onPause() {
-        mYoutubePlayerFragment.onPause();
-        super.onPause();
+    public String getCurrentUserId() {
+        return firebaseAuth.getCurrentUser().getUid();
+    }
+
+    public String getThreadId() {
+        //TODO MAKE STH WITH THIS THREADID VAR
+        return threadId;
     }
 
     /**

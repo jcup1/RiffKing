@@ -6,10 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,8 +133,9 @@ public class InsertThreadFragment extends Fragment {
 
         if (validate()) {
 
-            Thread thread = new Thread(titleEt.getText().toString(), getAuthor()[0], getAuthor()[1], urlEt.getText().toString(), contentEt.getText().toString(), getCurrentDate());
+            //TODO JOINING DATABASE
 
+            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlEt.getText().toString(), contentEt.getText().toString(), "default", getCurrentDate(), 0, 0);
             if (threadsInQueue == null)
                 threadsInQueue = new ArrayList<>();
 
@@ -165,7 +163,7 @@ public class InsertThreadFragment extends Fragment {
 
         if (validate()) {
 
-            Thread thread = new Thread(titleEt.getText().toString(), getAuthor()[0], getAuthor()[1], urlEt.getText().toString(), contentEt.getText().toString(), getCurrentDate());
+            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlEt.getText().toString(), contentEt.getText().toString(), "default", getCurrentDate(), 0, 0);
             mDatabase.child("threads").push().setValue(thread);
             urlLink = "";
             HomeActivity homeActivity = (HomeActivity) getActivity();
@@ -174,35 +172,11 @@ public class InsertThreadFragment extends Fragment {
 
         }
 
-
     }
 
-    private void onInsertThreadSuccess(String id, String title1, String author, String URL) {
 
-        Bundle bundle = new Bundle();
-        bundle.putString("id", id);
-        bundle.putString("title", title1);
-        bundle.putString("author", author);
-        bundle.putString("URL", URL);
-
-        //Toast.makeText(getContext(), id + " " + title1 + " " + author + " " + URL,
-        //        Toast.LENGTH_SHORT).show();
-
-        HomeFragment homeFragment = new HomeFragment();
-        homeFragment.setArguments(bundle);
-        try {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.content_home, homeFragment);
-            transaction.commit();
-
-        } catch (ClassCastException e) {
-            Log.e(TAG, "cant get fragment manager");
-            FirebaseCrash.log("can't get fragment manager");
-            //Toast.makeText(getContext(), "Cant get fragment manager!", Toast.LENGTH_SHORT).show();
-        }
-
-
+    public String getUser() {
+        return mFirebaseAuth.getCurrentUser().getUid();
     }
 
     private boolean validate() {
@@ -235,9 +209,6 @@ public class InsertThreadFragment extends Fragment {
         //TODO CHECK LAST IF 11 last CHARACTERS CONTAIN
 
         String ytId = urlEt.getText().toString().substring(urlEt.length() - 11, urlEt.length());
-
-        //Toast.makeText(getContext(), ytId, Toast.LENGTH_SHORT).show();
-
 
         return !ytId.contains("/");
 
@@ -336,6 +307,8 @@ public class InsertThreadFragment extends Fragment {
         return inputFormat.format(Calendar.getInstance().getTime());
 
     }
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
