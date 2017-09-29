@@ -1,7 +1,6 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -56,6 +55,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +70,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 thread = dataSnapshot.child("threads").child(threadId).getValue(Thread.class);
-                databaseReference.child("threads").child(threadId).setValue(thread);
 
                 if (dataSnapshot.child("threadLikes").child(getCurrentUserId()).child(getThreadId()).getValue(Boolean.class) != null) {
                     Log.d(TAG, "onDataChange: " + "already liked");
@@ -97,6 +96,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
 
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -135,6 +135,8 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             fragmentTransaction.replace(R.id.fragment_youtube_player, mYoutubePlayerFragment);
             fragmentTransaction.commit();
 
+            addView(databaseReference.child("threads").child(threadId).child("views"));
+
             return fragmentThreadView;
 
         }
@@ -142,9 +144,9 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         return inflater.inflate(com.theandroiddev.riffking.R.layout.fragment_thread, container, false);
     }
 
-    private void addLike(final DatabaseReference postRef) {
+    private void addLike(final DatabaseReference likeRef) {
         //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
-        postRef.runTransaction(new Transaction.Handler() {
+        likeRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 int likes = mutableData.getValue(Integer.class);
@@ -164,16 +166,31 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         });
     }
 
-    private void removeLike(final DatabaseReference postRef) {
+    private void removeLike(final DatabaseReference likeRef) {
         //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
-        postRef.runTransaction(new Transaction.Handler() {
+        likeRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                int likes = mutableData.getValue(Integer.class);
 
-                likes--;
+                mutableData.setValue((mutableData.getValue(Integer.class)) - 1);
+                return Transaction.success(mutableData);
+            }
 
-                mutableData.setValue(likes);
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
+
+    private void addView(final DatabaseReference viewRef) {
+        //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
+        viewRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+
+                mutableData.setValue((mutableData.getValue(Integer.class)) + 1);
                 return Transaction.success(mutableData);
             }
 
@@ -232,6 +249,9 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
         fm.beginTransaction().remove(mYoutubePlayerFragment).commit();
 
+        databaseReference.child("threads").child(threadId).setValue(thread);
+
+
         super.onPause();
     }
 
@@ -269,10 +289,13 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         if (!b) {
+            //TODO handle screen orientation
+//            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//                youTubePlayer.setFullscreen(true);
+//            } else youTubePlayer.setFullscreen(false);
+
             //cue instead of load to stop auto-play
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                youTubePlayer.setFullscreen(true);
-            } else youTubePlayer.setFullscreen(false);
+
             youTubePlayer.loadVideo(thread.getYoutubeId());
             youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
 
