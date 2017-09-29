@@ -94,6 +94,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
         loadThread();
 
+
     }
 
     @Override
@@ -121,8 +122,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                     } else {
                         removeLike(databaseReference.child("threads").child(threadId).child("likes"));
                         databaseReference.child("threadLikes").child(getCurrentUserId()).child(threadId).removeValue();
-
-
                     }
 
                 }
@@ -159,7 +158,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             @Override
             public void onComplete(DatabaseError databaseError, boolean b,
                                    DataSnapshot dataSnapshot) {
-                // Transaction completed
                 Log.d(TAG, "postTransaction:onComplete:" + databaseError);
             }
         });
@@ -174,7 +172,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
                 likes--;
 
-                // Set value and report transaction success
                 mutableData.setValue(likes);
                 return Transaction.success(mutableData);
             }
@@ -182,7 +179,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             @Override
             public void onComplete(DatabaseError databaseError, boolean b,
                                    DataSnapshot dataSnapshot) {
-                // Transaction completed
                 Log.d(TAG, "postTransaction:onComplete:" + databaseError);
             }
         });
@@ -204,7 +200,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                     threadLikesNumberTv.setText(String.valueOf(thread.getLikes()));
                 }
 
-
             }
 
             @Override
@@ -217,9 +212,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
     private void setContent() {
 
-
         threadContentTv.setText(thread.getDescription());
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -275,8 +268,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         if (!b) {
             //cue instead of load to stop auto-play
-            youTubePlayer.loadVideo(thread.getVideoUrl());
-
+            youTubePlayer.loadVideo(thread.getYoutubeId());
             youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
 
         }

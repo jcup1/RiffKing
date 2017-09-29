@@ -4,20 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,12 +29,11 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(com.theandroiddev.riffking.R.id.register_login_tv)
     TextView loginTv;
     String email, password, name;
-    private String userRegisterURL = "http://theandroiddev.com/register.php";
 
     @OnClick(com.theandroiddev.riffking.R.id.register_register_btn)
     public void register() {
 
-        tryToRegister(emailEt, passwordEt);
+        //tryToRegister(emailEt, passwordEt);
 
     }
 
@@ -52,26 +41,6 @@ public class RegisterActivity extends AppCompatActivity {
     public void login() {
 
         startLoginActivity();
-    }
-
-    private void tryToRegister(TextInputEditText emailEt, TextInputEditText passwordEt) {
-
-        //TODO Wroclaw
-
-        if (!validate()) {
-            onRegisterFailed();
-
-        } else {
-
-            registerBtn.setEnabled(false);
-
-            String email = emailEt.getText().toString();
-            String password = passwordEt.getText().toString();
-            String name = nameEt.getText().toString();
-
-            authenticate(email, password, name);
-        }
-
     }
 
     private void onRegisterFailed() {
@@ -84,47 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean validate() {
 
         return true;
-    }
-
-    private void authenticate(final String email, final String password, final String name) {
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                userRegisterURL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e(TAG, "onResponse: " + response);
-                if (response.contains("Register Failed")) {
-                    onRegisterFailed();
-                } else if (response.contains("Error first")) {
-
-                    onEmailNotAvalible();
-
-                } else {
-
-                    onRegisterSuccess(Integer.valueOf(response), email);
-
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(RegisterActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
-                error.printStackTrace();
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("email", email);
-                params.put("password", password);
-                params.put("name", name);
-
-                return params;
-            }
-        };
-
-        MySingleton.getmInstance(RegisterActivity.this).addToRequestQueue(stringRequest);
     }
 
     private void onEmailNotAvalible() {

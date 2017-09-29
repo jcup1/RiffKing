@@ -311,7 +311,6 @@ public class HomeActivity extends AppCompatActivity
 //            textt = mFirebaseAuth.getCurrentUser().getEmail();
 //        }
 //
-//        Toast.makeText(getContext(),textt , Toast.LENGTH_SHORT).show();
 
     }
 

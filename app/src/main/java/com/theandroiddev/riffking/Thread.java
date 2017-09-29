@@ -1,5 +1,7 @@
 package com.theandroiddev.riffking;
 
+import static com.theandroiddev.riffking.GetThumbnail.YTIDLENGTH;
+
 /**
  * Created by jakub on 19.07.17.
  */
@@ -96,20 +98,20 @@ class Thread {
         this.views = views;
     }
 
-    //    public String getYoutubeId() {
-//
-//        if (getURL().length() > YTIDLENGTH) {
-//            String ytId = getURL().substring(getURL().length() - YTIDLENGTH, getURL().length());
-//            if (ytId.length() >= YTIDLENGTH) {
-//
-//
-//                ytId = ytId.substring(0, YTIDLENGTH);
-//
-//                return ytId;
-//            }
-//
-//        }
-//        return getURL();
-//    }
+    public String getYoutubeId() {
+
+        if (getVideoUrl().length() > YTIDLENGTH) {
+            String ytId = getVideoUrl().substring(getVideoUrl().length() - YTIDLENGTH, getVideoUrl().length());
+            if (ytId.length() >= YTIDLENGTH) {
+
+
+                ytId = ytId.substring(0, YTIDLENGTH);
+
+                return ytId;
+            }
+
+        }
+        return getVideoUrl();
+    }
 
 }
