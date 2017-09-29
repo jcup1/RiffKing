@@ -25,16 +25,16 @@ import java.util.ArrayList;
  * Created by jakub on 18.07.17.
  */
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>
+public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder>
         implements AsyncResponse {
-    private static final String TAG = "CustomAdapter";
+    private static final String TAG = "ThreadAdapter";
     DatabaseReference databaseReference;
     User user;
     private ArrayList<Thread> threads;
     private Context context;
 
 
-    public CustomAdapter(Context context, ArrayList<Thread> threads, DatabaseReference databaseReference) {
+    public ThreadAdapter(Context context, ArrayList<Thread> threads, DatabaseReference databaseReference) {
         this.context = context;
         this.threads = threads;
         this.databaseReference = databaseReference;
@@ -45,7 +45,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_item,
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_thread,
                 parent, false);
 
         return new ViewHolder(v);
@@ -150,13 +150,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public ViewHolder(View itemView) {
             super(itemView);
 
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "Element " + getAdapterPosition() + " clicked");
-                }
-            });
             singleTitle = (TextView) itemView.findViewById(R.id.text_view);
             nickTv = (TextView) itemView.findViewById(R.id.nick_tv);
             singleThumbnail = (ImageView) itemView.findViewById(R.id.thumnail_img);

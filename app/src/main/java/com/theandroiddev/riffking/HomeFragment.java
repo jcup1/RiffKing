@@ -24,11 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 
 /**
@@ -46,9 +42,8 @@ public class HomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
 
-    protected LayoutManagerType currentLayoutManagerType;
     protected RecyclerView mRecyclerView;
-    protected CustomAdapter mCustomAdapter;
+    protected ThreadAdapter mThreadAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected ArrayList<Thread> threads;
     protected ArrayList<Thread> threadsToRemove;
@@ -99,13 +94,13 @@ public class HomeFragment extends Fragment {
 
     private void sendToRemoveQueue(Thread thread, int position) {
         threads.remove(position);
-        mCustomAdapter.notifyItemRemoved(position);
+        mThreadAdapter.notifyItemRemoved(position);
         threadsToRemove.add(thread);
     }
 
     private void undoToRemove(Thread thread, int position) {
         threads.add(position, thread);
-        mCustomAdapter.notifyItemInserted(position);
+        mThreadAdapter.notifyItemInserted(position);
         mRecyclerView.scrollToPosition(position);
         threadsToRemove.remove(thread);
     }
@@ -151,7 +146,7 @@ public class HomeFragment extends Fragment {
                     threads.add(0, thread);
 
                 }
-                mCustomAdapter.notifyDataSetChanged();
+                mThreadAdapter.notifyDataSetChanged();
                 Log.e(TAG, "onDataChange:QWE ");
 
             }
@@ -201,15 +196,15 @@ public class HomeFragment extends Fragment {
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
-        mCustomAdapter = new CustomAdapter(getContext(), threads, mDatabase);
-        mRecyclerView.setAdapter(mCustomAdapter);
+        mThreadAdapter = new ThreadAdapter(getContext(), threads, mDatabase);
+        mRecyclerView.setAdapter(mThreadAdapter);
 
         if (HomeActivity.user.getEmail().equals("jakubpchmiel@gmail.com")) {
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
             itemTouchHelper.attachToRecyclerView(mRecyclerView);
         }
 
-
+        //TODO check why set two times
         setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
 
 
@@ -271,7 +266,7 @@ public class HomeFragment extends Fragment {
         }
 
 
-        mCustomAdapter.notifyDataSetChanged();
+        mThreadAdapter.notifyDataSetChanged();
 
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -291,7 +286,10 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
 
+        //TODO shoudnt it be in onCreateView?
+
         HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.fab.setVisibility(View.VISIBLE);
         homeActivity.fab.setImageResource(R.drawable.ic_add_24dp);
         homeActivity.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -345,24 +343,8 @@ public class HomeFragment extends Fragment {
         mListener = null;
     }
 
-    public String getCurrentDate() {
 
-
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String currentDate = df.format(Calendar.getInstance().getTime());
-
-        return currentDate;
-
-    }
-
-    private void onGetThreadFailed() {
-
-        Toast.makeText(getContext(), "Error getting threads", Toast.LENGTH_SHORT).show();
-    }
-
-
-    private enum LayoutManagerType {
+    public enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
         LINEAR_LAYOUT_MANAGER
     }

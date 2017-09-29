@@ -13,7 +13,7 @@ public class Comment {
 
     }
 
-    public Comment(String id, String threadId, String userId, String content, String date, int likes) {
+    public Comment(String threadId, String userId, String content, String date, int likes) {
         this.id = id;
         this.threadId = threadId;
         this.userId = userId;
@@ -68,5 +68,10 @@ public class Comment {
 
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    @Override
+    public String toString() {
+        return threadId + "\n" + userId;
     }
 }

@@ -7,10 +7,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,14 +32,31 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import static com.theandroiddev.riffking.HomeFragment.KEY_LAYOUT_MANAGER;
+
 public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitializedListener {
     private static final String TAG = "ThreadFragment";
 
     private static final String ARG_PARAM1 = "threadId";
+    private static final int SPAN_COUNT = 2;
     static boolean liked;
+    //TODO 29-09 15:20 CLEAN IT
+    protected RecyclerView mRecyclerView;
+    protected RecyclerView.LayoutManager mLayoutManager;
+    protected CommentAdapter mCommentAdapter;
+    protected List<Comment> comments;
+    protected HomeFragment.LayoutManagerType mCurrentLayoutManagerType;
     YouTubePlayerSupportFragment mYoutubePlayerFragment;
-    TextView threadTitleTv, threadContentTv, threadLikesNumberTv;
-    ImageView threadLikeIv;
+    TextView threadTitleTv, threadContentTv, threadLikesNumberTv, threadViewsNumberTv;
+    EditText threadCommentEt;
+    ImageView threadLikeIv, threadCommentSendIv;
     //DATABASE
     FirebaseDatabase database;
     DatabaseReference databaseReference;
@@ -43,6 +65,8 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     private OnFragmentInteractionListener mListener;
     private Thread thread;
     private boolean postLiked;
+    private String currentDate;
+
 
     public ThreadFragment() {
     }
@@ -59,6 +83,8 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        comments = new ArrayList<>();
 
         threadId = getArguments().getString(ARG_PARAM1);
         database = FirebaseDatabase.getInstance();
@@ -82,6 +108,19 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                     threadLikeIv.setColorFilter(Color.BLACK);
 
                 }
+
+                comments.clear();
+                Iterable<DataSnapshot> children = dataSnapshot.child("comments").child(threadId).getChildren();
+
+                for (DataSnapshot child : children) {
+                    Comment comment = child.getValue(Comment.class);
+                    comment.setId(child.getKey());
+                    comments.add(0, comment);
+
+                }
+                Log.d(TAG, "onDataChange1: " + comments.toString());
+                mCommentAdapter.notifyDataSetChanged();
+                Log.e(TAG, "onDataChange:Comments refreshed! ");
 
             }
 
@@ -107,10 +146,33 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
         if (getArguments() != null) {
 
+            mRecyclerView = (RecyclerView) fragmentThreadView.findViewById(R.id.thread_comments_rv);
+            mLayoutManager = new LinearLayoutManager(getActivity());
+
+
+            mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+            if (savedInstanceState != null) {
+                // Restore saved layout manager type.
+                mCurrentLayoutManagerType = (HomeFragment.LayoutManagerType) savedInstanceState
+                        .getSerializable(KEY_LAYOUT_MANAGER);
+            }
+            setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+
+            setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
+
+            mCommentAdapter = new CommentAdapter(getContext(), comments, databaseReference);
+            Log.d(TAG, "onDataChange2: " + comments.toString());
+
+            mRecyclerView.setNestedScrollingEnabled(true);
+            mRecyclerView.setAdapter(mCommentAdapter);
+
             threadTitleTv = (TextView) fragmentThreadView.findViewById(R.id.thread_title_tv);
             threadLikesNumberTv = (TextView) fragmentThreadView.findViewById(R.id.thread_likes_number_tv);
+            threadViewsNumberTv = (TextView) fragmentThreadView.findViewById(R.id.thread_views_number_tv);
             threadContentTv = (TextView) fragmentThreadView.findViewById(R.id.thread_description);
             threadLikeIv = (ImageView) fragmentThreadView.findViewById(R.id.thread_like_iv);
+            threadCommentSendIv = (ImageView) fragmentThreadView.findViewById(R.id.thread_comment_send_iv);
+            threadCommentEt = (EditText) fragmentThreadView.findViewById(R.id.thread_comment_et);
 
             threadLikeIv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,6 +187,18 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                         databaseReference.child("threadLikes").child(getCurrentUserId()).child(threadId).removeValue();
                     }
 
+                }
+            });
+
+            threadCommentSendIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!TextUtils.isEmpty(threadCommentEt.getText().toString())) {
+                        Comment comment = new Comment(threadId, getCurrentUserId(), threadCommentEt.getText().toString(), getCurrentDate(), 0);
+                        databaseReference.child("comments").child(getThreadId()).push().setValue(comment);
+                        threadCommentEt.setText("");
+
+                    }
                 }
             });
 
@@ -184,6 +258,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         });
     }
 
+
     private void addView(final DatabaseReference viewRef) {
         //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
         viewRef.runTransaction(new Transaction.Handler() {
@@ -216,6 +291,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                     threadTitleTv.setText(thread.getTitle());
                     setContent();
                     threadLikesNumberTv.setText(String.valueOf(thread.getLikes()));
+                    threadViewsNumberTv.setText(String.valueOf(thread.getViews()));
                 }
 
             }
@@ -265,6 +341,9 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         fragmentTransaction.replace(R.id.fragment_youtube_player, mYoutubePlayerFragment);
         fragmentTransaction.commit();
 
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.fab.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -276,6 +355,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
     }
 
     @Override
@@ -324,6 +404,46 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     public String getThreadId() {
         //TODO MAKE STH WITH THIS THREADID VAR
         return threadId;
+    }
+
+    public void setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType layoutManagerType) {
+        int scrollPosition = 0;
+
+        // If a layout manager has already been set, get current scroll position.
+        if (mRecyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+        }
+
+        switch (layoutManagerType) {
+            case GRID_LAYOUT_MANAGER:
+                mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
+                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.GRID_LAYOUT_MANAGER;
+                break;
+            case LINEAR_LAYOUT_MANAGER:
+                mLayoutManager = new LinearLayoutManager(getActivity());
+                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+                break;
+            default:
+                mLayoutManager = new LinearLayoutManager(getActivity());
+                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        }
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.scrollToPosition(scrollPosition);
+    }
+
+    public String getCurrentDate() {
+        //TODO take care of date format
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat(
+                "HH:mm MMM dd", Locale.getDefault());
+        //"EEE MMM dd HH:mm:ss 'GMT' yyyy", Locale.getDefault());
+        inputFormat.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+        //inputFormat.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+
+        return inputFormat.format(Calendar.getInstance().getTime());
+
     }
 
     /**

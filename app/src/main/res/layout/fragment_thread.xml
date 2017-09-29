@@ -11,19 +11,19 @@
         android:id="@+id/thread_title_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="12dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:textAlignment="center"
+        android:layout_marginTop="0dp"
+        android:gravity="start"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toTopOf="@+id/thread_views_number_tv"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/thread_views_number_tv"
+        app:layout_constraintTop_toTopOf="@+id/thread_view_iv"
+        app:layout_constraintVertical_bias="1.0"
         tools:text="Title"/>
 
     <FrameLayout
@@ -32,68 +32,133 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
         android:saveEnabled="false"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thread_title_tv"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"/>
+
 
     <TextView
         android:id="@+id/thread_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:textAlignment="center"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:visibility="gone"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thread_likes_number_tv"
+        app:layout_constraintTop_toBottomOf="@+id/thread_views_number_tv"
         tools:text="TextView"/>
 
     <ImageView
         android:id="@+id/thread_like_iv"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintLeft_toLeftOf="@+id/thread_likes_number_tv"
         app:layout_constraintRight_toRightOf="@+id/thread_likes_number_tv"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_youtube_player"
+        app:layout_constraintTop_toTopOf="@+id/thread_view_iv"
         app:srcCompat="@drawable/ic_thumb_up_black_48dp"/>
 
     <TextView
         android:id="@+id/thread_likes_number_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="0dp"
         android:textAlignment="center"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/thread_like_iv"
         tools:text="TextView"/>
 
-    <TextView
-        android:id="@+id/thread_todo"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/thread_comment_et"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:hint="Type..."
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/thread_comment_send_iv"
+        app:layout_constraintTop_toBottomOf="@+id/thread_views_number_tv"/>
+
+    <ImageView
+        android:id="@+id/thread_view_iv"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Here I'd like to implement forum like topic and thread section"
-        android:textAlignment="center"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toTopOf="@+id/thread_likes_number_tv"
+        app:layout_constraintLeft_toLeftOf="@+id/thread_views_number_tv"
+        app:layout_constraintRight_toRightOf="@+id/thread_views_number_tv"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_youtube_player"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_remove_red_eye_black_48dp"
+        />
+
+    <TextView
+        android:id="@+id/thread_views_number_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintRight_toLeftOf="@+id/thread_likes_number_tv"
+        app:layout_constraintTop_toBottomOf="@+id/thread_view_iv"
+        tools:text="51"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/thread_comments_rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thread_description"/>
+        app:layout_constraintTop_toBottomOf="@+id/thread_comment_et"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <ImageView
+        android:id="@+id/thread_comment_send_iv"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/thread_comments_rv"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/thread_comment_et"
+        app:srcCompat="@drawable/ic_menu_send"/>
+
 
 </android.support.constraint.ConstraintLayout>
