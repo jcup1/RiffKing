@@ -284,6 +284,11 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     public void loadQueued() {
         List<Thread> threadsInQueue = loadSharedPreferencesLogList(this);
 

@@ -6,7 +6,7 @@ import static com.theandroiddev.riffking.GetThumbnail.YTIDLENGTH;
  * Created by jakub on 19.07.17.
  */
 
-class Thread {
+public class Thread {
 
     private String id, userId, title, videoUrl, description, category, date;
     private int likes, views;

@@ -1,6 +1,7 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -240,6 +241,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         fragmentTransaction.replace(R.id.fragment_youtube_player, mYoutubePlayerFragment);
         fragmentTransaction.commit();
 
@@ -268,6 +270,9 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         if (!b) {
             //cue instead of load to stop auto-play
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                youTubePlayer.setFullscreen(true);
+            } else youTubePlayer.setFullscreen(false);
             youTubePlayer.loadVideo(thread.getYoutubeId());
             youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
 
@@ -287,6 +292,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         }
 
     }
+
 
     public String getCurrentUserId() {
         return firebaseAuth.getCurrentUser().getUid();
