@@ -27,7 +27,7 @@
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toRightOf="@+id/thumnail_img"
+            app:layout_constraintLeft_toRightOf="@+id/thumbnail_img"
             app:layout_constraintRight_toLeftOf="@+id/date_tv"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Thrash metal riff"/>
@@ -39,7 +39,7 @@
             android:layout_marginTop="4dp"
             android:textSize="10sp"
             android:visibility="gone"
-            app:layout_constraintLeft_toRightOf="@+id/thumnail_img"
+            app:layout_constraintLeft_toRightOf="@+id/thumbnail_img"
             app:layout_constraintTop_toBottomOf="@+id/nick_tv"/>
 
         <TextView
@@ -49,12 +49,12 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
             android:textSize="12sp"
-            app:layout_constraintLeft_toRightOf="@+id/thumnail_img"
+            app:layout_constraintLeft_toRightOf="@+id/thumbnail_img"
             app:layout_constraintTop_toBottomOf="@+id/text_view"
             tools:text="Jakub Chmiel"/>
 
         <ImageView
-            android:id="@+id/thumnail_img"
+            android:id="@+id/thumbnail_img"
             android:layout_width="75dp"
             android:layout_height="72dp"
             android:layout_marginBottom="4dp"

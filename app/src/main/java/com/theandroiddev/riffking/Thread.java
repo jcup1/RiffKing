@@ -1,6 +1,7 @@
 package com.theandroiddev.riffking;
 
-import static com.theandroiddev.riffking.GetThumbnail.YTIDLENGTH;
+
+import static com.theandroiddev.riffking.Helper.YTIDLENGTH;
 
 /**
  * Created by jakub on 19.07.17.

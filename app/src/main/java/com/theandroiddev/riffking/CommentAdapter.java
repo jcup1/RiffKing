@@ -2,6 +2,8 @@ package com.theandroiddev.riffking;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +15,6 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -25,19 +25,22 @@ import java.util.List;
  */
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
-    private static final String TAG = "CommentAdapter";
+    private static final String TAG = "RepAdapter";
+    protected Helper helper;
     DatabaseReference databaseReference;
     Comment comment;
     private List<Comment> comments;
     private Context context;
-    private User user;
+    private String currentUserId;
     private boolean[] liked;
 
-    public CommentAdapter(Context context, List<Comment> comments, DatabaseReference databaseReference) {
+    public CommentAdapter(Context context, List<Comment> comments, DatabaseReference databaseReference, String currentUserId) {
         this.context = context;
         this.comments = comments;
         this.databaseReference = databaseReference;
         liked = new boolean[100];
+        helper = new Helper();
+        this.currentUserId = currentUserId;
 
     }
 
@@ -53,55 +56,120 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         setDatabase(comments.get(holder.getAdapterPosition()).getThreadId(), comments.get(holder.getAdapterPosition()).getId(),
-                comments.get(holder.getAdapterPosition()).getUserId(), holder.likeIv, position);
+                holder.likeIv, position);
         setUserName(holder.userTv, holder.userIv, holder.getAdapterPosition());
         holder.contentTv.setText(comments.get(position).getContent());
         holder.dateTv.setText(comments.get(position).getDate());
-        holder.likesTv.setText(String.valueOf(comments.get(position).getLikes()))
-        ;
-        holder.likeIv.setOnClickListener(new View.OnClickListener() {
+        holder.likesTv.setText(String.valueOf(comments.get(position).getLikes()));
+
+        if (!comments.get(position).getUserId().equals(currentUserId)) {
+            holder.likeIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (holder.getAdapterPosition() != -1)
+                        handleLike(comments.get(holder.getAdapterPosition()).getThreadId(), comments.get(holder.getAdapterPosition()).getId(),
+                                holder.likeIv, holder.getAdapterPosition());
+
+                }
+            });
+        } else {
+            holder.likeIv.setColorFilter(Color.GRAY);
+        }
+
+
+        holder.userIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (position != -1)
-                    handleLike(comments.get(holder.getAdapterPosition()).getThreadId(), comments.get(holder.getAdapterPosition()).getId(),
-                            comments.get(holder.getAdapterPosition()).getUserId(), holder.likeIv, holder.getAdapterPosition());
+                if (holder.getAdapterPosition() != -1)
+                    openProfileFragment(holder.getAdapterPosition());
+            }
+        });
+
+        holder.userTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.getAdapterPosition() != -1)
+                    openProfileFragment(holder.getAdapterPosition());
+            }
+        });
+
+    }
+
+    private void handleLike(String threadId, final String commentId, final ImageView likeIv, int position) {
+        if (!liked[position]) {
+            helper.transacton(databaseReference.child("comments").child(threadId).child(commentId).child("likes"), 1);
+            helper.transacton(databaseReference.child("users").child(comments.get(position).getUserId()).child("likes"), 1);
+            databaseReference.child("commentLikes").child(currentUserId).child(commentId).setValue(true);
+
+        } else {
+            helper.transacton(databaseReference.child("comments").child(threadId).child(commentId).child("likes"), -1);
+            helper.transacton(databaseReference.child("users").child(comments.get(position).getUserId()).child("likes"), -1);
+            databaseReference.child("commentLikes").child(currentUserId).child(commentId).removeValue();
+        }
+    }
+
+    private void setDatabase(String threadId, final String commentId, final ImageView likeIv, final int position) {
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (!currentUserId.equals(comments.get(position).getUserId())) {
+
+                    if (dataSnapshot.child("commentLikes").child(currentUserId).child(commentId).getValue(Boolean.class) != null) {
+                        Log.d(TAG, "onDataChangeComment: " + "already liked");
+                        liked[position] = true;
+                        likeIv.setColorFilter(Color.BLUE);
+
+                    } else {
+                        Log.d(TAG, "onDataChangeComment: not liked!");
+                        liked[position] = false;
+                        likeIv.setColorFilter(Color.BLACK);
+
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
 
     }
 
-    private void handleLike(String threadId, final String commentId, final String userId, final ImageView likeIv, int position) {
-        if (!liked[position]) {
-            addCommentLike(threadId, commentId, userId, likeIv);
-            databaseReference.child("commentLikes").child(userId).child(commentId).setValue(true);
-
-        } else {
-            removeCommentLike(threadId, commentId, userId, likeIv);
-            databaseReference.child("commentLikes").child(userId).child(commentId).removeValue();
-        }
+    @Override
+    public int getItemCount() {
+        return comments.size();
     }
 
-    private void setDatabase(String threadId, final String commentId, final String userId, final ImageView likeIv, final int position) {
+    public void setUserName(final TextView userTv, final ImageView userIv, final int position) {
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if (dataSnapshot.child("commentLikes").child(userId).child(commentId).getValue(Boolean.class) != null) {
-                    Log.d(TAG, "onDataChangeComment: " + "already liked");
-                    liked[position] = true;
-                    likeIv.setColorFilter(Color.BLUE);
+                //Change color of creator's comment
+                if (position >= 0) {
 
-                } else {
-                    Log.d(TAG, "onDataChangeComment: not liked!");
-                    liked[position] = false;
-                    likeIv.setColorFilter(Color.BLACK);
+                    if (dataSnapshot.child("threads").child(comments.get(position).getThreadId()).child("userId").getValue(String.class) != null) {
+                        if (dataSnapshot.child("threads").child(comments.get(position).getThreadId()).child("userId").getValue(String.class).equals(comments.get(position).getUserId())) {
+                            userTv.setTextColor(Color.BLUE);
+                        }
+                    }
 
+                    userTv.setText(dataSnapshot.child("users").child(comments.get(position).getUserId()).child("name").getValue(String.class));
+                    Picasso.with(context).load(dataSnapshot.child("users")
+                            .child(comments.get(position).getUserId()).child("photoUrl").getValue(String.class))
+                            .into(userIv);
                 }
             }
 
@@ -113,76 +181,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     }
 
-    //TODO ADD COMMENT LIKE
-    private void addCommentLike(String threadId, final String commentId, final String userId, final ImageView likeIv) {
-        //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
+    private void openProfileFragment(int position) {
 
-        databaseReference.child("comments").child(threadId).child(commentId).child("likes").runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                int likes = mutableData.getValue(Integer.class);
+        ProfileFragment profileFragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("USER_ID", comments.get(position).getUserId());
+        bundle.putString("CURRENT_USER_ID", currentUserId); //Two same only in this case
+        profileFragment.setArguments(bundle);
 
-                likes++;
-
-                // Set value and report transaction success
-                mutableData.setValue(likes);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b,
-                                   DataSnapshot dataSnapshot) {
-                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-            }
-        });
-    }
-
-    //TODO ADD COMMENT LIKE
-    private void removeCommentLike(String threadId, final String commentId, final String userId, final ImageView likeIv) {
-        //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
-
-
-        databaseReference.child("comments").child(threadId).child(commentId).child("likes").runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                int likes = mutableData.getValue(Integer.class);
-
-                likes--;
-
-                // Set value and report transaction success
-                mutableData.setValue(likes);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b,
-                                   DataSnapshot dataSnapshot) {
-                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return comments.size();
-    }
-
-    public void setUserName(final TextView userTv, final ImageView userIv, final int adapterPosition) {
-
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userTv.setText(dataSnapshot.child("users").child(comments.get(adapterPosition).getUserId()).child("name").getValue(String.class));
-                Picasso.with(context).load(dataSnapshot.child("users")
-                        .child(comments.get(adapterPosition).getUserId()).child("photoUrl").getValue(String.class))
-                        .into(userIv);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        FragmentTransaction fragmentTransaction = ((HomeActivity) context).getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_home, profileFragment).addToBackStack(null);
+        fragmentTransaction.commit();
 
     }
 

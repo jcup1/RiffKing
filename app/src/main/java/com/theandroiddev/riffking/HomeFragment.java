@@ -38,7 +38,6 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment {
     public static final String KEY_LAYOUT_MANAGER = "mLayoutManager";
     private static final String TAG = "HomeFragment";
-    private static final int SPAN_COUNT = 2;
 
     // TODO: Rename parameter arguments, choose names that match
 
@@ -48,6 +47,7 @@ public class HomeFragment extends Fragment {
     protected ArrayList<Thread> threads;
     protected ArrayList<Thread> threadsToRemove;
     protected LayoutManagerType mCurrentLayoutManagerType;
+    protected Helper helper;
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
         @Override
@@ -128,6 +128,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        helper = new Helper();
 
         threads = new ArrayList<>();
         threadsToRemove = new ArrayList<>();
@@ -222,7 +223,7 @@ public class HomeFragment extends Fragment {
 
         switch (layoutManagerType) {
             case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
+                mLayoutManager = new GridLayoutManager(getActivity(), Helper.SPAN_COUNT);
                 mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
                 break;
             case LINEAR_LAYOUT_MANAGER:

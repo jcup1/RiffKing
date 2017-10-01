@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             if (account != null) {
                                 Log.d(TAG, "onActivityResult: accnt not null");
-                                User user = new User(account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString(), 0, 0, 0, 0);
+                                User user = new User(account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString(), 0, 0, 0, 0, 0);
                                 writeNewUser(user, mFirebaseAuth.getCurrentUser().getUid());
                             }
                             Log.d(TAG, "signInWithCredential:success");

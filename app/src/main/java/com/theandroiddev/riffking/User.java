@@ -10,12 +10,12 @@ import com.google.firebase.database.IgnoreExtraProperties;
 class User {
 
     private String name, details, email, id, photoUrl;
-    private int likes, reps, age, followers;
+    private int likes, reps, age, followers, comments;
 
     public User() {
     }
 
-    public User(String name, String email, String photoUrl, int likes, int reps, int age, int followers) {
+    public User(String name, String email, String photoUrl, int likes, int reps, int age, int followers, int comments) {
         this.name = name;
         this.email = email;
         this.photoUrl = photoUrl;
@@ -23,6 +23,7 @@ class User {
         this.reps = reps;
         this.age = age;
         this.followers = followers;
+        this.comments = comments;
     }
 
     public User(String name, String email) {
@@ -100,5 +101,13 @@ class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getComments() {
+        return comments;
+    }
+
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 }

@@ -9,13 +9,14 @@ import android.widget.ImageView;
 import java.io.IOException;
 import java.net.URL;
 
+import static com.theandroiddev.riffking.Helper.YTIDLENGTH;
+
 /**
  * Created by jakub on 22.07.17.
  */
 
 public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
     private static final String TAG = "GetThumbnail";
-    public static int YTIDLENGTH = 11;
     Bitmap icon_val;
     String thumbURL;
     ImageView singleThumb;
@@ -33,7 +34,7 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
 
         String URLLink = thumbURL;
         if (URLLink.length() > YTIDLENGTH) {
-            String ytId = URLLink.substring(URLLink.length() - 11, URLLink.length());
+            String ytId = URLLink.substring(URLLink.length() - YTIDLENGTH, URLLink.length());
             Log.d(TAG, "doInBackground: " + ytId);
             if (ytId.length() >= YTIDLENGTH) {
 

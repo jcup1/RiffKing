@@ -19,12 +19,8 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import static com.theandroiddev.riffking.HomeActivity.saveSharedPreferencesLogList;
 
@@ -40,8 +36,7 @@ import static com.theandroiddev.riffking.HomeActivity.saveSharedPreferencesLogLi
 public class InsertThreadFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String URL_PARAM = "URL_PARAM";
     private static final String TAG = "InsertThreadFragment";
     EditText titleEt, urlEt, contentEt;
     String URL;
@@ -49,6 +44,7 @@ public class InsertThreadFragment extends Fragment {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabase;
     private FirebaseAuth mFirebaseAuth;
+    private Helper helper;
     private String urlLink;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
@@ -72,8 +68,7 @@ public class InsertThreadFragment extends Fragment {
     public static InsertThreadFragment newInstance(String param1, String param2) {
         InsertThreadFragment fragment = new InsertThreadFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(URL_PARAM, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,11 +81,11 @@ public class InsertThreadFragment extends Fragment {
 
         if (getArguments() != null) {
             urlLink = getArguments().getString("URL");
-            mParam2 = getArguments().getString(ARG_PARAM2);
 
         }
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseAuth = FirebaseAuth.getInstance();
+        helper = new Helper();
 
     }
 
@@ -133,9 +128,7 @@ public class InsertThreadFragment extends Fragment {
 
         if (validate()) {
 
-            //TODO JOINING DATABASE
-
-            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlEt.getText().toString(), contentEt.getText().toString(), "default", getCurrentDate(), 0, 0);
+            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlEt.getText().toString(), contentEt.getText().toString(), "default", helper.getCurrentDate(), 0, 0);
             if (threadsInQueue == null)
                 threadsInQueue = new ArrayList<>();
 
@@ -163,7 +156,7 @@ public class InsertThreadFragment extends Fragment {
 
         if (validate()) {
 
-            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlEt.getText().toString(), contentEt.getText().toString(), "default", getCurrentDate(), 0, 0);
+            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlEt.getText().toString(), contentEt.getText().toString(), "default", helper.getCurrentDate(), 0, 0);
             mDatabase.child("threads").push().setValue(thread);
             urlLink = "";
             HomeActivity homeActivity = (HomeActivity) getActivity();
@@ -295,19 +288,6 @@ public class InsertThreadFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-    public String getCurrentDate() {
-
-        SimpleDateFormat inputFormat = new SimpleDateFormat(
-                "HH:mm MMM dd", Locale.getDefault());
-        //"EEE MMM dd HH:mm:ss 'GMT' yyyy", Locale.getDefault());
-        inputFormat.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-        //inputFormat.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-
-        return inputFormat.format(Calendar.getInstance().getTime());
-
-    }
-
 
     /**
      * This interface must be implemented by activities that contain this

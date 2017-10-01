@@ -15,18 +15,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,14 +42,15 @@ public class HomeActivity extends AppCompatActivity
         HomeFragment.OnFragmentInteractionListener, RankingFragment.OnFragmentInteractionListener,
         VideosFragment.OnFragmentInteractionListener, UploadFragment.OnFragmentInteractionListener,
         ThreadFragment.OnFragmentInteractionListener, InsertThreadFragment.OnFragmentInteractionListener,
-        ProfileFragment.OnFragmentInteractionListener, FragmentB.OnFragmentInteractionListener,
-        FragmentC.OnFragmentInteractionListener, FragmentD.OnFragmentInteractionListener {
+        ProfileFragment.OnFragmentInteractionListener, ProfileCommentsFragment.OnFragmentInteractionListener,
+        ProfileVideosFragment.OnFragmentInteractionListener, ProfileRepFragment.OnFragmentInteractionListener,
+        ProfileRepFragmentMe.OnFragmentInteractionListener {
 
     private static final String TAG = "HomeActivity";
     static User user;
     static Thread thread;
     public FloatingActionButton fab;
-    public ImageView navProfileImg;
+    public CircularImageView navProfileImg;
     public TextView navNameTv, navEmailTv;
     DrawerLayout drawer;
     String urlLink = "";
@@ -77,6 +83,12 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
@@ -91,6 +103,22 @@ public class HomeActivity extends AppCompatActivity
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
+        initUser();
+
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child("users").child(user.getId()).getValue(User.class) == null) {
+                    logout();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -99,6 +127,7 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         };
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -114,7 +143,7 @@ public class HomeActivity extends AppCompatActivity
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         final View headerView = navigationView.getHeaderView(0);
-        navProfileImg = (ImageView) headerView.findViewById(R.id.nav_profile_img);
+        navProfileImg = (CircularImageView) headerView.findViewById(R.id.nav_profile_img);
         navProfileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,9 +152,10 @@ public class HomeActivity extends AppCompatActivity
             }
         });
         navNameTv = (TextView) headerView.findViewById(R.id.nav_name_tv);
-        setName();
         navEmailTv = (TextView) headerView.findViewById(R.id.nav_email_tv);
-        navEmailTv.setText(SharedPrefManager.getInstance(this).getEmail());
+
+        setName();
+
 
         HomeFragment fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction()
@@ -176,6 +206,11 @@ public class HomeActivity extends AppCompatActivity
     private void openProfileFragment(View headerView) {
 
         ProfileFragment profileFragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("USER_ID", user.getId());
+        bundle.putString("CURRENT_USER_ID", user.getId()); //Two same only in this case
+        Log.d(TAG, "openProfileFragment: " + user.getId());
+        profileFragment.setArguments(bundle);
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_home, profileFragment).addToBackStack(null);
@@ -216,7 +251,7 @@ public class HomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void logout() {
+    void logout() {
 
         mFirebaseAuth.signOut();
 
@@ -251,7 +286,6 @@ public class HomeActivity extends AppCompatActivity
                 Toast.makeText(this, "niczego tu nie znajdę...", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_upload:
-
                 Bundle bundle = new Bundle();
                 bundle.putString("URL", urlLink);
                 fragment = new InsertThreadFragment();
@@ -336,19 +370,21 @@ public class HomeActivity extends AppCompatActivity
 
     public void setName() {
 
+        navNameTv.setText(user.getName());
+        navEmailTv.setText(user.getEmail());
+        Picasso.with(this).load(user.getPhotoUrl()).into(navProfileImg);
+
+    }
+
+    public void initUser() {
+
         if (mFirebaseAuth.getCurrentUser() != null) {
             user = new User();
+            user.setId(mFirebaseAuth.getCurrentUser().getUid());
             user.setName(mFirebaseAuth.getCurrentUser().getDisplayName());
             user.setEmail(mFirebaseAuth.getCurrentUser().getEmail());
             user.setPhotoUrl(mFirebaseAuth.getCurrentUser().getPhotoUrl().toString());
-            navNameTv.setText(user.getName());
-
-
-        } else {
-            Toast.makeText(this, "Can't get user name", Toast.LENGTH_SHORT).show();
-            navNameTv.setText("");
         }
-
     }
 
     @Override

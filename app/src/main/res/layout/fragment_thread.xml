@@ -99,12 +99,12 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="8dp"
         android:hint="Type..."
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/thread_comment_send_iv"
-        app:layout_constraintTop_toBottomOf="@+id/thread_views_number_tv"/>
+        app:layout_constraintTop_toBottomOf="@+id/thread_user_tv"/>
 
     <ImageView
         android:id="@+id/thread_view_iv"
@@ -159,6 +159,29 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/thread_comment_et"
         app:srcCompat="@drawable/ic_menu_send"/>
+
+    <TextView
+        android:id="@+id/thread_user_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/thread_user_iv"
+        app:layout_constraintLeft_toRightOf="@+id/thread_user_iv"
+        app:layout_constraintTop_toTopOf="@+id/thread_user_iv"/>
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/thread_user_iv"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="7dp"
+        app:civ_border="false"
+        app:layout_constraintLeft_toRightOf="@+id/thread_description"
+        app:layout_constraintTop_toBottomOf="@+id/thread_title_tv"
+        app:srcCompat="@drawable/ic_account_circle_black_48dp"/>
 
 
 </android.support.constraint.ConstraintLayout>

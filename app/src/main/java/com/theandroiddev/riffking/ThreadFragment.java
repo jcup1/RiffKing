@@ -28,24 +28,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
+import static com.theandroiddev.riffking.Helper.SPAN_COUNT;
 import static com.theandroiddev.riffking.HomeFragment.KEY_LAYOUT_MANAGER;
 
 public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitializedListener {
     private static final String TAG = "ThreadFragment";
 
     private static final String ARG_PARAM1 = "threadId";
-    private static final int SPAN_COUNT = 2;
     static boolean liked;
     //TODO 29-09 15:20 CLEAN IT
     protected RecyclerView mRecyclerView;
@@ -53,14 +49,17 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     protected CommentAdapter mCommentAdapter;
     protected List<Comment> comments;
     protected HomeFragment.LayoutManagerType mCurrentLayoutManagerType;
+    protected Helper helper;
     YouTubePlayerSupportFragment mYoutubePlayerFragment;
-    TextView threadTitleTv, threadContentTv, threadLikesNumberTv, threadViewsNumberTv;
+    TextView threadTitleTv, threadContentTv, threadLikesNumberTv, threadViewsNumberTv, threadUserTv;
     EditText threadCommentEt;
     ImageView threadLikeIv, threadCommentSendIv;
+    CircularImageView threadUserIv;
     //DATABASE
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
+    User user;
     private String threadId;
     private OnFragmentInteractionListener mListener;
     private Thread thread;
@@ -90,12 +89,18 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         database = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = database.getReference();
+        helper = new Helper();
 
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 thread = dataSnapshot.child("threads").child(threadId).getValue(Thread.class);
+                Log.d(TAG, "onDataChange: " + thread.getUserId());
+                user = dataSnapshot.child("users").child(thread.getUserId()).getValue(User.class);
+                threadUserTv.setText(user.getName());
+                Picasso.with(getContext()).load(user.getPhotoUrl()).into(threadUserIv);
 
                 if (dataSnapshot.child("threadLikes").child(getCurrentUserId()).child(getThreadId()).getValue(Boolean.class) != null) {
                     Log.d(TAG, "onDataChange: " + "already liked");
@@ -160,7 +165,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
             setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
 
-            mCommentAdapter = new CommentAdapter(getContext(), comments, databaseReference);
+            mCommentAdapter = new CommentAdapter(getContext(), comments, databaseReference, getCurrentUserId());
             Log.d(TAG, "onDataChange2: " + comments.toString());
 
             mRecyclerView.setNestedScrollingEnabled(true);
@@ -173,17 +178,35 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             threadLikeIv = (ImageView) fragmentThreadView.findViewById(R.id.thread_like_iv);
             threadCommentSendIv = (ImageView) fragmentThreadView.findViewById(R.id.thread_comment_send_iv);
             threadCommentEt = (EditText) fragmentThreadView.findViewById(R.id.thread_comment_et);
+            threadUserTv = (TextView) fragmentThreadView.findViewById(R.id.thread_user_tv);
+            threadUserIv = (CircularImageView) fragmentThreadView.findViewById(R.id.thread_user_iv);
+
+            threadUserTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openProfileFragment();
+                }
+            });
+
+            threadUserIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openProfileFragment();
+                }
+            });
 
             threadLikeIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     if (!liked) {
-                        addLike(databaseReference.child("threads").child(threadId).child("likes"));
+                        helper.transacton(databaseReference.child("threads").child(threadId).child("likes"), 1);
+                        helper.transacton(databaseReference.child("users").child(thread.getUserId()).child("likes"), 1);
                         databaseReference.child("threadLikes").child(getCurrentUserId()).child(threadId).setValue(true);
 
                     } else {
-                        removeLike(databaseReference.child("threads").child(threadId).child("likes"));
+                        helper.transacton(databaseReference.child("threads").child(threadId).child("likes"), -1);
+                        helper.transacton(databaseReference.child("users").child(thread.getUserId()).child("likes"), -1);
                         databaseReference.child("threadLikes").child(getCurrentUserId()).child(threadId).removeValue();
                     }
 
@@ -194,7 +217,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                 @Override
                 public void onClick(View v) {
                     if (!TextUtils.isEmpty(threadCommentEt.getText().toString())) {
-                        Comment comment = new Comment(threadId, getCurrentUserId(), threadCommentEt.getText().toString(), getCurrentDate(), 0);
+                        Comment comment = new Comment(threadId, getCurrentUserId(), threadCommentEt.getText().toString(), helper.getCurrentDate(), 0);
                         databaseReference.child("comments").child(getThreadId()).push().setValue(comment);
                         threadCommentEt.setText("");
 
@@ -209,7 +232,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             fragmentTransaction.replace(R.id.fragment_youtube_player, mYoutubePlayerFragment);
             fragmentTransaction.commit();
 
-            addView(databaseReference.child("threads").child(threadId).child("views"));
+            helper.transacton(databaseReference.child("threads").child(threadId).child("views"), 1);
 
             return fragmentThreadView;
 
@@ -218,63 +241,17 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         return inflater.inflate(com.theandroiddev.riffking.R.layout.fragment_thread, container, false);
     }
 
-    private void addLike(final DatabaseReference likeRef) {
-        //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
-        likeRef.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                int likes = mutableData.getValue(Integer.class);
+    private void openProfileFragment() {
 
-                likes++;
+        ProfileFragment profileFragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("USER_ID", thread.getUserId());
+        bundle.putString("CURRENT_USER_ID", getCurrentUserId()); //Two same only in this case
+        profileFragment.setArguments(bundle);
 
-                // Set value and report transaction success
-                mutableData.setValue(likes);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b,
-                                   DataSnapshot dataSnapshot) {
-                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-            }
-        });
-    }
-
-    private void removeLike(final DatabaseReference likeRef) {
-        //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
-        likeRef.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-
-                mutableData.setValue((mutableData.getValue(Integer.class)) - 1);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b,
-                                   DataSnapshot dataSnapshot) {
-                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-            }
-        });
-    }
-
-
-    private void addView(final DatabaseReference viewRef) {
-        //TODO ATTACH TO ONCLICK AND CHECK IS USER LOGGED IN...
-        viewRef.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-
-                mutableData.setValue((mutableData.getValue(Integer.class)) + 1);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b,
-                                   DataSnapshot dataSnapshot) {
-                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-            }
-        });
+        FragmentTransaction fragmentTransaction = ((HomeActivity) getContext()).getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_home, profileFragment).addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void loadThread() {
@@ -398,6 +375,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
 
     public String getCurrentUserId() {
+        Log.d(TAG, "TESTTTT: " + firebaseAuth.getCurrentUser().getUid());
         return firebaseAuth.getCurrentUser().getUid();
     }
 
@@ -431,19 +409,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.scrollToPosition(scrollPosition);
-    }
-
-    public String getCurrentDate() {
-        //TODO take care of date format
-
-        SimpleDateFormat inputFormat = new SimpleDateFormat(
-                "HH:mm MMM dd", Locale.getDefault());
-        //"EEE MMM dd HH:mm:ss 'GMT' yyyy", Locale.getDefault());
-        inputFormat.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-        //inputFormat.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-
-        return inputFormat.format(Calendar.getInstance().getTime());
-
     }
 
     /**

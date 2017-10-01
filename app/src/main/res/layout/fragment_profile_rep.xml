@@ -1,0 +1,75 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context=".ProfileRepFragment">
+
+    <EditText
+        android:id="@+id/profile_rep_title_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:hint="Title"
+        android:maxLines="1"
+        android:textAlignment="center"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <EditText
+        android:id="@+id/profile_rep_et"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:layout_constraintLeft_toLeftOf="@+id/profile_rep_title_et"
+        app:layout_constraintRight_toRightOf="@+id/profile_rep_title_et"
+        app:layout_constraintTop_toBottomOf="@+id/profile_rep_title_et"/>
+
+    <ImageView
+        android:id="@+id/profile_rep_plus_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_rep_et"
+        app:layout_constraintLeft_toRightOf="@+id/profile_rep_et"
+        app:layout_constraintTop_toTopOf="@+id/profile_rep_et"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@android:drawable/ic_input_add"/>
+
+    <ImageView
+        android:id="@+id/profile_rep_minus_iv"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_rep_et"
+        app:layout_constraintRight_toLeftOf="@+id/profile_rep_et"
+        app:layout_constraintTop_toTopOf="@+id/profile_rep_et"
+        app:layout_constraintVertical_bias="0.478"
+        app:srcCompat="@android:drawable/button_onoff_indicator_on"/>
+
+    <Button
+        android:id="@+id/profile_rep_transfer_btn"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TRANSFER"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_rep_et"/>
+
+</android.support.constraint.ConstraintLayout>

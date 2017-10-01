@@ -5,6 +5,6 @@ package com.theandroiddev.riffking;
  */
 
 public class RankingAdapter {
-
+//TODO SO LONELY HERE
 
 }

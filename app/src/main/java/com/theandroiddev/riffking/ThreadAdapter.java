@@ -28,16 +28,16 @@ import java.util.ArrayList;
 public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder>
         implements AsyncResponse {
     private static final String TAG = "ThreadAdapter";
-    DatabaseReference databaseReference;
+    DatabaseReference mDatabase;
     User user;
     private ArrayList<Thread> threads;
     private Context context;
 
 
-    public ThreadAdapter(Context context, ArrayList<Thread> threads, DatabaseReference databaseReference) {
+    public ThreadAdapter(Context context, ArrayList<Thread> threads, DatabaseReference mDatabase) {
         this.context = context;
         this.threads = threads;
-        this.databaseReference = databaseReference;
+        this.mDatabase = mDatabase;
 
     }
 
@@ -52,7 +52,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         Log.d(TAG, "Element " + position + " set.");
 
         holder.getSingleTitle().setText(threads.get(position).getTitle());
@@ -62,7 +62,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 //Toast.makeText(context, String.valueOf(position), Toast.LENGTH_SHORT).show();
-                openThread(position);
+                openThread(holder.getAdapterPosition());
             }
         });
 
@@ -124,7 +124,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
 
     public void setThreadCreator(final int position, final TextView tv) {
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child("users").child(threads.get(position).getUserId()).getValue(User.class);
@@ -137,7 +137,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
             }
         });
         //TODO HANDLE DATABASE JOINING
-        // databaseReference
+        // mDatabase
     }
 
 
@@ -152,7 +152,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
 
             singleTitle = (TextView) itemView.findViewById(R.id.text_view);
             nickTv = (TextView) itemView.findViewById(R.id.nick_tv);
-            singleThumbnail = (ImageView) itemView.findViewById(R.id.thumnail_img);
+            singleThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail_img);
             statsTv = (TextView) itemView.findViewById(R.id.stats_tv);
             dateTv = (TextView) itemView.findViewById(R.id.date_tv);
 
