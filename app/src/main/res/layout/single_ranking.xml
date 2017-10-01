@@ -22,7 +22,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="0dp"
         android:gravity="left"
-        android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/ranking_rep_tv"
         app:layout_constraintLeft_toRightOf="@+id/ranking_user_iv"
         app:layout_constraintTop_toTopOf="@+id/ranking_user_iv"
@@ -34,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="8dp"
-        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/ranking_user_iv"
         app:layout_constraintLeft_toRightOf="@+id/ranking_user_iv"/>
 
