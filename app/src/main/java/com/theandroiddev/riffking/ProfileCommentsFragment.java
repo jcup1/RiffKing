@@ -95,7 +95,6 @@ public class ProfileCommentsFragment extends Fragment {
         }
 
         comments = new ArrayList<>();
-        helper = new Helper();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -203,6 +202,7 @@ public class ProfileCommentsFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            helper = new Helper(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

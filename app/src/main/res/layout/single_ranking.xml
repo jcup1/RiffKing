@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="wrap_content">
 
@@ -8,9 +9,11 @@
         android:id="@+id/ranking_user_iv"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         app:civ_border="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -25,7 +28,8 @@
         app:layout_constraintBottom_toTopOf="@+id/ranking_rep_tv"
         app:layout_constraintLeft_toRightOf="@+id/ranking_user_iv"
         app:layout_constraintTop_toTopOf="@+id/ranking_user_iv"
-        app:layout_constraintVertical_bias="0.0"/>
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Jakub Chmiel"/>
 
     <TextView
         android:id="@+id/ranking_rep_tv"
@@ -34,6 +38,7 @@
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/ranking_user_iv"
-        app:layout_constraintLeft_toRightOf="@+id/ranking_user_iv"/>
+        app:layout_constraintLeft_toRightOf="@+id/ranking_user_iv"
+        tools:text="500$"/>
 
 </android.support.constraint.ConstraintLayout>

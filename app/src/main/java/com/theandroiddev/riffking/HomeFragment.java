@@ -127,7 +127,6 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        helper = new Helper();
 
         threads = new ArrayList<>();
         threadsToRemove = new ArrayList<>();
@@ -305,6 +304,7 @@ public class HomeFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            helper = new Helper(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

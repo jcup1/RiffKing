@@ -16,7 +16,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="0dp"
         android:gravity="start"
-        android:textSize="18sp"
+        android:textSize="@dimen/thread_title_tv_fs"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/thread_views_number_tv"
         app:layout_constraintHorizontal_bias="0.0"
@@ -32,10 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:saveEnabled="false"
         android:visibility="visible"
@@ -58,6 +56,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:textAlignment="center"
+        android:textSize="@dimen/thread_description_tv_fs"
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -74,6 +73,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
+        android:tint="@color/darker_gray"
         app:layout_constraintLeft_toLeftOf="@+id/thread_likes_number_tv"
         app:layout_constraintRight_toRightOf="@+id/thread_likes_number_tv"
         app:layout_constraintTop_toTopOf="@+id/thread_view_iv"
@@ -116,12 +116,14 @@
         android:layout_marginRight="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:tint="@color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/thread_likes_number_tv"
         app:layout_constraintLeft_toLeftOf="@+id/thread_views_number_tv"
         app:layout_constraintRight_toRightOf="@+id/thread_views_number_tv"
         app:layout_constraintTop_toBottomOf="@+id/fragment_youtube_player"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_remove_red_eye_black_48dp"
+
         />
 
     <TextView
@@ -155,6 +157,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:tint="@color/darker_gray"
         app:layout_constraintBottom_toTopOf="@+id/thread_comments_rv"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/thread_comment_et"
@@ -162,6 +165,7 @@
 
     <TextView
         android:id="@+id/thread_user_tv"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"

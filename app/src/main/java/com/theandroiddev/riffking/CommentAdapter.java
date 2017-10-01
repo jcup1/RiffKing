@@ -1,7 +1,6 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -40,7 +39,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         this.comments = comments;
         this.databaseReference = databaseReference;
         liked = new boolean[100];
-        helper = new Helper();
+        helper = new Helper(context);
         this.currentUserId = currentUserId;
 
     }
@@ -78,7 +77,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 }
             });
         } else {
-            holder.likeIv.setColorFilter(Color.GRAY);
+            helper.setLikeInactive(holder.likeIv);
         }
 
 
@@ -125,12 +124,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                     if (dataSnapshot.child("commentLikes").child(currentUserId).child(commentId).getValue(Boolean.class) != null) {
                         Log.d(TAG, "onDataChangeComment: " + "already liked");
                         liked[position] = true;
-                        likeIv.setColorFilter(Color.BLUE);
+                        helper.setLiked(likeIv);
 
                     } else {
                         Log.d(TAG, "onDataChangeComment: not liked!");
                         liked[position] = false;
-                        likeIv.setColorFilter(Color.BLACK);
+                        helper.setUnliked(likeIv);
 
                     }
 
@@ -163,7 +162,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
                     if (dataSnapshot.child("threads").child(comments.get(position).getThreadId()).child("userId").getValue(String.class) != null) {
                         if (dataSnapshot.child("threads").child(comments.get(position).getThreadId()).child("userId").getValue(String.class).equals(comments.get(position).getUserId())) {
-                            userTv.setTextColor(Color.BLUE);
+                            helper.highlightUser(userTv);
                         }
                     }
 

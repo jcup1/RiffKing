@@ -30,4 +30,49 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="user_tv_fs">14sp</dimen>
+    <dimen name="date_tv_fs">10sp</dimen>
+    <dimen name="content_ts">14sp</dimen>
+    <dimen name="likes_tv_fs">12sp</dimen>
+    <dimen name="views_tv_fs">12sp</dimen>
+
+    <dimen name="thread_title_tv_fs">18sp</dimen>
+    <dimen name="thread_description_tv_fs">14sp</dimen>
+
+
+    <dimen name="profile_name_tv_fs">18sp</dimen>
+    <dimen name="profile_email_tv_fs">10sp</dimen>
+    <dimen name="profile_button_follow_tv_fs">12sp</dimen>
+
+    <dimen name="profile_pm_iv_w">36dp</dimen>
+    <dimen name="profile_pm_iv_h">40dp</dimen>
+
+    <dimen name="profile_iv_w">0dp</dimen>
+    <dimen name="profile_iv_h">36dp</dimen>
+
+    <dimen name="default_et_fs">14sp</dimen>
+
+    <dimen name="dot_size">5dp</dimen>
+    <dimen name="space_size">1dp</dimen>
+
+    <dimen name="like_iv_size">24dp</dimen>
+    <dimen name="view_iv_size">24dp</dimen>
+    <dimen name="send_iv_size">24dp</dimen>
+    <dimen name="user_iv_size">40dp</dimen>
+    <dimen name="user_iv_big_size">56dp</dimen>
+    <dimen name="user_iv_huge_size">100dp</dimen>
+
+    <dimen name="margin_ultra">32dp</dimen>
+    <dimen name="margin_huge">16dp</dimen>
+    <dimen name="margin_big">8dp</dimen>
+    <dimen name="margin_medium">4dp</dimen>
+    <dimen name="margin_small">2dp</dimen>
+    <dimen name="margin_zero">2dp</dimen>
+
+    <dimen name="button_follow_h">36dp</dimen>
+    <dimen name="button_follow_w">190dp</dimen>
+
+
 </resources>

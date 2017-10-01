@@ -34,7 +34,6 @@ public class ProfileRepFragment extends Fragment {
     protected EditText profileRepTitleEt, profileRepEt;
     protected ImageView profileRepMinusIv, profileRepPlusIv;
     protected Button profileRepTransferBtn;
-    protected int number = 50;
 
     protected DatabaseReference mDatabase;
     protected Helper helper;
@@ -72,8 +71,6 @@ public class ProfileRepFragment extends Fragment {
             userId = bundle.getString("USER_ID");
             currentUserId = bundle.getString("CURRENT_USER_ID");
         }
-
-        helper = new Helper();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -102,24 +99,22 @@ public class ProfileRepFragment extends Fragment {
         profileRepPlusIv = (ImageView) rootView.findViewById(R.id.profile_rep_plus_iv);
         profileRepTransferBtn = (Button) rootView.findViewById(R.id.profile_rep_transfer_btn);
 
-        profileRepEt.setText(String.valueOf(number));
+        profileRepEt.setText(String.valueOf(50));
 
 
         profileRepMinusIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                number = Integer.valueOf(profileRepEt.getText().toString());
-                number -= 5;
-                profileRepEt.setText(String.valueOf(number));
+
+                profileRepEt.setText(String.valueOf((Integer.valueOf(profileRepEt.getText().toString()) - 5)));
             }
         });
 
         profileRepPlusIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                number = Integer.valueOf(profileRepEt.getText().toString());
-                number += 5;
-                profileRepEt.setText(String.valueOf(number));
+                profileRepEt.setText(String.valueOf((Integer.valueOf(profileRepEt.getText().toString()) + 5)));
+
             }
         });
 
@@ -141,11 +136,11 @@ public class ProfileRepFragment extends Fragment {
         //TODO handle reping yourself
         if (!userId.equals(currentUserId)) {
 
-            Rep rep = new Rep(number, currentUserId, helper.getCurrentDate(), profileRepTitleEt.getText().toString());
+            Rep rep = new Rep(Integer.valueOf(profileRepEt.getText().toString()), currentUserId, helper.getCurrentDate(), profileRepTitleEt.getText().toString());
             mDatabase.child("reps").child(userId).push().setValue(rep);
 
-            helper.transaction(mDatabase.child("users").child(currentUserId).child("reps"), -number);
-            helper.transaction(mDatabase.child("users").child(userId).child("reps"), number);
+            helper.transaction(mDatabase.child("users").child(currentUserId).child("reps"), -(Integer.valueOf(profileRepEt.getText().toString())));
+            helper.transaction(mDatabase.child("users").child(userId).child("reps"), Integer.valueOf(profileRepEt.getText().toString()));
             profileRepTitleEt.setText("");
         }
     }
@@ -165,6 +160,7 @@ public class ProfileRepFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            helper = new Helper(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

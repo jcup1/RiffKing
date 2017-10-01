@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.theandroiddev.riffking.Helper.YTIDLENGTH;
 import static com.theandroiddev.riffking.HomeActivity.saveSharedPreferencesLogList;
 
 
@@ -85,8 +86,6 @@ public class InsertThreadFragment extends Fragment {
         }
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseAuth = FirebaseAuth.getInstance();
-        helper = new Helper();
-
     }
 
     @Override
@@ -182,7 +181,7 @@ public class InsertThreadFragment extends Fragment {
             urlEt.setError("Video URL can't be empty");
             return false;
         }
-        if (urlEt.getText().toString().length() < 11) {
+        if (urlEt.getText().toString().length() < YTIDLENGTH) {
             urlEt.setError("Video URL is not proper");
             return false;
         }
@@ -199,9 +198,7 @@ public class InsertThreadFragment extends Fragment {
 
     private boolean linkIdIsProper(EditText urlEt) {
 
-        //TODO CHECK LAST IF 11 last CHARACTERS CONTAIN
-
-        String ytId = urlEt.getText().toString().substring(urlEt.length() - 11, urlEt.length());
+        String ytId = urlEt.getText().toString().substring(urlEt.length() - YTIDLENGTH, urlEt.length());
 
         return !ytId.contains("/");
 
@@ -265,6 +262,7 @@ public class InsertThreadFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            helper = new Helper(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

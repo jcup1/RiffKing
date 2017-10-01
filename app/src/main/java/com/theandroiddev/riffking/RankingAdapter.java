@@ -1,7 +1,6 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -38,7 +37,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
         this.context = context;
         this.users = users;
         this.databaseReference = databaseReference;
-        helper = new Helper();
+        helper = new Helper(context);
         this.currentUserId = currentUserId;
         Log.d(TAG, "USERSTEST" + users.toString());
 
@@ -112,7 +111,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
 
 
                 if (currentUserId.equals(users.get(position).getId())) {
-                    userTv.setTextColor(Color.BLUE);
+                    helper.highlightUser(userTv);
                 }
                 Log.d(TAG, "USERSTESTTT: " + position + " " + users.size());
                 userTv.setText(dataSnapshot.child("users").child(users.get(position).getId()).child("name").getValue(String.class));

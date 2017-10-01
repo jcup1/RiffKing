@@ -1,7 +1,6 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -79,7 +78,6 @@ public class ProfileFragment extends Fragment {
         }
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        helper = new Helper();
         initUser();
 
 
@@ -158,11 +156,9 @@ public class ProfileFragment extends Fragment {
         profileLikesTv.setText(String.valueOf(user.getLikes()));
 
         if (followed) {
-            profileFollowBtn.setText("Unfollow");
-            profileFollowBtn.setTextColor(Color.BLUE);
+            helper.setUfollowed(profileFollowBtn);
         } else {
-            profileFollowBtn.setText("Follow");
-            profileFollowBtn.setTextColor(Color.BLACK);
+            helper.setFollowed(profileFollowBtn);
         }
 
         profileFollowBtn.setOnClickListener(new View.OnClickListener() {
@@ -172,15 +168,13 @@ public class ProfileFragment extends Fragment {
                     mDatabase.child("userFollowers").child(currentUserId).child(userId).removeValue();
 
                     helper.transaction(mDatabase.child("users").child(userId).child("followers"), -1);
-                    profileFollowBtn.setText("Unfollow");
-                    profileFollowBtn.setTextColor(Color.BLUE);
+                    helper.setFollowed(profileFollowBtn);
 
                 } else {
                     mDatabase.child("userFollowers").child(currentUserId).child(userId).setValue(true);
 
                     helper.transaction(mDatabase.child("users").child(userId).child("followers"), 1);
-                    profileFollowBtn.setText("Follow");
-                    profileFollowBtn.setTextColor(Color.BLACK);
+                    helper.setUfollowed(profileFollowBtn);
                 }
             }
         });
@@ -239,6 +233,7 @@ public class ProfileFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            helper = new Helper(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

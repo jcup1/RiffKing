@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;
 
@@ -55,8 +56,8 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Log.d(TAG, "Element " + position + " set.");
 
-        holder.getSingleTitle().setText(threads.get(position).getTitle());
-        setThreadCreator((position), holder.nickTv);
+        holder.getThreadTitleTv().setText(threads.get(position).getTitle());
+        setThreadCreator((position), holder.threadUserTv, holder.threadUserIv);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,11 +67,11 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
             }
         });
 
-        holder.statsTv.setText(initStats(threads.get(position)));
-        holder.dateTv.setText(initDate(threads.get(position)));
+        holder.threadStatsTv.setText(initStats(threads.get(position)));
+        holder.threadDateTv.setText(initDate(threads.get(position)));
 
 
-        new GetThumbnail(threads.get(position).getVideoUrl(), holder.singleThumbnail).execute();
+        new GetThumbnail(threads.get(position).getVideoUrl(), holder.threadThumbnailTv).execute();
 
     }
 
@@ -122,7 +123,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public void setThreadCreator(final int position, final TextView tv) {
+    public void setThreadCreator(final int position, final TextView tv, final CircularImageView iv) {
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -143,23 +144,25 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView singleTitle, statsTv, nickTv;
-        private final TextView dateTv;
-        private final ImageView singleThumbnail;
+        private final TextView threadTitleTv, threadStatsTv, threadUserTv;
+        private final TextView threadDateTv;
+        private final ImageView threadThumbnailTv;
+        private final CircularImageView threadUserIv;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            singleTitle = (TextView) itemView.findViewById(R.id.text_view);
-            nickTv = (TextView) itemView.findViewById(R.id.nick_tv);
-            singleThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail_img);
-            statsTv = (TextView) itemView.findViewById(R.id.stats_tv);
-            dateTv = (TextView) itemView.findViewById(R.id.date_tv);
+            threadTitleTv = (TextView) itemView.findViewById(R.id.text_view);
+            threadUserTv = (TextView) itemView.findViewById(R.id.nick_tv);
+            threadThumbnailTv = (ImageView) itemView.findViewById(R.id.thumbnail_img);
+            threadStatsTv = (TextView) itemView.findViewById(R.id.stats_tv);
+            threadDateTv = (TextView) itemView.findViewById(R.id.date_tv);
+            threadUserIv = (CircularImageView) itemView.findViewById(R.id.nick_iv);
 
         }
 
-        public TextView getSingleTitle() {
-            return singleTitle;
+        public TextView getThreadTitleTv() {
+            return threadTitleTv;
         }
     }
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,7 +19,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static com.theandroiddev.riffking.Helper.SPAN_COUNT;
 import static com.theandroiddev.riffking.HomeFragment.KEY_LAYOUT_MANAGER;
 
 
@@ -33,6 +31,7 @@ public class ProfileVideosFragment extends Fragment {
     protected ArrayList<Thread> threads;
     protected ArrayList<Thread> threadsToRemove;
     protected HomeFragment.LayoutManagerType mCurrentLayoutManagerType;
+    protected Helper helper;
 
     private DatabaseReference mDatabase;
 
@@ -65,7 +64,6 @@ public class ProfileVideosFragment extends Fragment {
             currentUserId = bundle.getString("CURRENT_USER_ID");
             Log.d(TAG, "BUNDLETEST " + currentUserId);
         }
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         threads = new ArrayList<>();
@@ -118,7 +116,6 @@ public class ProfileVideosFragment extends Fragment {
             mCurrentLayoutManagerType = (HomeFragment.LayoutManagerType) savedInstanceState
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
-        setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
         mThreadAdapter = new ThreadAdapter(getContext(), threads, mDatabase);
         mRecyclerView.setAdapter(mThreadAdapter);
 
@@ -128,35 +125,9 @@ public class ProfileVideosFragment extends Fragment {
 //        }
 
         //TODO check why set two times
-        setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
+        helper.setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER, mRecyclerView,
+                getActivity(), mLayoutManager, mCurrentLayoutManagerType);
         return rootView;
-    }
-
-    public void setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType layoutManagerType) {
-        int scrollPosition = 0;
-
-        // If a layout manager has already been set, get current scroll position.
-        if (mRecyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-        }
-
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        }
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.scrollToPosition(scrollPosition);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -171,6 +142,7 @@ public class ProfileVideosFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            helper = new Helper(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

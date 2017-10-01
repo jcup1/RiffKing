@@ -69,8 +69,6 @@ public class ProfileRepFragmentMe extends Fragment {
         }
 
         reps = new ArrayList<>();
-
-        helper = new Helper();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -137,6 +135,7 @@ public class ProfileRepFragmentMe extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            helper = new Helper(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

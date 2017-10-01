@@ -63,7 +63,6 @@ public class RankingFragment extends Fragment implements HomeFragment.OnFragment
             currentUserId = bundle.getString("CURRENT_USER_ID");
         }
 
-        helper = new Helper();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         users = new ArrayList<>();
@@ -148,6 +147,7 @@ public class RankingFragment extends Fragment implements HomeFragment.OnFragment
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            helper = new Helper(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

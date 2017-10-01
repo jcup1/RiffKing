@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Thread Title"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName"
+            android:textSize="@dimen/default_et_fs"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -46,8 +47,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+
             android:hint="Video URL"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:textSize="@dimen/default_et_fs"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -66,9 +69,11 @@
             android:id="@+id/category_et"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:ems="10"
             android:hint="Category"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:textSize="@dimen/default_et_fs"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -91,8 +96,10 @@
             android:ems="10"
             android:hint="Content"
             android:inputType="textCapSentences|textMultiLine"
+
             android:maxLines="10"
-            android:scrollbars="none"/>
+            android:scrollbars="none"
+            android:textSize="@dimen/default_et_fs"/>
 
     </android.support.design.widget.TextInputLayout>
 

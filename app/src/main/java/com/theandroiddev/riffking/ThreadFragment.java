@@ -1,7 +1,6 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -87,8 +86,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         database = FirebaseDatabase.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = database.getReference();
-        helper = new Helper();
-
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -100,16 +97,19 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                 threadUserTv.setText(user.getName());
                 Picasso.with(getContext()).load(user.getPhotoUrl()).into(threadUserIv);
 
-                if (dataSnapshot.child("threadLikes").child(getCurrentUserId()).child(getThreadId()).getValue(Boolean.class) != null) {
-                    Log.d(TAG, "onDataChange: " + "already liked");
-                    liked = true;
-                    threadLikeIv.setColorFilter(Color.BLUE);
+                if (getContext() != null) {
+                    if (dataSnapshot.child("threadLikes").child(getCurrentUserId()).child(getThreadId()).getValue(Boolean.class) != null) {
+                        Log.d(TAG, "onDataChange: " + "already liked");
+                        liked = true;
+                        helper.setLiked(threadLikeIv);
 
-                } else {
-                    Log.d(TAG, "onDataChange: not liked!");
-                    liked = false;
-                    threadLikeIv.setColorFilter(Color.BLACK);
+                    } else {
+                        Log.d(TAG, "onDataChange: not liked!");
+                        liked = false;
+                        helper.setUnliked(threadLikeIv);
 
+
+                    }
                 }
 
                 comments.clear();
@@ -326,6 +326,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            helper = new Helper(context);
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

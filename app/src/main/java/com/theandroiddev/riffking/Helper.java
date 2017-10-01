@@ -1,10 +1,14 @@
 package com.theandroiddev.riffking;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +29,11 @@ public class Helper {
     static final int SPAN_COUNT = 2;
     private static final String TAG = "Helper";
     static int YTIDLENGTH = 11;
+    Context context;
+
+    public Helper(Context context) {
+        this.context = context;
+    }
 
 
     void transaction(final DatabaseReference ref, final int number) {
@@ -91,4 +100,38 @@ public class Helper {
     }
 
 
+    public void setLiked(ImageView threadLikeIv) {
+        if (threadLikeIv != null)
+            threadLikeIv.setColorFilter(context.getResources().getColor(R.color.colorAccent));
+    }
+
+    public void setUnliked(ImageView threadLikeIv) {
+        if (threadLikeIv != null)
+            threadLikeIv.setColorFilter(context.getResources().getColor(R.color.darker_gray));
+    }
+
+    public void setLikeInactive(ImageView threadLikeIv) {
+        if (threadLikeIv != null)
+            threadLikeIv.setColorFilter(context.getResources().getColor(R.color.gray));
+    }
+
+    public void setFollowed(Button followIv) {
+        if (followIv != null) {
+            followIv.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            followIv.setText("Unfollow");
+        }
+    }
+
+    public void setUfollowed(Button followIv) {
+        if (followIv != null) {
+            followIv.setTextColor(context.getResources().getColor(R.color.darker_gray));
+            followIv.setText("Follow");
+        }
+    }
+
+    public void highlightUser(TextView userTv) {
+        if (userTv != null) {
+            userTv.setTextColor(context.getResources().getColor(R.color.colorAccent));
+        }
+    }
 }

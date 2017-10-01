@@ -33,6 +33,7 @@
             tools:text="Thrash metal riff"/>
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="12dp"
             android:layout_marginLeft="8dp"
@@ -46,10 +47,11 @@
             android:id="@+id/nick_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
+            android:textColor="@color/gray"
             android:textSize="12sp"
-            app:layout_constraintLeft_toRightOf="@+id/thumbnail_img"
+            app:layout_constraintLeft_toRightOf="@+id/nick_iv"
             app:layout_constraintTop_toBottomOf="@+id/text_view"
             tools:text="Jakub Chmiel"/>
 
@@ -57,9 +59,9 @@
             android:id="@+id/thumbnail_img"
             android:layout_width="75dp"
             android:layout_height="72dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="0dp"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -70,6 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="3dp"
+            android:textColor="@color/gray"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -81,10 +84,23 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
             android:textSize="12sp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="23:30 24.12.2016"/>
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/nick_iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/thumbnail_img"
+            app:layout_constraintLeft_toRightOf="@+id/thumbnail_img"
+            app:layout_constraintTop_toTopOf="@+id/thumbnail_img"
+            app:srcCompat="@drawable/ic_account_circle_black_48dp"/>
 
 
     </android.support.constraint.ConstraintLayout>
