@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -164,9 +163,6 @@ public class ProfileCommentsFragment extends Fragment {
             mCurrentLayoutManagerType = (HomeFragment.LayoutManagerType) savedInstanceState
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
-        setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
-
-        setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
 
         mCommentAdapter = new CommentAdapter(getContext(), comments, mDatabase, currentUserId);
         Log.d(TAG, "onDataChange2: " + comments.toString());
@@ -174,7 +170,8 @@ public class ProfileCommentsFragment extends Fragment {
         mRecyclerView.setNestedScrollingEnabled(true);
         mRecyclerView.setAdapter(mCommentAdapter);
 
-        //CLICKS
+        helper.setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER, mRecyclerView,
+                getActivity(), mLayoutManager, mCurrentLayoutManagerType);
 
         profileCommentsSendIv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,38 +182,13 @@ public class ProfileCommentsFragment extends Fragment {
                     Comment comment = new Comment(userId, currentUserId, profileCommentsContentEt.getText().toString(), helper.getCurrentDate(), 0);
                     mDatabase.child("comments").child(userId).push().setValue(comment);
                     profileCommentsContentEt.setText("");
-                    helper.transacton(mDatabase.child("users").child(userId).child("comments"), 1);
+                    helper.transaction(mDatabase.child("users").child(userId).child("comments"), 1);
 
                 }
             }
         });
 
         return rootView;
-    }
-
-    public void setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType layoutManagerType) {
-        int scrollPosition = 0;
-
-        // If a layout manager has already been set, get current scroll position.
-        if (mRecyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-        }
-
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new GridLayoutManager(getActivity(), Helper.SPAN_COUNT);
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-
-                break;
-            default:
-
-        }
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.scrollToPosition(scrollPosition);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

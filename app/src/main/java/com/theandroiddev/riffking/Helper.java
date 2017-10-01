@@ -1,5 +1,9 @@
 package com.theandroiddev.riffking;
 
+import android.app.Activity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +27,7 @@ public class Helper {
     static int YTIDLENGTH = 11;
 
 
-    void transacton(final DatabaseReference ref, final int number) {
+    void transaction(final DatabaseReference ref, final int number) {
         //TODO IMPLEMENT IT IN HELPER TOO
         ref.runTransaction(new Transaction.Handler() {
             @Override
@@ -56,6 +60,34 @@ public class Helper {
 
         return inputFormat.format(Calendar.getInstance().getTime());
 
+    }
+
+    public void setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType layoutManagerType, RecyclerView mRecyclerView, Activity activity,
+                                             RecyclerView.LayoutManager mLayoutManager, HomeFragment.LayoutManagerType mCurrentLayoutManagerType) {
+        int scrollPosition = 0;
+
+        // If a layout manager has already been set, get current scroll position.
+        if (mRecyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+        }
+
+        switch (layoutManagerType) {
+            case GRID_LAYOUT_MANAGER:
+                mLayoutManager = new GridLayoutManager(activity, SPAN_COUNT);
+                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.GRID_LAYOUT_MANAGER;
+                break;
+            case LINEAR_LAYOUT_MANAGER:
+                mLayoutManager = new LinearLayoutManager(activity);
+                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+                break;
+            default:
+                mLayoutManager = new LinearLayoutManager(activity);
+                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        }
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.scrollToPosition(scrollPosition);
     }
 
 

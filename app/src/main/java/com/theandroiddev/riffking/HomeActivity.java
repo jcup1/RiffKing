@@ -272,30 +272,42 @@ public class HomeActivity extends AppCompatActivity
     private void displaySelectedScreen(int id) {
 
         Fragment fragment = null;
+        Bundle bundle;
 
         switch (id) {
             case R.id.nav_home:
                 fragment = new HomeFragment();
+                bundle = new Bundle();
+                bundle.putString("CURRENT_USER_ID", user.getId());
+                bundle.putString("USER_ID", user.getId());
+                fragment.setArguments(bundle);
+
                 break;
             case R.id.nav_ranking:
+                bundle = new Bundle();
+                bundle.putString("CURRENT_USER_ID", user.getId());
+                bundle.putString("USER_ID", user.getId());
                 fragment = new RankingFragment();
-                Toast.makeText(this, "nic tu nie ma", Toast.LENGTH_SHORT).show();
+                fragment.setArguments(bundle);
                 break;
             case R.id.nav_videos:
-                fragment = new VideosFragment();
-                Toast.makeText(this, "niczego tu nie znajdę...", Toast.LENGTH_SHORT).show();
+                bundle = new Bundle();
+                bundle.putString("CURRENT_USER_ID", user.getId());
+                bundle.putString("USER_ID", user.getId());
+                fragment = new ProfileVideosFragment();
+                fragment.setArguments(bundle);
                 break;
             case R.id.nav_upload:
-                Bundle bundle = new Bundle();
+                bundle = new Bundle();
                 bundle.putString("URL", urlLink);
                 fragment = new InsertThreadFragment();
                 fragment.setArguments(bundle);
                 break;
             case R.id.nav_share:
-                Toast.makeText(this, "Przed wyruszeniem w drogę, nalezy zebrać drużynę...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Not ready yet :(", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_settings:
-                Toast.makeText(this, "Nie w mieście...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Not ready yet :(", Toast.LENGTH_SHORT).show();
                 break;
 
         }

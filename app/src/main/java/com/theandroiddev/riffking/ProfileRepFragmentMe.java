@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,6 +38,7 @@ public class ProfileRepFragmentMe extends Fragment {
     protected List<Rep> reps;
     protected HomeFragment.LayoutManagerType mCurrentLayoutManagerType;
     DatabaseReference mDatabase;
+    Helper helper;
     private RecyclerView mRecyclerView;
     private String currentUserId;
     private String userId;
@@ -70,6 +70,7 @@ public class ProfileRepFragmentMe extends Fragment {
 
         reps = new ArrayList<>();
 
+        helper = new Helper();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -119,44 +120,16 @@ public class ProfileRepFragmentMe extends Fragment {
             mCurrentLayoutManagerType = (HomeFragment.LayoutManagerType) savedInstanceState
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
-        setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
-
-        setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
 
         mRepAdapter = new RepAdapter(getContext(), reps, mDatabase, currentUserId);
 
         mRecyclerView.setNestedScrollingEnabled(true);
         mRecyclerView.setAdapter(mRepAdapter);
 
+        helper.setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER, mRecyclerView,
+                getActivity(), mLayoutManager, mCurrentLayoutManagerType);
+
         return rootView;
-    }
-
-
-    public void setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType layoutManagerType) {
-        int scrollPosition = 0;
-
-        // If a layout manager has already been set, get current scroll position.
-        if (mRecyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-        }
-
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        }
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.scrollToPosition(scrollPosition);
     }
 
     @Override

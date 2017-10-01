@@ -171,14 +171,14 @@ public class ProfileFragment extends Fragment {
                 if (followed) {
                     mDatabase.child("userFollowers").child(currentUserId).child(userId).removeValue();
 
-                    helper.transacton(mDatabase.child("users").child(userId).child("followers"), -1);
+                    helper.transaction(mDatabase.child("users").child(userId).child("followers"), -1);
                     profileFollowBtn.setText("Unfollow");
                     profileFollowBtn.setTextColor(Color.BLUE);
 
                 } else {
                     mDatabase.child("userFollowers").child(currentUserId).child(userId).setValue(true);
 
-                    helper.transacton(mDatabase.child("users").child(userId).child("followers"), 1);
+                    helper.transaction(mDatabase.child("users").child(userId).child("followers"), 1);
                     profileFollowBtn.setText("Follow");
                     profileFollowBtn.setTextColor(Color.BLACK);
                 }

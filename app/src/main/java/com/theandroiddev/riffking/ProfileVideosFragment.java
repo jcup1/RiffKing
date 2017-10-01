@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public class ProfileVideosFragment extends Fragment {
         if (bundle != null) {
             userId = bundle.getString("USER_ID");
             currentUserId = bundle.getString("CURRENT_USER_ID");
+            Log.d(TAG, "BUNDLETEST " + currentUserId);
         }
 
         mDatabase = FirebaseDatabase.getInstance().getReference();

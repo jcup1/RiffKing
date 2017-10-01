@@ -144,8 +144,8 @@ public class ProfileRepFragment extends Fragment {
             Rep rep = new Rep(number, currentUserId, helper.getCurrentDate(), profileRepTitleEt.getText().toString());
             mDatabase.child("reps").child(userId).push().setValue(rep);
 
-            helper.transacton(mDatabase.child("users").child(currentUserId).child("reps"), -number);
-            helper.transacton(mDatabase.child("users").child(userId).child("reps"), number);
+            helper.transaction(mDatabase.child("users").child(currentUserId).child("reps"), -number);
+            helper.transaction(mDatabase.child("users").child(userId).child("reps"), number);
             profileRepTitleEt.setText("");
         }
     }

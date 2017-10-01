@@ -213,7 +213,7 @@ public class InsertThreadFragment extends Fragment {
         Toast.makeText(getContext(), "Error inserting thread!", Toast.LENGTH_SHORT).show();
         FirebaseCrash.log("Error inserting thread!");
 
-    }//https://youtu.be/cChsHZ6RVgY?t=5m51s
+    }
 
     private String[] getAuthor() {
 

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -35,7 +34,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.theandroiddev.riffking.Helper.SPAN_COUNT;
 import static com.theandroiddev.riffking.HomeFragment.KEY_LAYOUT_MANAGER;
 
 public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitializedListener {
@@ -161,15 +159,15 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                 mCurrentLayoutManagerType = (HomeFragment.LayoutManagerType) savedInstanceState
                         .getSerializable(KEY_LAYOUT_MANAGER);
             }
-            setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
-
-            setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
 
             mCommentAdapter = new CommentAdapter(getContext(), comments, databaseReference, getCurrentUserId());
             Log.d(TAG, "onDataChange2: " + comments.toString());
 
             mRecyclerView.setNestedScrollingEnabled(true);
             mRecyclerView.setAdapter(mCommentAdapter);
+
+            helper.setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER, mRecyclerView,
+                    getActivity(), mLayoutManager, mCurrentLayoutManagerType);
 
             threadTitleTv = (TextView) fragmentThreadView.findViewById(R.id.thread_title_tv);
             threadLikesNumberTv = (TextView) fragmentThreadView.findViewById(R.id.thread_likes_number_tv);
@@ -200,13 +198,13 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                 public void onClick(View v) {
 
                     if (!liked) {
-                        helper.transacton(databaseReference.child("threads").child(threadId).child("likes"), 1);
-                        helper.transacton(databaseReference.child("users").child(thread.getUserId()).child("likes"), 1);
+                        helper.transaction(databaseReference.child("threads").child(threadId).child("likes"), 1);
+                        helper.transaction(databaseReference.child("users").child(thread.getUserId()).child("likes"), 1);
                         databaseReference.child("threadLikes").child(getCurrentUserId()).child(threadId).setValue(true);
 
                     } else {
-                        helper.transacton(databaseReference.child("threads").child(threadId).child("likes"), -1);
-                        helper.transacton(databaseReference.child("users").child(thread.getUserId()).child("likes"), -1);
+                        helper.transaction(databaseReference.child("threads").child(threadId).child("likes"), -1);
+                        helper.transaction(databaseReference.child("users").child(thread.getUserId()).child("likes"), -1);
                         databaseReference.child("threadLikes").child(getCurrentUserId()).child(threadId).removeValue();
                     }
 
@@ -232,7 +230,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             fragmentTransaction.replace(R.id.fragment_youtube_player, mYoutubePlayerFragment);
             fragmentTransaction.commit();
 
-            helper.transacton(databaseReference.child("threads").child(threadId).child("views"), 1);
+            helper.transaction(databaseReference.child("threads").child(threadId).child("views"), 1);
 
             return fragmentThreadView;
 
@@ -382,33 +380,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     public String getThreadId() {
         //TODO MAKE STH WITH THIS THREADID VAR
         return threadId;
-    }
-
-    public void setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType layoutManagerType) {
-        int scrollPosition = 0;
-
-        // If a layout manager has already been set, get current scroll position.
-        if (mRecyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-        }
-
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        }
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.scrollToPosition(scrollPosition);
     }
 
     /**

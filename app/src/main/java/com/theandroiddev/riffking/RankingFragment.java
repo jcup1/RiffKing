@@ -4,49 +4,51 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RankingFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link RankingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.theandroiddev.riffking.HomeFragment.KEY_LAYOUT_MANAGER;
+
 public class RankingFragment extends Fragment implements HomeFragment.OnFragmentInteractionListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "RankingFragment";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
+    protected RecyclerView mRecyclerView;
+    protected RankingAdapter mRankingAdapter;
+    protected RecyclerView.LayoutManager mLayoutManager;
+    protected List<User> users;
+    protected HomeFragment.LayoutManagerType mCurrentLayoutManagerType;
+
+    private DatabaseReference mDatabase;
+    private Helper helper;
+
+    private String currentUserId;
+    private String userId;
     private OnFragmentInteractionListener mListener;
+
 
     public RankingFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RankingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static RankingFragment newInstance(String param1, String param2) {
         RankingFragment fragment = new RankingFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,17 +56,83 @@ public class RankingFragment extends Fragment implements HomeFragment.OnFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            userId = bundle.getString("USER_ID");
+            currentUserId = bundle.getString("CURRENT_USER_ID");
         }
+
+        helper = new Helper();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        users = new ArrayList<>();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = database.getReference();
+        databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                users.clear();
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                for (DataSnapshot child : children) {
+                    User user = child.getValue(User.class);
+                    user.setId(child.getKey());
+                    users.add(0, user);
+                    Log.d(TAG, "USERSTEST" + users.toString());
+
+
+                }
+
+                mRankingAdapter.notifyDataSetChanged();
+
+                Collections.sort(users, new Comparator<User>() {
+                    @Override
+                    public int compare(User o1, User o2) {
+                        return Integer.valueOf(o2.getReps()).compareTo(o1.getReps());
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ranking, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_ranking, container, false);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.ranking_rv);
+
+        Log.d(TAG, "USERSTEST" + users.toString());
+        mRankingAdapter = new RankingAdapter(getContext(), users, mDatabase, currentUserId);
+        mRecyclerView.setAdapter(mRankingAdapter);
+        mRankingAdapter.notifyDataSetChanged();
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        if (savedInstanceState != null) {
+            // Restore saved layout manager type.
+            mCurrentLayoutManagerType = (HomeFragment.LayoutManagerType) savedInstanceState
+                    .getSerializable(KEY_LAYOUT_MANAGER);
+        }
+
+
+        helper.setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER, mRecyclerView,
+                getActivity(), mLayoutManager, mCurrentLayoutManagerType);
+
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -73,6 +141,7 @@ public class RankingFragment extends Fragment implements HomeFragment.OnFragment
             mListener.onFragmentInteraction(uri);
         }
     }
+
 
     @Override
     public void onAttach(Context context) {

@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -102,13 +103,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     private void handleLike(String threadId, final String commentId, final ImageView likeIv, int position) {
         if (!liked[position]) {
-            helper.transacton(databaseReference.child("comments").child(threadId).child(commentId).child("likes"), 1);
-            helper.transacton(databaseReference.child("users").child(comments.get(position).getUserId()).child("likes"), 1);
+            helper.transaction(databaseReference.child("comments").child(threadId).child(commentId).child("likes"), 1);
+            helper.transaction(databaseReference.child("users").child(comments.get(position).getUserId()).child("likes"), 1);
             databaseReference.child("commentLikes").child(currentUserId).child(commentId).setValue(true);
 
         } else {
-            helper.transacton(databaseReference.child("comments").child(threadId).child(commentId).child("likes"), -1);
-            helper.transacton(databaseReference.child("users").child(comments.get(position).getUserId()).child("likes"), -1);
+            helper.transaction(databaseReference.child("comments").child(threadId).child(commentId).child("likes"), -1);
+            helper.transaction(databaseReference.child("users").child(comments.get(position).getUserId()).child("likes"), -1);
             databaseReference.child("commentLikes").child(currentUserId).child(commentId).removeValue();
         }
     }
@@ -198,7 +199,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView userTv, contentTv, dateTv, likesTv;
-        private final ImageView userIv, likeIv;
+        private final CircularImageView userIv;
+        private final ImageView likeIv;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -208,7 +210,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             dateTv = (TextView) itemView.findViewById(R.id.comment_date_tv);
             likesTv = (TextView) itemView.findViewById(R.id.comment_likes_number_tv);
 
-            userIv = (ImageView) itemView.findViewById(R.id.comment_user_iv);
+            userIv = (CircularImageView) itemView.findViewById(R.id.comment_user_iv);
             likeIv = (ImageView) itemView.findViewById(R.id.comment_like_iv);
 
         }
