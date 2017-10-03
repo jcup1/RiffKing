@@ -60,7 +60,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
 
         setDatabase(users.get(holder.getAdapterPosition()).getId(), position);
 
-        setUser(holder.rankingUserTv, holder.rankingUserIv, holder.rankingRepTv, holder.getAdapterPosition());
+        setUser(holder.rankingUserTv, holder.rankingUserIv, holder.rankingRepTv, holder.rankingNumber, holder.rankingLogo, holder.getAdapterPosition());
 
         holder.rankingUserIv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +103,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
         return users.size();
     }
 
-    private void setUser(final TextView userTv, final ImageView userIv, final TextView repTv, final int position) {
+    private void setUser(final TextView userTv, final ImageView userIv, final TextView repTv, final TextView numTv, final CircularImageView logoIv, final int position) {
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -119,6 +119,17 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
                 Picasso.with(context).load(dataSnapshot.child("users")
                         .child(users.get(position).getId()).child("photoUrl").getValue(String.class))
                         .into(userIv);
+
+                if (users.get(position).getRanking() == 1) {
+                    userTv.setTextSize(18);
+                    repTv.setTextSize(18);
+
+                    helper.highlightUser(userTv);
+                    helper.highlightUser(repTv);
+                    logoIv.setBackgroundResource(R.drawable.logo);
+                } else {
+                    numTv.setText(String.valueOf(users.get(position).getRanking()));
+                }
             }
 
 
@@ -146,15 +157,17 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView rankingUserTv, rankingRepTv;
-        private final CircularImageView rankingUserIv;
+        private final TextView rankingUserTv, rankingRepTv, rankingNumber;
+        private final CircularImageView rankingUserIv, rankingLogo;
 
         ViewHolder(View itemView) {
             super(itemView);
 
             rankingUserTv = (TextView) itemView.findViewById(R.id.ranking_user_tv);
             rankingRepTv = (TextView) itemView.findViewById(R.id.ranking_rep_tv);
+            rankingNumber = (TextView) itemView.findViewById(R.id.ranking_number);
             rankingUserIv = (CircularImageView) itemView.findViewById(R.id.ranking_user_iv);
+            rankingLogo = (CircularImageView) itemView.findViewById(R.id.ranking_logo);
 
         }
 

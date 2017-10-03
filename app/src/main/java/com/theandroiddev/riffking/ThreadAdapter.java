@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,6 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
         implements AsyncResponse {
     private static final String TAG = "ThreadAdapter";
     DatabaseReference mDatabase;
-    User user;
     private ArrayList<Thread> threads;
     private Context context;
 
@@ -69,7 +69,6 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
 
         holder.threadStatsTv.setText(initStats(threads.get(position)));
         holder.threadDateTv.setText(initDate(threads.get(position)));
-
 
         new GetThumbnail(threads.get(position).getVideoUrl(), holder.threadThumbnailTv).execute();
 
@@ -128,8 +127,10 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                user = dataSnapshot.child("users").child(threads.get(position).getUserId()).getValue(User.class);
-                tv.setText(user.getName());
+
+                tv.setText(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("name").getValue(String.class));
+                Picasso.with(context).load(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("photoUrl").getValue(String.class))
+                        .into(iv);
             }
 
             @Override

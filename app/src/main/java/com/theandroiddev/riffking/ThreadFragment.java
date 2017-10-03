@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +51,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     protected Helper helper;
     YouTubePlayerSupportFragment mYoutubePlayerFragment;
     TextView threadTitleTv, threadContentTv, threadLikesNumberTv, threadViewsNumberTv, threadUserTv;
-    EditText threadCommentEt;
+    CustomEditText threadCommentEt;
     ImageView threadLikeIv, threadCommentSendIv;
     CircularImageView threadUserIv;
     //DATABASE
@@ -57,11 +59,11 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
     User user;
+    FrameLayout youtubeFrameLayout;
     private String threadId;
     private OnFragmentInteractionListener mListener;
     private Thread thread;
-    private boolean postLiked;
-    private String currentDate;
+
 
 
     public ThreadFragment() {
@@ -75,6 +77,57 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         return fragment;
     }
 
+    public static void expand(final View v) {
+        v.measure(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? FrameLayout.LayoutParams.WRAP_CONTENT
+                        : (int) (targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                } else {
+                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,23 +145,27 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 thread = dataSnapshot.child("threads").child(threadId).getValue(Thread.class);
-                Log.d(TAG, "onDataChange: " + thread.getUserId());
-                user = dataSnapshot.child("users").child(thread.getUserId()).getValue(User.class);
-                threadUserTv.setText(user.getName());
-                Picasso.with(getContext()).load(user.getPhotoUrl()).into(threadUserIv);
+                if (thread != null) {
+                    user = dataSnapshot.child("users").child(thread.getUserId()).getValue(User.class);
+                    if (user != null) {
+                        threadUserTv.setText(user.getName());
+                        Picasso.with(getContext()).load(user.getPhotoUrl()).into(threadUserIv);
 
-                if (getContext() != null) {
-                    if (dataSnapshot.child("threadLikes").child(getCurrentUserId()).child(getThreadId()).getValue(Boolean.class) != null) {
-                        Log.d(TAG, "onDataChange: " + "already liked");
-                        liked = true;
-                        helper.setLiked(threadLikeIv);
+                        if (getContext() != null) {
+                            if (dataSnapshot.child("threadLikes").child(getCurrentUserId()).child(getThreadId()).getValue(Boolean.class) != null) {
+                                Log.d(TAG, "onDataChange: " + "already liked");
+                                liked = true;
+                                helper.setLiked(threadLikeIv);
 
-                    } else {
-                        Log.d(TAG, "onDataChange: not liked!");
-                        liked = false;
-                        helper.setUnliked(threadLikeIv);
+                            } else {
+                                Log.d(TAG, "onDataChange: not liked!");
+                                liked = false;
+                                helper.setUnliked(threadLikeIv);
 
 
+                            }
+
+                        }
                     }
                 }
 
@@ -138,7 +195,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
 
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -175,9 +231,10 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             threadContentTv = (TextView) fragmentThreadView.findViewById(R.id.thread_description);
             threadLikeIv = (ImageView) fragmentThreadView.findViewById(R.id.thread_like_iv);
             threadCommentSendIv = (ImageView) fragmentThreadView.findViewById(R.id.thread_comment_send_iv);
-            threadCommentEt = (EditText) fragmentThreadView.findViewById(R.id.thread_comment_et);
+            threadCommentEt = (CustomEditText) fragmentThreadView.findViewById(R.id.thread_comment_et);
             threadUserTv = (TextView) fragmentThreadView.findViewById(R.id.thread_user_tv);
             threadUserIv = (CircularImageView) fragmentThreadView.findViewById(R.id.thread_user_iv);
+            youtubeFrameLayout = (FrameLayout) fragmentThreadView.findViewById(R.id.fragment_youtube_player);
 
             threadUserTv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -222,6 +279,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                     }
                 }
             });
+
 
             mYoutubePlayerFragment = new YouTubePlayerSupportFragment();
             mYoutubePlayerFragment.initialize(PlayerConfig.API_KEY, this);

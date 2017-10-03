@@ -10,7 +10,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 class User {
 
     private String name, details, email, id, photoUrl;
-    private int likes, reps, age, followers, comments;
+    private int likes, reps, age, followers, comments, ranking;
 
     public User() {
     }
@@ -109,5 +109,13 @@ class User {
 
     public void setComments(int comments) {
         this.comments = comments;
+    }
+
+    public int getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
     }
 }

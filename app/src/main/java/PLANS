@@ -1,3 +1,17 @@
+TODO
+-Accent Color
+
+
+-Splash Screen
+-Progress when logging
+-Collapse video fix
+-Ranking design and changes
+-Upload window design and handle opening youtube(not sure)
+-Handle Share
+-Handle Settings
+-Add search bar
+
+
 Things TO DO:
 - change colors
 - use strings from values
@@ -10,6 +24,6 @@ Things TO DO:
 - create progress bar for LoginActivity
 - create app splash screen
 - parallax effect in thread and comments to save space
-- TODO update list on 03.10.17
+
 
 

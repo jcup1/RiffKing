@@ -1,5 +1,6 @@
 package com.theandroiddev.riffking;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,9 +32,9 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 2;
 
     FirebaseAuth mFirebaseAuth;
-
     GoogleApiClient mGoogleApiClient;
     FirebaseAuth.AuthStateListener mAuthListener;
+    private ProgressDialog mProgress;
     private DatabaseReference mDatabase;
 
     @Override
@@ -55,6 +56,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(com.theandroiddev.riffking.R.layout.activity_login);
         ButterKnife.bind(this);
+
+        mProgress = new ProgressDialog(getApplicationContext());
+        mProgress.setTitle("Processing...");
+        mProgress.setMessage("Please wait...");
+        mProgress.setCancelable(false);
+        mProgress.setIndeterminate(true);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -142,5 +149,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mDatabase.child("users").child(id).setValue(user);
     }
+
 
 }

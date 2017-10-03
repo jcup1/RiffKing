@@ -84,7 +84,7 @@ public class RankingFragment extends Fragment implements HomeFragment.OnFragment
 
                 }
 
-                mRankingAdapter.notifyDataSetChanged();
+
 
                 Collections.sort(users, new Comparator<User>() {
                     @Override
@@ -92,6 +92,12 @@ public class RankingFragment extends Fragment implements HomeFragment.OnFragment
                         return Integer.valueOf(o2.getReps()).compareTo(o1.getReps());
                     }
                 });
+
+                for (int i = 0; i < users.size(); i++) {
+                    users.get(i).setRanking(i + 1);
+                }
+
+                mRankingAdapter.notifyDataSetChanged();
 
             }
 
