@@ -37,7 +37,6 @@ public class Helper {
 
 
     void transaction(final DatabaseReference ref, final int number) {
-        //TODO IMPLEMENT IT IN HELPER TOO
         ref.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {

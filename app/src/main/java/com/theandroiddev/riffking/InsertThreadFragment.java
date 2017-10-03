@@ -1,7 +1,6 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,8 +13,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,8 +32,7 @@ import static com.theandroiddev.riffking.HomeActivity.saveSharedPreferencesLogLi
  * create an instance of this fragment.
  */
 public class InsertThreadFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String URL_PARAM = "URL_PARAM";
     private static final String TAG = "InsertThreadFragment";
     EditText titleEt, urlEt, contentEt;
@@ -57,15 +53,6 @@ public class InsertThreadFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InsertThreadFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static InsertThreadFragment newInstance(String param1, String param2) {
         InsertThreadFragment fragment = new InsertThreadFragment();
         Bundle args = new Bundle();
@@ -101,8 +88,6 @@ public class InsertThreadFragment extends Fragment {
         titleEt = (EditText) getActivity().findViewById(R.id.title_et);
         urlEt = (EditText) getActivity().findViewById(R.id.URL_et);
         contentEt = (EditText) getActivity().findViewById(R.id.content_et);
-
-        //TODO GET RID OF IT IF FAB WORKS
 
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.fab.setImageResource(R.drawable.ic_check_24dp);
@@ -205,47 +190,37 @@ public class InsertThreadFragment extends Fragment {
 
     }
 
-    private void onInsertThreadFailed() {
-
-        Toast.makeText(getContext(), "Error inserting thread!", Toast.LENGTH_SHORT).show();
-        FirebaseCrash.log("Error inserting thread!");
-
-    }
-
-    private String[] getAuthor() {
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String[] author = new String[0];
-
-        //TODO GET FROM AUTH
-        if (user != null) {
-            author = new String[]{user.getDisplayName(), user.getEmail()};
-
-
-        } else {
-            Toast.makeText(getContext(), "Lost Connection", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-        }
-
-        return author;
-
-    }
+//    private void onInsertThreadFailed() {
+//
+//        Toast.makeText(getContext(), "Error inserting thread!", Toast.LENGTH_SHORT).show();
+//        FirebaseCrash.log("Error inserting thread!");
+//
+//    }
+//
+//    private String[] getAuthor() {
+//
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        String[] author = new String[0];
+//
+//        if (user != null) {
+//            author = new String[]{user.getDisplayName(), user.getEmail()};
+//
+//
+//        } else {
+//            Toast.makeText(getContext(), "Lost Connection", Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(getContext(), LoginActivity.class);
+//            startActivity(intent);
+//            getActivity().finish();
+//        }
+//
+//        return author;
+//
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-//        urlEt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //TODO CHANGE TO BUTTERKNIFE
-//
-//            }
-//        });
-
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_insert_thread, container, false);
     }
 

@@ -40,7 +40,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
 
     private static final String ARG_PARAM1 = "threadId";
     static boolean liked;
-    //TODO 29-09 15:20 CLEAN IT
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected CommentAdapter mCommentAdapter;
@@ -52,7 +51,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     EditText threadCommentEt;
     ImageView threadLikeIv, threadCommentSendIv;
     CircularImageView threadUserIv;
-    //DATABASE
+
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
@@ -60,8 +59,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     private String threadId;
     private OnFragmentInteractionListener mListener;
     private Thread thread;
-    private boolean postLiked;
-    private String currentDate;
 
 
     public ThreadFragment() {
@@ -223,13 +220,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                 }
             });
 
-            mYoutubePlayerFragment = new YouTubePlayerSupportFragment();
-            mYoutubePlayerFragment.initialize(PlayerConfig.API_KEY, this);
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_youtube_player, mYoutubePlayerFragment);
-            fragmentTransaction.commit();
-
             helper.transaction(databaseReference.child("threads").child(threadId).child("views"), 1);
 
             return fragmentThreadView;
@@ -294,30 +284,27 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     @Override
     public void onPause() {
 
-        mYoutubePlayerFragment.onPause();
-
-        FragmentManager fm = getFragmentManager();
-
-        fm.beginTransaction().remove(mYoutubePlayerFragment).commit();
-
         databaseReference.child("threads").child(threadId).setValue(thread);
-
 
         super.onPause();
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.fragment_youtube_player, mYoutubePlayerFragment);
-        fragmentTransaction.commit();
-
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.fab.setVisibility(View.GONE);
+
+
+        mYoutubePlayerFragment = new YouTubePlayerSupportFragment();
+        mYoutubePlayerFragment.initialize(PlayerConfig.API_KEY, this);
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_youtube_player, mYoutubePlayerFragment);
+        fragmentTransaction.commit();
+
 
     }
 
@@ -337,8 +324,8 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     @Override
     public void onDetach() {
         super.onDetach();
+
         mListener = null;
-        mYoutubePlayerFragment.onDetach();
     }
 
 
@@ -379,7 +366,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     }
 
     public String getThreadId() {
-        //TODO MAKE STH WITH THIS THREADID VAR
         return threadId;
     }
 

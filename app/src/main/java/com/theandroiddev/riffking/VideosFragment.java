@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class VideosFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
     private OnFragmentInteractionListener mListener;
 

@@ -1,0 +1,15 @@
+Things TO DO:
+- change colors
+- use strings from values
+- use dimens from values
+- add search bar
+- set single_thread.xml height ( it's resizing on start )
+- fix loading user avatar in single_thread.xml
+- other options in LoginActivity
+- design in LoginActivity
+- create progress bar for LoginActivity
+- create app splash screen
+- parallax effect in thread and comments to save space
+- TODO update list on 03.10.17
+
+

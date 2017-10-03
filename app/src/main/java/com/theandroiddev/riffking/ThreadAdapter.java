@@ -137,8 +137,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
 
             }
         });
-        //TODO HANDLE DATABASE JOINING
-        // mDatabase
+
     }
 
 

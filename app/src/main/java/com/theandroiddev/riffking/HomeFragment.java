@@ -25,20 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link HomeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
     public static final String KEY_LAYOUT_MANAGER = "mLayoutManager";
     private static final String TAG = "HomeFragment";
-
-    // TODO: Rename parameter arguments, choose names that match
 
     protected RecyclerView mRecyclerView;
     protected ThreadAdapter mThreadAdapter;
@@ -104,15 +93,6 @@ public class HomeFragment extends Fragment {
         threadsToRemove.remove(thread);
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public HomeFragment newInstance(String param1, String param2, String param3, String param4) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();

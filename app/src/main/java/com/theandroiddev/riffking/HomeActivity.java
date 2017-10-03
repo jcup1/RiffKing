@@ -84,6 +84,8 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+
+
         super.onResume();
 
     }
@@ -104,6 +106,7 @@ public class HomeActivity extends AppCompatActivity
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         initUser();
+
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -165,29 +168,17 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            onBackPressed();
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
-//
+
 //    @Override
 //    public void onBackPressed() {
-//        Log.d(TAG, "onBackPressed: ");
 //
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//
+//        Log.d(TAG, "onBackPressed: " +getSupportFragmentManager().getBackStackEntryCount() );
+//        if (getSupportFragmentManager().getBackStackEntryCount() >0) {
+//            getSupportFragmentManager().popBackStack();
 //        } else {
-//            if (getFragmentManager().getBackStackEntryCount() > 1) {
-//                getFragmentManager().popBackStack();
-//            } else {
-//                super.onBackPressed();
-//            }
+//            Log.d(TAG, "onBackPressed: finishing");
+//            finish();
 //        }
-//
 //    }
 
     private void youtubeShareable() {
@@ -332,6 +323,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "onDestroy: DESTROOYED");
         super.onDestroy();
     }
 
@@ -365,6 +357,7 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    //TODO HANDLE SAVING FRAGMENTS WHEN ACTIVITY IS RESTORED
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);

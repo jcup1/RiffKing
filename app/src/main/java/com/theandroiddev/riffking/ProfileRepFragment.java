@@ -46,16 +46,6 @@ public class ProfileRepFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileRepFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ProfileRepFragment newInstance(String param1, String param2) {
         ProfileRepFragment fragment = new ProfileRepFragment();
 
@@ -121,7 +111,6 @@ public class ProfileRepFragment extends Fragment {
         profileRepTransferBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO LETS END IT...
                 if (!TextUtils.isEmpty(profileRepEt.getText().toString()) && !TextUtils.isEmpty(profileRepTitleEt.getText().toString())) {
                     Log.d(TAG, "transferRep: " + currentUserId + " to " + userId);
                     transferRep();
@@ -133,7 +122,6 @@ public class ProfileRepFragment extends Fragment {
     }
 
     private void transferRep() {
-        //TODO handle reping yourself
         if (!userId.equals(currentUserId)) {
 
             Rep rep = new Rep(Integer.valueOf(profileRepEt.getText().toString()), currentUserId, helper.getCurrentDate(), profileRepTitleEt.getText().toString());

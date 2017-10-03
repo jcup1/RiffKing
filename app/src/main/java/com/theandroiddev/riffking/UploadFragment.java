@@ -8,20 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link UploadFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link UploadFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class UploadFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
 
-
-    // TODO: Rename and change types of parameters
 
     private OnFragmentInteractionListener mListener;
 

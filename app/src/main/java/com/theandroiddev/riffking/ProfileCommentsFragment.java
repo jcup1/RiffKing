@@ -55,7 +55,6 @@ public class ProfileCommentsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    //TODO send and retrieve it
     private String currentUserId;
     private String userId;
 
@@ -65,15 +64,6 @@ public class ProfileCommentsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileCommentsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ProfileCommentsFragment newInstance(String param1, String param2) {
         ProfileCommentsFragment fragment = new ProfileCommentsFragment();
         Bundle args = new Bundle();
@@ -109,7 +99,6 @@ public class ProfileCommentsFragment extends Fragment {
 
                 Log.d(TAG, "userrr: " + currentUser.toString());
 
-                // TODO get data
                 comments.clear();
                 Iterable<DataSnapshot> children = dataSnapshot.child("comments").child(userId).getChildren();
 

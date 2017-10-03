@@ -34,11 +34,8 @@ import com.squareup.picasso.Picasso;
  */
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String USER_ID = "userId";
     private static final String CURRENT_USER_ID = "currentUserId";
-    private static final String ARG_PARAM2 = "currentUserId";
     CircularImageView profileImg, profileMoneyImg, profileFollowersImg, profileMessagesImg;
     ImageView profilePmImg;
     TextView profileNameTv, profileDescTv, profileEmailTv, profileMoneyTv, profileFollowersTv, profileLikesTv;
@@ -47,7 +44,6 @@ public class ProfileFragment extends Fragment {
     DatabaseReference mDatabase;
     Helper helper;
     Boolean followed = false;
-    // TODO: Rename and change types of parameters
     private String userId;
     private String currentUserId;
     private FragmentTabHost tabHost;
@@ -57,7 +53,6 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(String userId, String currentUserId) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();

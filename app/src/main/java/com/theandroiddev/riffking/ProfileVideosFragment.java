@@ -45,7 +45,6 @@ public class ProfileVideosFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static ProfileVideosFragment newInstance(String param1, String param2) {
         ProfileVideosFragment fragment = new ProfileVideosFragment();
         Bundle args = new Bundle();
@@ -123,8 +122,6 @@ public class ProfileVideosFragment extends Fragment {
 //            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
 //            itemTouchHelper.attachToRecyclerView(mRecyclerView);
 //        }
-
-        //TODO check why set two times
         helper.setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER, mRecyclerView,
                 getActivity(), mLayoutManager, mCurrentLayoutManagerType);
         return rootView;

@@ -27,13 +27,13 @@ import java.util.List;
 public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHolder> {
     private static final String TAG = "RepAdapter";
     protected Helper helper;
-    DatabaseReference databaseReference;
     Comment comment;
+    private DatabaseReference databaseReference;
     private List<User> users;
     private Context context;
     private String currentUserId;
 
-    public RankingAdapter(Context context, List<User> users, DatabaseReference databaseReference, String currentUserId) {
+    RankingAdapter(Context context, List<User> users, DatabaseReference databaseReference, String currentUserId) {
         this.context = context;
         this.users = users;
         this.databaseReference = databaseReference;
@@ -103,7 +103,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
         return users.size();
     }
 
-    public void setUser(final TextView userTv, final ImageView userIv, final TextView repTv, final int position) {
+    private void setUser(final TextView userTv, final ImageView userIv, final TextView repTv, final int position) {
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -149,7 +149,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
         private final TextView rankingUserTv, rankingRepTv;
         private final CircularImageView rankingUserIv;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             rankingUserTv = (TextView) itemView.findViewById(R.id.ranking_user_tv);
