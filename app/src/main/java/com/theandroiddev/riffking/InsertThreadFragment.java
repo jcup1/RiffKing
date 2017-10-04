@@ -79,6 +79,9 @@ public class InsertThreadFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.fab.setVisibility(View.VISIBLE);
+
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.theandroiddev.riffking;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,11 +22,14 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
     Bitmap icon_val;
     String thumbURL;
     ImageView singleThumb;
+    Context context;
+    URL thumbnailURL;
 
-    public GetThumbnail(String url, ImageView singleThumbnail) {
+    public GetThumbnail(String url, ImageView singleThumbnail, Context context) {
 
         this.thumbURL = url;
         this.singleThumb = singleThumbnail;
+        this.context = context;
 
     }
 
@@ -41,8 +46,8 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
                 ytId = ytId.substring(0, YTIDLENGTH);
 
                 try {
-                    URL thumbnailURL = new URL("https://img.youtube.com/vi/" + ytId + "/0.jpg");
-                    icon_val = BitmapFactory.decodeStream(thumbnailURL.openConnection().getInputStream());
+                    thumbnailURL = new URL("https://img.youtube.com/vi/" + ytId + "/0.jpg");
+                    //icon_val = BitmapFactory.decodeStream(thumbnailURL.openConnection().getInputStream());
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -58,6 +63,7 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
     protected void onPostExecute(Bitmap bf) {
 
         super.onPostExecute(icon_val);
+        Picasso.with(context).load(String.valueOf(thumbnailURL)).into(singleThumb);
         singleThumb.setImageBitmap(icon_val);
     }
 }

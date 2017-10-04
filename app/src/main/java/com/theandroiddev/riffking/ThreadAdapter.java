@@ -66,11 +66,10 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
                 openThread(holder.getAdapterPosition());
             }
         });
-
         holder.threadStatsTv.setText(initStats(threads.get(position)));
         holder.threadDateTv.setText(initDate(threads.get(position)));
 
-        new GetThumbnail(threads.get(position).getVideoUrl(), holder.threadThumbnailTv).execute();
+        new GetThumbnail(threads.get(position).getVideoUrl(), holder.threadThumbnailTv, context).execute();
 
     }
 
@@ -131,6 +130,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
                 tv.setText(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("name").getValue(String.class));
                 Picasso.with(context).load(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("photoUrl").getValue(String.class))
                         .into(iv);
+
             }
 
             @Override

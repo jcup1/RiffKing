@@ -107,7 +107,6 @@ public class HomeActivity extends AppCompatActivity
 
         initUser();
 
-
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

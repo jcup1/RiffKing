@@ -1,6 +1,7 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -400,10 +401,9 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         if (!b) {
-            //TODO handle screen orientation
-//            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//                youTubePlayer.setFullscreen(true);
-//            } else youTubePlayer.setFullscreen(false);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                youTubePlayer.setFullscreen(true);
+            } else youTubePlayer.setFullscreen(false);
 
             //cue instead of load to stop auto-play
 
