@@ -56,7 +56,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         setDatabase(comments.get(holder.getAdapterPosition()).getThreadId(), comments.get(holder.getAdapterPosition()).getId(),
                 holder.likeIv, position);
@@ -70,9 +70,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
 
-                    if (holder.getAdapterPosition() != -1)
+
+                    if (holder.getAdapterPosition() != -1) {
                         handleLike(comments.get(holder.getAdapterPosition()).getThreadId(), comments.get(holder.getAdapterPosition()).getId(),
                                 holder.likeIv, holder.getAdapterPosition());
+
+                }
 
                 }
             });
