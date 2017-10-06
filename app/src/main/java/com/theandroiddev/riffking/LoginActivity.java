@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -14,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -37,6 +43,12 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
     GoogleApiClient mGoogleApiClient;
     FirebaseAuth.AuthStateListener mAuthListener;
+    @BindView(R.id.login_layout)
+    ConstraintLayout loginLayout;
+    @BindView(R.id.signInButton)
+    SignInButton loginButton;
+    @BindView(R.id.login_guest)
+    TextView loginGuestTv;
     private ProgressDialog mProgress;
     private DatabaseReference mDatabase;
 
@@ -44,14 +56,30 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        mFirebaseAuth.addAuthStateListener(mAuthListener);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        initPostData();
+    }
+
+    private void initPostData() {
+        if (Utility.isNetworkAvailable(getApplicationContext())) {
+            mFirebaseAuth.addAuthStateListener(mAuthListener);
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+        }
+    }
+
+    @OnClick(com.theandroiddev.riffking.R.id.login_guest)
+    public void guest() {
+        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+        i.putExtra("guestmode", true);
+        startActivity(i);
+        finish();
     }
 
     @OnClick(com.theandroiddev.riffking.R.id.signInButton)
     public void login() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        if (Utility.isNetworkAvailable(getApplicationContext())) {
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        } else noInternetSnack();
     }
 
     @Override
@@ -60,11 +88,23 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(com.theandroiddev.riffking.R.layout.activity_login);
         ButterKnife.bind(this);
 
+        //TODO finish ProgressDialog
         mProgress = new ProgressDialog(getApplicationContext());
         mProgress.setTitle("Processing...");
         mProgress.setMessage("Please wait...");
         mProgress.setCancelable(false);
         mProgress.setIndeterminate(true);
+
+        if (Utility.isNetworkAvailable(getApplicationContext())) {
+
+            initData();
+        } else {
+            noInternetSnack();
+        }
+
+    }
+
+    private void initData() {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -94,8 +134,33 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+    }
 
+    private void noInternetSnack() {
 
+        Snackbar snack = Snackbar.make(loginLayout, "No Internet Connection", Snackbar.LENGTH_INDEFINITE)
+                .setAction("REFRESH", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (Utility.isNetworkAvailable(getApplicationContext())) {
+                            //Ifs to handle the case when user opened app with internet connection and lost it after onStart()
+                            //If not null, then already managing a GoogleApiClient
+                            if (mFirebaseAuth == null)
+                                initData();
+                            if (mDatabase == null)
+                                initPostData();
+                        } else noInternetSnack();
+                    }
+                });
+        snack.show();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mGoogleApiClient.stopAutoManage(LoginActivity.this);
+        mGoogleApiClient.disconnect();
     }
 
     @Override

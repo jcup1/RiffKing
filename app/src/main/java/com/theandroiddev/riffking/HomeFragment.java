@@ -183,6 +183,7 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setDrawingCacheEnabled(true);
         mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
+        if (!HomeActivity.guestMode)
         if (HomeActivity.user.getEmail().equals("jakubpchmiel@gmail.com")) {
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
             itemTouchHelper.attachToRecyclerView(mRecyclerView);
@@ -260,11 +261,11 @@ public class HomeFragment extends Fragment {
 
     private void insertThread() {
 
-        InsertThreadFragment insertThreadFragment = new InsertThreadFragment();
+        UploadFragment uploadFragment = new UploadFragment();
 
         FragmentManager fragmentManager = ((FragmentActivity) getContext()).getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(com.theandroiddev.riffking.R.id.content_home, insertThreadFragment).addToBackStack(null);
+        transaction.replace(com.theandroiddev.riffking.R.id.content_home, uploadFragment).addToBackStack(null);
         transaction.commit();
 
     }

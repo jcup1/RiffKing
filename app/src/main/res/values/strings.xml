@@ -44,4 +44,9 @@
     <string name="profile_transfer_btn">Transfer</string>
     <string name="fragment_upload">Fragment Upload</string>
     <string name="fragment_videos">Fragment Videos</string>
+    <string name="share_text">I want to invite you to Riff King app.
+        Compete or watch other musicians fighting for the Riff King title.
+        Maybe you are not a rock star but you can be the Riff King.
+        And there is only one Riff King.
+        You can find it on Google Play</string>
 </resources>

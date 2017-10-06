@@ -40,13 +40,13 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         HomeFragment.OnFragmentInteractionListener, RankingFragment.OnFragmentInteractionListener,
-        VideosFragment.OnFragmentInteractionListener, UploadFragment.OnFragmentInteractionListener,
-        ThreadFragment.OnFragmentInteractionListener, InsertThreadFragment.OnFragmentInteractionListener,
+        ThreadFragment.OnFragmentInteractionListener, UploadFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener, ProfileCommentsFragment.OnFragmentInteractionListener,
         ProfileVideosFragment.OnFragmentInteractionListener, ProfileRepFragment.OnFragmentInteractionListener,
         ProfileRepFragmentMe.OnFragmentInteractionListener {
 
     private static final String TAG = "HomeActivity";
+    public static Boolean guestMode = false;
     static User user;
     static Thread thread;
     public FloatingActionButton fab;
@@ -100,6 +100,9 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        checkGuestMode();
+
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -164,7 +167,19 @@ public class HomeActivity extends AppCompatActivity
                 .replace(R.id.content_home, fragment).commit();
 
         youtubeShareable();
+        checkGuestModeViews();
 
+    }
+
+    private void checkGuestModeViews() {
+        if (guestMode) {
+
+        }
+    }
+
+    private void checkGuestMode() {
+        Intent getIntent = getIntent();
+        guestMode = getIntent.getBooleanExtra("guestmode", false);
     }
 
 
@@ -290,11 +305,11 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_upload:
                 bundle = new Bundle();
                 bundle.putString("URL", urlLink);
-                fragment = new InsertThreadFragment();
+                fragment = new UploadFragment();
                 fragment.setArguments(bundle);
                 break;
             case R.id.nav_share:
-                Toast.makeText(this, "Not ready yet :(", Toast.LENGTH_SHORT).show();
+                share();
                 break;
             case R.id.nav_settings:
                 Toast.makeText(this, "Not ready yet :(", Toast.LENGTH_SHORT).show();
@@ -309,6 +324,12 @@ public class HomeActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+    }
+
+    private void share() {
+        Toast.makeText(this, "Not ready yet :(", Toast.LENGTH_SHORT).show();
+
 
     }
 
@@ -363,9 +384,9 @@ public class HomeActivity extends AppCompatActivity
         int id = R.id.nav_home;
         if (fragment instanceof HomeFragment) id = R.id.nav_home;
         else if (fragment instanceof RankingFragment) id = R.id.nav_ranking;
-        else if (fragment instanceof VideosFragment) id = R.id.nav_videos;
-        else if (fragment instanceof UploadFragment) id = R.id.nav_upload;
+        else if (fragment instanceof ProfileVideosFragment) id = R.id.nav_videos;
         else if (fragment instanceof ProfileFragment) id = R.id.nav_profile_img;
+        else if (fragment instanceof UploadFragment) id = R.id.nav_upload;
         else return;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.getHeaderView(id);
@@ -373,10 +394,14 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void setName() {
+        if (!guestMode) {
+            navNameTv.setText(user.getName());
+            navEmailTv.setText(user.getEmail());
+            Picasso.with(this).load(user.getPhotoUrl()).into(navProfileImg);
+        } else {
+            navNameTv.setText("Guest");
+        }
 
-        navNameTv.setText(user.getName());
-        navEmailTv.setText(user.getEmail());
-        Picasso.with(this).load(user.getPhotoUrl()).into(navProfileImg);
 
     }
 
