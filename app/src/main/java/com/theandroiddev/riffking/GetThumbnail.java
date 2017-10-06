@@ -48,7 +48,8 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
                 ytId = ytId.substring(0, YTIDLENGTH);
 
                 try {
-                    thumbnailURL = new URL("https://img.youtube.com/vi/" + ytId + "/0.jpg");
+                    //thumbnailURL = new URL("https://img.youtube.com/vi/" + ytId + "/0.jpg");
+                    thumbnailURL = new URL("https://img.youtube.com/vi/" + ytId + "/mqdefault.jpg");
                     //icon_val = BitmapFactory.decodeStream(thumbnailURL.openConnection().getInputStream());
 
                 } catch (IOException e) {
@@ -67,6 +68,7 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
         super.onPostExecute(icon_val);
         Picasso.with(context).load(String.valueOf(thumbnailURL))
                 .networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE)
+                .resize(singleThumb.getWidth(), singleThumb.getWidth() * 9 / 16)
                 .into(singleThumb);
         singleThumb.setImageBitmap(icon_val);
     }
