@@ -39,7 +39,7 @@
         android:layout_marginRight="@dimen/margin_big"
         android:layout_marginStart="@dimen/margin_big"
         android:layout_marginTop="@dimen/margin_big"
-        android:hint="Type..."
+        android:hint="@string/type_et_hint"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/profile_comments_user_iv"
         app:layout_constraintRight_toLeftOf="@+id/profile_comments_send_iv"

@@ -26,4 +26,22 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_blog">Blog</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_ranking">Ranking</string>
+    <string name="nav_my_videos">My Videos</string>
+    <string name="nav_upload">Upload</string>
+    <string name="nav_communicate">Communicate</string>
+    <string name="nav_share">Share</string>
+    <string name="nav_settings">Settings</string>
+    <string name="insert_thread_title">Thread Title</string>
+    <string name="insert_video_url">Video URL</string>
+    <string name="insert_category">Category</string>
+    <string name="insert_content">Content</string>
+    <string name="profile_img_desc">desc</string>
+    <string name="follow_btn">follow</string>
+    <string name="type_et_hint">Type…</string>
+    <string name="profile_title_hint">Title</string>
+    <string name="profile_transfer_btn">Transfer</string>
+    <string name="fragment_upload">Fragment Upload</string>
+    <string name="fragment_videos">Fragment Videos</string>
 </resources>

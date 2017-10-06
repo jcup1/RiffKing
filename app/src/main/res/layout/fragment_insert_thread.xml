@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Thread Title"
+            android:hint="@string/insert_thread_title"
             android:inputType="textPersonName"
             android:maxLength="40"
             android:textSize="@dimen/default_et_fs"/>
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Video URL"
+            android:hint="@string/insert_video_url"
             android:inputType="text"
             android:textSize="@dimen/default_et_fs"/>
 
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
 
             android:ems="10"
-            android:hint="Category"
+            android:hint="@string/insert_category"
             android:inputType="text"
             android:textSize="@dimen/default_et_fs"/>
 
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Content"
+            android:hint="@string/insert_content"
             android:inputType="textCapSentences|textMultiLine"
 
             android:maxLines="10"
