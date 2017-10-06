@@ -78,6 +78,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             });
         } else {
             helper.setLikeInactive(holder.likeIv);
+            Log.d(TAG, "onBindViewHolderLike: inactive");
         }
 
 
@@ -101,6 +102,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     private void handleLike(String threadId, final String commentId, final ImageView likeIv, int position) {
+        Log.e(TAG, "handleLike: thre" + threadId + "comm" + commentId);
         if (!liked[position]) {
             helper.transaction(databaseReference.child("comments").child(threadId).child(commentId).child("likes"), 1);
             helper.transaction(databaseReference.child("users").child(comments.get(position).getUserId()).child("likes"), 1);
@@ -110,12 +112,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             helper.transaction(databaseReference.child("comments").child(threadId).child(commentId).child("likes"), -1);
             helper.transaction(databaseReference.child("users").child(comments.get(position).getUserId()).child("likes"), -1);
             databaseReference.child("commentLikes").child(currentUserId).child(commentId).removeValue();
+
         }
     }
 
     private void setDatabase(String threadId, final String commentId, final ImageView likeIv, final int position) {
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -135,8 +138,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
                 }
 
-
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -153,7 +156,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     public void setUserName(final TextView userTv, final ImageView userIv, final int position) {
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 

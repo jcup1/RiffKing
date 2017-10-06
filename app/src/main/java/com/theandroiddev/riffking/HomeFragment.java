@@ -183,7 +183,6 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setDrawingCacheEnabled(true);
         mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
-        if (!HomeActivity.guestMode)
         if (HomeActivity.user.getEmail().equals("jakubpchmiel@gmail.com")) {
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
             itemTouchHelper.attachToRecyclerView(mRecyclerView);

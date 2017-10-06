@@ -101,7 +101,7 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        checkGuestMode();
+//        checkGuestMode();
 
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -167,20 +167,20 @@ public class HomeActivity extends AppCompatActivity
                 .replace(R.id.content_home, fragment).commit();
 
         youtubeShareable();
-        checkGuestModeViews();
+//        checkGuestModeViews();
 
     }
 
-    private void checkGuestModeViews() {
-        if (guestMode) {
-
-        }
-    }
-
-    private void checkGuestMode() {
-        Intent getIntent = getIntent();
-        guestMode = getIntent.getBooleanExtra("guestmode", false);
-    }
+//    private void checkGuestModeViews() {
+//        if (guestMode) {
+//
+//        }
+//    }
+//
+//    private void checkGuestMode() {
+//        Intent getIntent = getIntent();
+//        guestMode = getIntent.getBooleanExtra("guestmode", false);
+//    }
 
 
 //    @Override

@@ -141,7 +141,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = database.getReference();
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -255,6 +255,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                 @Override
                 public void onClick(View v) {
 
+                    if (!thread.getUserId().equals(getCurrentUserId())) {
                     if (!liked) {
                         helper.transaction(databaseReference.child("threads").child(threadId).child("likes"), 1);
                         helper.transaction(databaseReference.child("users").child(thread.getUserId()).child("likes"), 1);
@@ -266,6 +267,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                         databaseReference.child("threadLikes").child(getCurrentUserId()).child(threadId).removeValue();
                     }
 
+                }
                 }
             });
 

@@ -102,17 +102,18 @@ public class Thread {
     public String getYoutubeId() {
 
         if (getVideoUrl().length() > YTIDLENGTH) {
-            String ytId = getVideoUrl().substring(getVideoUrl().length() - YTIDLENGTH, getVideoUrl().length());
-            if (ytId.length() >= YTIDLENGTH) {
+            String youtubeId = getVideoUrl().substring(getVideoUrl().length() - YTIDLENGTH, getVideoUrl().length());
+            if (youtubeId.length() >= YTIDLENGTH) {
 
 
-                ytId = ytId.substring(0, YTIDLENGTH);
+                youtubeId = youtubeId.substring(0, YTIDLENGTH);
 
-                return ytId;
+                return youtubeId;
             }
 
         }
         return getVideoUrl();
     }
+
 
 }

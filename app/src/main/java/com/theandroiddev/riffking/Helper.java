@@ -41,6 +41,7 @@ public class Helper {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 int num = mutableData.getValue(Integer.class);
+                Log.d(TAG, "doTransaction: num " + num + "number " + number);
 
                 num += number;
 
