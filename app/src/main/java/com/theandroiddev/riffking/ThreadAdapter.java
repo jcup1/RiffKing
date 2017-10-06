@@ -55,6 +55,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Log.d(TAG, "Element " + position + " set.");
+        new GetThumbnail(threads.get(position).getVideoUrl(), holder.threadThumbnailTv, context).execute();
 
         holder.getThreadTitleTv().setText(threads.get(position).getTitle());
         setThreadCreator((position), holder.threadUserTv, holder.threadUserIv);
@@ -69,7 +70,6 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
         holder.threadStatsTv.setText(initStats(threads.get(position)));
         holder.threadDateTv.setText(initDate(threads.get(position)));
 
-        new GetThumbnail(threads.get(position).getVideoUrl(), holder.threadThumbnailTv, context).execute();
 
     }
 
@@ -123,12 +123,17 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
 
     public void setThreadCreator(final int position, final TextView tv, final CircularImageView iv) {
 
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                Picasso.with(iv.getContext()).cancelRequest(iv);
+
                 tv.setText(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("name").getValue(String.class));
-                Picasso.with(context).load(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("photoUrl").getValue(String.class))
+//                Picasso.with(context).load(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("photoUrl").getValue(String.class))
+//                        .into(iv);
+                Picasso.with(iv.getContext())
+                        .load(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("photoUrl").getValue(String.class))
                         .into(iv);
 
             }

@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -63,7 +65,9 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
     protected void onPostExecute(Bitmap bf) {
 
         super.onPostExecute(icon_val);
-        Picasso.with(context).load(String.valueOf(thumbnailURL)).into(singleThumb);
+        Picasso.with(context).load(String.valueOf(thumbnailURL))
+                .networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE)
+                .into(singleThumb);
         singleThumb.setImageBitmap(icon_val);
     }
 }

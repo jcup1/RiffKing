@@ -178,6 +178,11 @@ public class HomeFragment extends Fragment {
         mThreadAdapter = new ThreadAdapter(getContext(), threads, mDatabase);
         mRecyclerView.setAdapter(mThreadAdapter);
 
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemViewCacheSize(20);
+        mRecyclerView.setDrawingCacheEnabled(true);
+        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
         if (HomeActivity.user.getEmail().equals("jakubpchmiel@gmail.com")) {
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
             itemTouchHelper.attachToRecyclerView(mRecyclerView);
@@ -187,6 +192,7 @@ public class HomeFragment extends Fragment {
                 getActivity(), mLayoutManager, mCurrentLayoutManagerType);
 
 
+        mThreadAdapter.notifyDataSetChanged();
         return rootView;
     }
 
@@ -219,7 +225,7 @@ public class HomeFragment extends Fragment {
         }
 
 
-        mThreadAdapter.notifyDataSetChanged();
+        //mThreadAdapter.notifyDataSetChanged();
 
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -285,6 +291,7 @@ public class HomeFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
             helper = new Helper(context);
+
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

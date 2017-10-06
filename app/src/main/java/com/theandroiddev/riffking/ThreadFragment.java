@@ -141,7 +141,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = database.getReference();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
