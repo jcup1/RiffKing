@@ -49,6 +49,8 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_thread,
                 parent, false);
 
+        //TODO set ThumbnailIv size on start
+
         return new ViewHolder(v);
     }
 
@@ -159,10 +161,10 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
 
             threadTitleTv = (TextView) itemView.findViewById(R.id.text_view);
             threadUserTv = (TextView) itemView.findViewById(R.id.nick_tv);
-            threadThumbnailTv = (ImageView) itemView.findViewById(R.id.thumbnail_img);
             threadStatsTv = (TextView) itemView.findViewById(R.id.stats_tv);
             threadDateTv = (TextView) itemView.findViewById(R.id.date_tv);
             threadUserIv = (CircularImageView) itemView.findViewById(R.id.nick_iv);
+            threadThumbnailTv = (ImageView) itemView.findViewById(R.id.thumbnail_img);
 
         }
 

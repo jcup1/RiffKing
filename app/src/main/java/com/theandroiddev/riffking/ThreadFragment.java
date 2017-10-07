@@ -237,6 +237,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             threadUserIv = (CircularImageView) fragmentThreadView.findViewById(R.id.thread_user_iv);
             youtubeFrameLayout = (FrameLayout) fragmentThreadView.findViewById(R.id.fragment_youtube_player);
 
+
             threadUserTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -8,8 +8,8 @@ android {
         applicationId "com.theandroiddev.riffking"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 14
-        versionName "0.94"
+        versionCode 16
+        versionName "0.96"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

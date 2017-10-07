@@ -65,24 +65,23 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.dateTv.setText(comments.get(position).getDate());
         holder.likesTv.setText(String.valueOf(comments.get(position).getLikes()));
 
-        if (!comments.get(position).getUserId().equals(currentUserId)) {
+
             holder.likeIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                    if (!comments.get(position).getUserId().equals(currentUserId)) {
 
                     if (holder.getAdapterPosition() != -1) {
                         handleLike(comments.get(holder.getAdapterPosition()).getThreadId(), comments.get(holder.getAdapterPosition()).getId(),
                                 holder.likeIv, holder.getAdapterPosition());
+                    }
+
 
                 }
 
                 }
             });
-        } else {
-            helper.setLikeInactive(holder.likeIv);
-            Log.d(TAG, "onBindViewHolderLike: inactive");
-        }
 
 
         holder.userIv.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +138,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
                     }
 
+                } else {
+                    helper.setLikeInactive(likeIv);
                 }
 
             }

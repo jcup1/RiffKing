@@ -6,176 +6,244 @@
                                              android:focusableInTouchMode="true"
                                              tools:context=".ThreadFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <TextView
-        android:id="@+id/thread_title_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:maxLines="2"
-        android:paddingLeft="8dp"
-        android:textSize="@dimen/thread_title_tv_fs"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/thread_views_number_tv"
-        app:layout_constraintTop_toTopOf="@+id/thread_view_iv"
-        tools:text="Title"
-        />
-
     <FrameLayout
         android:id="@+id/fragment_youtube_player"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
         android:saveEnabled="false"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"/>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"/>
-
-
-    <TextView
-        android:id="@+id/thread_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:textSize="@dimen/thread_description_tv_fs"
-        android:visibility="gone"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thread_views_number_tv"
-        tools:text="TextView"/>
-
-    <ImageView
-        android:id="@+id/thread_like_iv"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:padding="4dp"
-        android:tint="@color/darker_gray"
-        app:layout_constraintLeft_toLeftOf="@+id/thread_likes_number_tv"
-        app:layout_constraintRight_toRightOf="@+id/thread_likes_number_tv"
-        app:layout_constraintTop_toTopOf="@+id/thread_view_iv"
-        app:srcCompat="@drawable/ic_thumb_up_black_48dp"/>
-
-    <TextView
-        android:id="@+id/thread_likes_number_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:textAlignment="center"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thread_like_iv"
-        tools:text="TextView"/>
-
-    <com.theandroiddev.riffking.CustomEditText
-        android:id="@+id/thread_comment_et"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
-        android:hint="@string/type_et_hint"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/thread_comment_send_iv"
-        app:layout_constraintTop_toBottomOf="@+id/thread_user_iv"/>
-
-    <ImageView
-        android:id="@+id/thread_view_iv"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:tint="@color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/thread_likes_number_tv"
-        app:layout_constraintLeft_toLeftOf="@+id/thread_views_number_tv"
-        app:layout_constraintRight_toRightOf="@+id/thread_views_number_tv"
         app:layout_constraintTop_toBottomOf="@+id/fragment_youtube_player"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1">
 
-        app:srcCompat="@drawable/ic_remove_red_eye_black_48dp"/>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/thread_views_number_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        app:layout_constraintRight_toLeftOf="@+id/thread_likes_number_tv"
-        app:layout_constraintTop_toBottomOf="@+id/thread_view_iv"
-        tools:text="51"/>
+            <TextView
+                android:id="@+id/thread_title_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:maxLines="2"
+                android:paddingLeft="8dp"
+                android:textColor="@color/darker_gray"
+                android:textSize="@dimen/thread_title_tv_fs"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/thread_views_number_tv"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1"
+                tools:text="Title"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/thread_comments_rv"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thread_comment_et"
-        app:layout_constraintVertical_bias="0.0"/>
 
-    <ImageView
-        android:id="@+id/thread_comment_send_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginTop="8dp"
-        android:onClick=""
-        android:padding="8dp"
-        android:tint="@color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/thread_comments_rv"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/thread_comment_et"
-        app:layout_constraintVertical_bias="0.333"
-        app:srcCompat="@drawable/ic_menu_send"/>
+            <View
+                android:id="@+id/view2"
+                android:layout_width="0dp"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/light_gray"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/thread_user_iv"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1"/>
 
-    <TextView
-        android:id="@+id/thread_user_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/thread_user_iv"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toRightOf="@+id/thread_user_iv"
-        app:layout_constraintRight_toLeftOf="@+id/thread_views_number_tv"
-        app:layout_constraintTop_toTopOf="@+id/thread_user_iv"
-        app:layout_constraintVertical_bias="0.5"/>
 
-    <com.mikhaellopez.circularimageview.CircularImageView
-        android:id="@+id/thread_user_iv"
-        android:layout_width="40dp"
-        android:layout_height="41dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="8dp"
-        app:civ_border="false"
-        app:layout_constraintLeft_toRightOf="@+id/thread_description"
-        app:layout_constraintTop_toBottomOf="@+id/thread_title_tv"
-        app:srcCompat="@drawable/ic_account_circle_black_48dp"/>
+            <View
+                android:id="@+id/view3"
+                android:layout_width="0dp"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorPrimaryDark"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/thread_comment_et"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1"
+                />
 
+            <TextView
+                android:id="@+id/thread_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="@dimen/thread_description_tv_fs"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/thread_views_number_tv"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1"
+                tools:text="TextView"/>
+
+            <ImageView
+                android:id="@+id/thread_like_iv"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="0dp"
+                android:padding="4dp"
+                android:tint="@color/darker_gray"
+                app:layout_constraintLeft_toLeftOf="@+id/thread_likes_number_tv"
+                app:layout_constraintRight_toRightOf="@+id/thread_likes_number_tv"
+                app:layout_constraintTop_toTopOf="@+id/thread_view_iv"
+                app:srcCompat="@drawable/ic_thumb_up_black_48dp"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintRight_creator="1"/>
+
+            <TextView
+                android:id="@+id/thread_likes_number_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginTop="0dp"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="@+id/thread_views_number_tv"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/thread_like_iv"
+                app:layout_constraintVertical_bias="1.0"
+                tools:text="4"/>
+
+            <ImageView
+                android:id="@+id/thread_view_iv"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="0dp"
+                android:padding="4dp"
+                android:tint="@color/darker_gray"
+                app:layout_constraintBottom_toTopOf="@+id/thread_likes_number_tv"
+                app:layout_constraintLeft_toLeftOf="@+id/thread_views_number_tv"
+
+                app:layout_constraintRight_toRightOf="@+id/thread_views_number_tv"
+                app:layout_constraintTop_toBottomOf="@+id/thread_title_tv"
+                app:srcCompat="@drawable/ic_remove_red_eye_black_48dp"/>
+
+            <TextView
+                android:id="@+id/thread_views_number_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="40dp"
+                app:layout_constraintBottom_toBottomOf="@+id/thread_user_tv"
+                app:layout_constraintRight_toLeftOf="@+id/thread_likes_number_tv"
+                app:layout_constraintTop_toBottomOf="@+id/thread_view_iv"
+                app:layout_constraintVertical_bias="1.0"
+                tools:text="51"/>
+
+            <TextView
+                android:id="@+id/thread_user_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="@+id/thread_user_iv"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@+id/thread_user_iv"
+                app:layout_constraintRight_toLeftOf="@+id/thread_views_number_tv"
+                app:layout_constraintTop_toTopOf="@+id/thread_user_iv"
+                app:layout_constraintVertical_bias="0.5"/>
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/thread_user_iv"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="16dp"
+                app:civ_border="false"
+                app:layout_constraintLeft_toRightOf="@+id/thread_description"
+                app:layout_constraintTop_toBottomOf="@+id/thread_title_tv"
+                app:srcCompat="@drawable/ic_account_circle_black_48dp"/>
+
+            <com.theandroiddev.riffking.CustomEditText
+                android:id="@+id/thread_comment_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:hint="@string/type_et_hint"
+                android:textSize="18sp"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/thread_comment_send_iv"
+                app:layout_constraintTop_toBottomOf="@+id/view2"/>
+
+            <ImageView
+                android:id="@+id/thread_comment_send_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="0dp"
+                android:onClick=""
+                android:padding="8dp"
+                android:tint="@color/darker_gray"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/thread_comment_et"
+                app:srcCompat="@drawable/ic_menu_send"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/thread_comments_rv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view3"
+                app:layout_constraintVertical_bias="0.0"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.constraint.ConstraintLayout>
+
+
+
