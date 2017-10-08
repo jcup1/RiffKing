@@ -3,9 +3,10 @@
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-                                             tools:context=".ProfileRepFragment">
+                                             tools:context=".ProfileRepFragment"
+    android:id="@+id/profile_rep_layout">
 
-    <EditText
+    <com.theandroiddev.riffking.CustomEditText
         android:id="@+id/profile_rep_title_et"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -21,7 +22,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <EditText
+    <com.theandroiddev.riffking.CustomEditText
         android:id="@+id/profile_rep_et"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -29,10 +30,12 @@
         android:layout_marginRight="@dimen/margin_big"
         android:layout_marginTop="@dimen/margin_big"
         android:gravity="center"
+        android:digits="0123456789."
+        android:inputType="numberDecimal"
         android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="@+id/profile_rep_title_et"
         app:layout_constraintRight_toRightOf="@+id/profile_rep_title_et"
-        app:layout_constraintTop_toBottomOf="@+id/profile_rep_title_et"/>
+        app:layout_constraintTop_toBottomOf="@+id/profile_rep_title_et" />
 
     <ImageView
         android:id="@+id/profile_rep_plus_iv"

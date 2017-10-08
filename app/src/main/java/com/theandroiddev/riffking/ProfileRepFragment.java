@@ -3,6 +3,8 @@ package com.theandroiddev.riffking;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,9 +33,10 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileRepFragment extends Fragment {
     private static final String TAG = "ProfileRepFragment";
 
-    protected EditText profileRepTitleEt, profileRepEt;
+    protected CustomEditText profileRepTitleEt, profileRepEt;
     protected ImageView profileRepMinusIv, profileRepPlusIv;
     protected Button profileRepTransferBtn;
+    protected ConstraintLayout profileRepLayout;
 
     protected DatabaseReference mDatabase;
     protected Helper helper;
@@ -41,6 +44,7 @@ public class ProfileRepFragment extends Fragment {
     private String userId;
 
     private OnFragmentInteractionListener mListener;
+    private Integer currentUserRep;
 
     public ProfileRepFragment() {
         // Required empty public constructor
@@ -66,7 +70,7 @@ public class ProfileRepFragment extends Fragment {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                currentUserRep = dataSnapshot.child("users").child(currentUserId).child("reps").getValue(Integer.class);
 
             }
 
@@ -83,11 +87,12 @@ public class ProfileRepFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile_rep, container, false);
 
-        profileRepTitleEt = (EditText) rootView.findViewById(R.id.profile_rep_title_et);
-        profileRepEt = (EditText) rootView.findViewById(R.id.profile_rep_et);
+        profileRepTitleEt = (CustomEditText) rootView.findViewById(R.id.profile_rep_title_et);
+        profileRepEt = (CustomEditText) rootView.findViewById(R.id.profile_rep_et);
         profileRepMinusIv = (ImageView) rootView.findViewById(R.id.profile_rep_minus_iv);
         profileRepPlusIv = (ImageView) rootView.findViewById(R.id.profile_rep_plus_iv);
         profileRepTransferBtn = (Button) rootView.findViewById(R.id.profile_rep_transfer_btn);
+        profileRepLayout = (ConstraintLayout) rootView.findViewById(R.id.profile_rep_layout);
 
         profileRepEt.setText(String.valueOf(50));
 
@@ -124,17 +129,28 @@ public class ProfileRepFragment extends Fragment {
     private void transferRep() {
         if (!userId.equals(currentUserId)) {
 
-            Rep rep = new Rep(Integer.valueOf(profileRepEt.getText().toString()), currentUserId, helper.getCurrentDate(), profileRepTitleEt.getText().toString());
-            mDatabase.child("reps").child(userId).push().setValue(rep);
+            if((Integer.valueOf(profileRepEt.getText().toString()) <= currentUserRep)) {
 
-            helper.transaction(mDatabase.child("users").child(currentUserId).child("reps"), -(Integer.valueOf(profileRepEt.getText().toString())));
-            helper.transaction(mDatabase.child("users").child(userId).child("reps"), Integer.valueOf(profileRepEt.getText().toString()));
-            profileRepTitleEt.setText("");
+                Rep rep = new Rep(Integer.valueOf(profileRepEt.getText().toString()), currentUserId, helper.getCurrentDate(), profileRepTitleEt.getText().toString());
+                mDatabase.child("reps").child(userId).push().setValue(rep);
+
+                helper.transaction(mDatabase.child("users").child(currentUserId).child("reps"), -(Integer.valueOf(profileRepEt.getText().toString())));
+                helper.transaction(mDatabase.child("users").child(userId).child("reps"), Integer.valueOf(profileRepEt.getText().toString()));
+                profileRepTitleEt.setText("");
+                profileRepEt.setText(R.string.profile_rep_value_default);
+                snackRepSent();
+            }else {
+                snackRepSentFailed();
+            }
         }
     }
 
+    private void snackRepSentFailed() {
+        Snackbar.make(profileRepLayout, R.string.profile_rep_not_enough, Snackbar.LENGTH_SHORT).show();
+    }
 
-
+    private void snackRepSent() {
+        Snackbar.make(profileRepLayout, R.string.profile_rep_sent, Snackbar.LENGTH_SHORT).show();}
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

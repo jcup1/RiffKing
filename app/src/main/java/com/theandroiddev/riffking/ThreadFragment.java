@@ -170,7 +170,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                     }
                 }
 
-                comments.clear();
+                //comments.clear();
                 Iterable<DataSnapshot> children = dataSnapshot.child("comments").child(threadId).getChildren();
 
                 for (DataSnapshot child : children) {
@@ -193,7 +193,6 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
         });
 
         loadThread();
-
 
     }
 
@@ -220,7 +219,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
             mCommentAdapter = new CommentAdapter(getContext(), comments, databaseReference, getCurrentUserId());
             Log.d(TAG, "onDataChange2: " + comments.toString());
 
-            mRecyclerView.setNestedScrollingEnabled(true);
+            mRecyclerView.setNestedScrollingEnabled(false);
             mRecyclerView.setAdapter(mCommentAdapter);
 
             helper.setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER, mRecyclerView,

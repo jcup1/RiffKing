@@ -151,25 +151,26 @@ public class ProfileFragment extends Fragment {
         profileLikesTv.setText(String.valueOf(user.getLikes()));
 
         if (followed) {
-            helper.setUfollowed(profileFollowBtn);
-        } else {
             helper.setFollowed(profileFollowBtn);
+        } else {
+            helper.setUnfollowed(profileFollowBtn);
         }
 
         profileFollowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (followed) {
-                    mDatabase.child("userFollowers").child(currentUserId).child(userId).removeValue();
+                    mDatabase.child("use" +
+                            "rFollowers").child(currentUserId).child(userId).removeValue();
 
                     helper.transaction(mDatabase.child("users").child(userId).child("followers"), -1);
-                    helper.setFollowed(profileFollowBtn);
+                    helper.setUnfollowed(profileFollowBtn);
 
                 } else {
                     mDatabase.child("userFollowers").child(currentUserId).child(userId).setValue(true);
 
                     helper.transaction(mDatabase.child("users").child(userId).child("followers"), 1);
-                    helper.setUfollowed(profileFollowBtn);
+                    helper.setFollowed(profileFollowBtn);
                 }
             }
         });

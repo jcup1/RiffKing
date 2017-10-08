@@ -2,8 +2,11 @@ package com.theandroiddev.riffking;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.squareup.picasso.MemoryPolicy;
@@ -13,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.net.URL;
 
+import static android.graphics.Color.GRAY;
 import static com.theandroiddev.riffking.Helper.YTIDLENGTH;
 
 /**
@@ -26,8 +30,9 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
     ImageView singleThumb;
     Context context;
     URL thumbnailURL;
+    int layoutWidth;
 
-    public GetThumbnail(String url, ImageView singleThumbnail, Context context) {
+    public GetThumbnail(String url, final ImageView singleThumbnail, Context context) {
 
         this.thumbURL = url;
         this.singleThumb = singleThumbnail;
@@ -37,7 +42,6 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... params) {
-
 
         String URLLink = thumbURL;
         if (URLLink.length() > YTIDLENGTH) {
@@ -66,10 +70,11 @@ public class GetThumbnail extends AsyncTask<String, String, Bitmap> {
     protected void onPostExecute(Bitmap bf) {
 
         super.onPostExecute(icon_val);
+
         Picasso.with(context).load(String.valueOf(thumbnailURL))
                 .networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE)
                 .resize(singleThumb.getWidth(), singleThumb.getWidth() * 9 / 16)
+                .placeholder(new ColorDrawable(GRAY))
                 .into(singleThumb);
-        singleThumb.setImageBitmap(icon_val);
     }
 }

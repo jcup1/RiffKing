@@ -169,6 +169,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
                     if (dataSnapshot.child("threads").child(comments.get(position).getThreadId()).child("userId").getValue(String.class) != null) {
                         if (dataSnapshot.child("threads").child(comments.get(position).getThreadId()).child("userId").getValue(String.class).equals(comments.get(position).getUserId())) {
+                            Log.d(TAG, "onDataChange: EWEWEW " + dataSnapshot.child("threads").child(comments.get(position).getThreadId()).child("userId").getValue(String.class)
+                            + " = " + comments.get(position).getUserId());
                             helper.highlightUser(userTv);
                         }
                     }

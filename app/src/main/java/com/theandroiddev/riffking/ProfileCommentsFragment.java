@@ -45,7 +45,7 @@ public class ProfileCommentsFragment extends Fragment {
     protected HomeFragment.LayoutManagerType mCurrentLayoutManagerType;
     TextView profileCommentsNumberTv;
     CircularImageView profileCommentsUserIv;
-    EditText profileCommentsContentEt;
+    CustomEditText profileCommentsContentEt;
     RecyclerView mRecyclerView;
     ImageView profileCommentsSendIv;
     DatabaseReference mDatabase;
@@ -138,11 +138,13 @@ public class ProfileCommentsFragment extends Fragment {
 
         profileCommentsNumberTv = (TextView) rootView.findViewById(R.id.profile_comments_number_tv);
         profileCommentsUserIv = (CircularImageView) rootView.findViewById(R.id.profile_comments_user_iv);
-        profileCommentsContentEt = (EditText) rootView.findViewById(R.id.profile_comments_content_et);
+        profileCommentsContentEt = (CustomEditText) rootView.findViewById(R.id.profile_comments_content_et);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.profile_comments_rv);
         profileCommentsSendIv = (ImageView) rootView.findViewById(R.id.profile_comments_send_iv);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
+
+        mRecyclerView.setNestedScrollingEnabled(true);
 
 
         mCurrentLayoutManagerType = HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;

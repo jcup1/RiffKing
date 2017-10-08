@@ -49,4 +49,8 @@
         Maybe you are not a rock star but you can be the Riff King.
         And there is only one Riff King.
         You can find it on Google Play</string>
+
+    <string name="profile_rep_value_default">50</string>
+    <string name="profile_rep_sent">Rep Sent!</string>
+    <string name="profile_rep_not_enough">Not enough rep</string>
 </resources>

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +23,10 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static android.graphics.Color.BLACK;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static com.theandroiddev.riffking.R.color.gray;
 
 /**
  * Created by jakub on 18.07.17.
@@ -57,7 +62,8 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Log.d(TAG, "Element " + position + " set.");
-        new GetThumbnail(threads.get(position).getVideoUrl(), holder.threadThumbnailTv, context).execute();
+
+        new GetThumbnail(threads.get(position).getVideoUrl(), holder.threadThumbnailIv, context).execute();
 
         holder.getThreadTitleTv().setText(threads.get(position).getTitle());
         setThreadCreator((position), holder.threadUserTv, holder.threadUserIv);
@@ -129,7 +135,7 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Picasso.with(iv.getContext()).cancelRequest(iv);
+                //Picasso.with(iv.getContext()).cancelRequest(iv);
 
                 tv.setText(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("name").getValue(String.class));
 //                Picasso.with(context).load(dataSnapshot.child("users").child(threads.get(position).getUserId()).child("photoUrl").getValue(String.class))
@@ -153,8 +159,9 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
 
         private final TextView threadTitleTv, threadStatsTv, threadUserTv;
         private final TextView threadDateTv;
-        private final ImageView threadThumbnailTv;
+        private final ImageView threadThumbnailIv;
         private final CircularImageView threadUserIv;
+        private final LinearLayout threadLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -164,8 +171,8 @@ public class ThreadAdapter extends RecyclerView.Adapter<ThreadAdapter.ViewHolder
             threadStatsTv = (TextView) itemView.findViewById(R.id.stats_tv);
             threadDateTv = (TextView) itemView.findViewById(R.id.date_tv);
             threadUserIv = (CircularImageView) itemView.findViewById(R.id.nick_iv);
-            threadThumbnailTv = (ImageView) itemView.findViewById(R.id.thumbnail_img);
-
+            threadThumbnailIv = (ImageView) itemView.findViewById(R.id.thumbnail_img);
+            threadLayout = (LinearLayout) itemView.findViewById(R.id.thread_layout);
         }
 
         public TextView getThreadTitleTv() {

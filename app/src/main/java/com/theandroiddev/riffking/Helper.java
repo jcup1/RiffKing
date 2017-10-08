@@ -122,7 +122,7 @@ public class Helper {
         }
     }
 
-    public void setUfollowed(Button followIv) {
+    public void setUnfollowed(Button followIv) {
         if (followIv != null) {
             followIv.setTextColor(context.getResources().getColor(R.color.darker_gray));
             followIv.setText("Follow");
