@@ -167,6 +167,7 @@ public class HomeActivity extends AppCompatActivity
                 .replace(R.id.content_home, fragment).commit();
 
         youtubeShareable();
+
 //        checkGuestModeViews();
 
     }
@@ -202,6 +203,7 @@ public class HomeActivity extends AppCompatActivity
 
             if (urlLink != null && !urlLink.equals("")) {
                 displaySelectedScreen(R.id.nav_upload);
+                //TODO send link to nav_upload and display in TV
             }
 
         }
@@ -307,6 +309,7 @@ public class HomeActivity extends AppCompatActivity
                 bundle.putString("URL", urlLink);
                 fragment = new UploadFragment();
                 fragment.setArguments(bundle);
+
                 break;
             case R.id.nav_share:
                 share();

@@ -1,6 +1,7 @@
 package com.theandroiddev.riffking;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +38,9 @@ public class UploadFragment extends Fragment {
 
     private static final String URL_PARAM = "URL_PARAM";
     private static final String TAG = "UploadFragment";
-    EditText titleEt, urlEt, contentEt;
+    EditText titleEt, contentEt;
+    TextView urlTv;
+    ImageView youtubeBtn;
     String URL;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -89,8 +94,9 @@ public class UploadFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         titleEt = (EditText) getActivity().findViewById(R.id.title_et);
-        urlEt = (EditText) getActivity().findViewById(R.id.URL_et);
+        urlTv = (TextView) getActivity().findViewById(R.id.URL_tv);
         contentEt = (EditText) getActivity().findViewById(R.id.content_et);
+        youtubeBtn = (ImageView) getActivity().findViewById(R.id.youtube_btn);
 
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.fab.setImageResource(R.drawable.ic_check_24dp);
@@ -98,6 +104,7 @@ public class UploadFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (userIsConnected()) {
+                    //TODO highlight in drawer doesn't change
                     insertThread();
                 } else {
                     insertThreadToQueue();
@@ -106,7 +113,15 @@ public class UploadFragment extends Fragment {
             }
         });
 
-        urlEt.setText(urlLink);
+        urlTv.setText(urlLink);
+        youtubeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO use butterknife
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://"));
+                startActivity(intent);
+            }
+        });
         //Toast.makeText(getContext(), urlLink, Toast.LENGTH_SHORT).show();
 
     }
@@ -115,7 +130,7 @@ public class UploadFragment extends Fragment {
 
         if (validate()) {
 
-            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlEt.getText().toString(), contentEt.getText().toString(), "default", helper.getCurrentDate(), 0, 0);
+            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlTv.getText().toString(), contentEt.getText().toString(), "default", helper.getCurrentDate(), 0, 0);
             if (threadsInQueue == null)
                 threadsInQueue = new ArrayList<>();
 
@@ -143,7 +158,7 @@ public class UploadFragment extends Fragment {
 
         if (validate()) {
 
-            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlEt.getText().toString(), contentEt.getText().toString(), "default", helper.getCurrentDate(), 0, 0);
+            Thread thread = new Thread(getUser(), titleEt.getText().toString(), urlTv.getText().toString(), contentEt.getText().toString(), "default", helper.getCurrentDate(), 0, 0);
             mDatabase.child("threads").push().setValue(thread);
             urlLink = "";
             HomeActivity homeActivity = (HomeActivity) getActivity();
@@ -165,18 +180,18 @@ public class UploadFragment extends Fragment {
             titleEt.setError("Title can't be empty");
             return false;
         }
-        if (TextUtils.isEmpty(urlEt.getText().toString())) {
-            urlEt.setError("Video URL can't be empty");
+        if (TextUtils.isEmpty(urlTv.getText().toString())) {
+            urlTv.setError("Video URL can't be empty");
             return false;
         }
-        if (urlEt.getText().toString().length() < YTIDLENGTH) {
-            urlEt.setError("Video URL is not proper");
+        if (urlTv.getText().toString().length() < YTIDLENGTH) {
+            urlTv.setError("Video URL is not proper");
             return false;
         }
 
-        if (!urlEt.getText().toString().contains(".") && !urlEt.getText().toString().contains("youtu") && !urlEt.getText().toString().contains("/")
-                && linkIdIsProper(urlEt)) {
-            urlEt.setError("Video URL is not proper");
+        if (!urlTv.getText().toString().contains(".") && !urlTv.getText().toString().contains("youtu") && !urlTv.getText().toString().contains("/")
+                && linkIdIsProper(urlTv)) {
+            urlTv.setError("Video URL is not proper");
             return false;
         }
 
@@ -184,7 +199,7 @@ public class UploadFragment extends Fragment {
 
     }
 
-    private boolean linkIdIsProper(EditText urlEt) {
+    private boolean linkIdIsProper(TextView urlEt) {
 
         String ytId = urlEt.getText().toString().substring(urlEt.length() - YTIDLENGTH, urlEt.length());
 
