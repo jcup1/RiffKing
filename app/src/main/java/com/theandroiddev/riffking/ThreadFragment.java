@@ -170,7 +170,7 @@ public class ThreadFragment extends Fragment implements YouTubePlayer.OnInitiali
                     }
                 }
 
-                //comments.clear();
+                comments.clear();
                 Iterable<DataSnapshot> children = dataSnapshot.child("comments").child(threadId).getChildren();
 
                 for (DataSnapshot child : children) {
