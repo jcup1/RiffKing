@@ -18,8 +18,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.squareup.picasso.Picasso
-import com.theandroiddev.riffking.AsyncResponse
 import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.utils.AsyncResponse
 import java.util.*
 
 /**

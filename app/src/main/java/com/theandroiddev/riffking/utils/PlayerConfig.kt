@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.utils
 
 /**
  * Created by jakub on 22.09.17.

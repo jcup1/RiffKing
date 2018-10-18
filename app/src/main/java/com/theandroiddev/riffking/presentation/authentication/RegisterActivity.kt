@@ -7,8 +7,8 @@ import android.widget.Toast
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.theandroiddev.riffking.R
-import com.theandroiddev.riffking.SharedPrefManager
 import com.theandroiddev.riffking.presentation.home.HomeActivity
+import com.theandroiddev.riffking.utils.SharedPrefManager
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {

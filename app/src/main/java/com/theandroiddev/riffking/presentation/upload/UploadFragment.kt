@@ -14,13 +14,13 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.theandroiddev.riffking.Helper
-import com.theandroiddev.riffking.Helper.Companion.ytIdLength
 import com.theandroiddev.riffking.R
-import com.theandroiddev.riffking.Utility
 import com.theandroiddev.riffking.presentation.home.HomeActivity
 import com.theandroiddev.riffking.presentation.home.HomeActivity.Companion.saveSharedPreferencesLogList
 import com.theandroiddev.riffking.presentation.thread.Thread
+import com.theandroiddev.riffking.utils.Helper
+import com.theandroiddev.riffking.utils.Helper.Companion.ytIdLength
+import com.theandroiddev.riffking.utils.Utility
 import kotlinx.android.synthetic.main.fragment_upload.*
 
 

@@ -46,7 +46,7 @@
             app:layout_constraintLeft_toRightOf="@+id/textView"
             app:layout_constraintTop_toTopOf="@+id/textView" />
 
-        <com.theandroiddev.riffking.CustomEditText
+        <com.theandroiddev.riffking.utils.CustomEditText
             android:id="@+id/profile_comments_content_et"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -22,14 +22,14 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
 import com.theandroiddev.riffking.R
-import com.theandroiddev.riffking.User
-import com.theandroiddev.riffking.Utility
 import com.theandroiddev.riffking.presentation.authentication.LoginActivity
+import com.theandroiddev.riffking.presentation.common.User
 import com.theandroiddev.riffking.presentation.profile.*
 import com.theandroiddev.riffking.presentation.ranking.RankingFragment
 import com.theandroiddev.riffking.presentation.thread.Thread
 import com.theandroiddev.riffking.presentation.thread.ThreadFragment
 import com.theandroiddev.riffking.presentation.upload.UploadFragment
+import com.theandroiddev.riffking.utils.Utility
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.nav_header_home.*
 

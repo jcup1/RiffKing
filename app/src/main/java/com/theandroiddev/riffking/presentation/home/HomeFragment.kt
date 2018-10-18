@@ -15,12 +15,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.google.firebase.database.*
-import com.theandroiddev.riffking.Helper
 import com.theandroiddev.riffking.R
-import com.theandroiddev.riffking.Utility
 import com.theandroiddev.riffking.presentation.thread.Thread
 import com.theandroiddev.riffking.presentation.thread.ThreadAdapter
 import com.theandroiddev.riffking.presentation.upload.UploadFragment
+import com.theandroiddev.riffking.utils.Helper
+import com.theandroiddev.riffking.utils.Utility
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 

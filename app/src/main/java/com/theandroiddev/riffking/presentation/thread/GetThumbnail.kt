@@ -9,7 +9,7 @@ import android.widget.ImageView
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
-import com.theandroiddev.riffking.Helper.Companion.ytIdLength
+import com.theandroiddev.riffking.utils.Helper.Companion.ytIdLength
 import java.io.IOException
 import java.net.URL
 

@@ -13,12 +13,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
-import com.theandroiddev.riffking.Helper
 import com.theandroiddev.riffking.R
-import com.theandroiddev.riffking.User
 import com.theandroiddev.riffking.presentation.common.Comment
 import com.theandroiddev.riffking.presentation.common.CommentAdapter
+import com.theandroiddev.riffking.presentation.common.User
 import com.theandroiddev.riffking.presentation.home.HomeFragment
+import com.theandroiddev.riffking.utils.Helper
 import kotlinx.android.synthetic.main.fragment_profile_comments.*
 import java.util.*
 

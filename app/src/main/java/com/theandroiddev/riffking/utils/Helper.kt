@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.utils
 
 import android.app.Activity
 import android.content.Context
@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.firebase.database.*
+import com.theandroiddev.riffking.R
 import com.theandroiddev.riffking.presentation.home.HomeFragment
 import java.text.SimpleDateFormat
 import java.util.*

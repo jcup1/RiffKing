@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.utils
 
 import android.content.Context
 import android.util.AttributeSet

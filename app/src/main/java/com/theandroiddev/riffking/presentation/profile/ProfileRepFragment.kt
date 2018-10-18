@@ -14,8 +14,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.theandroiddev.riffking.Helper
 import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.utils.Helper
 import kotlinx.android.synthetic.main.fragment_profile_rep.*
 
 

@@ -17,9 +17,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
 import com.theandroiddev.riffking.R
-import com.theandroiddev.riffking.User
-import com.theandroiddev.riffking.Utility
+import com.theandroiddev.riffking.presentation.common.User
 import com.theandroiddev.riffking.presentation.home.HomeActivity
+import com.theandroiddev.riffking.utils.Utility
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -162,7 +162,8 @@ class LoginActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "onActivityResult: accnt not null")
-                        val user = User(account.displayName ?: "N/A",
+                        val user = User(account.displayName
+                                ?: "N/A",
                                 account.email ?: "N/A",
                                 account.photoUrl.toString(), 0, 0, 0, 0, 0)
                         val currentUserUid = firebaseAuth?.currentUser?.uid

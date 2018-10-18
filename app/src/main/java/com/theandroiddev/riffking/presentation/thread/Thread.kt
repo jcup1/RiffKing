@@ -1,6 +1,6 @@
 package com.theandroiddev.riffking.presentation.thread
 
-import com.theandroiddev.riffking.Helper.Companion.ytIdLength
+import com.theandroiddev.riffking.utils.Helper.Companion.ytIdLength
 
 /**
  * Created by jakub on 19.07.17.
