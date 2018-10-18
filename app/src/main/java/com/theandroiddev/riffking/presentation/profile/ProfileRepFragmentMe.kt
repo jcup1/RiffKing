@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.profile
 
 import android.content.Context
 import android.net.Uri
@@ -15,7 +15,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.theandroiddev.riffking.HomeFragment.Companion.KEY_LAYOUT_MANAGER
+import com.theandroiddev.riffking.Helper
+import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.presentation.home.HomeFragment
+import com.theandroiddev.riffking.presentation.home.HomeFragment.Companion.KEY_LAYOUT_MANAGER
 import kotlinx.android.synthetic.main.fragment_profile_rep_me.*
 
 

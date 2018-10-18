@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context=".ProfileRepFragmentMe">
+              tools:context=".presentation.profile.ProfileRepFragmentMe">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/profile_rep_me_rv"

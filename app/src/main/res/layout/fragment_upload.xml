@@ -5,7 +5,7 @@
                                              android:layout_height="match_parent"
                                              android:gravity="center"
                                              android:orientation="vertical"
-                                             tools:context=".UploadFragment">
+                                             tools:context=".presentation.upload.UploadFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

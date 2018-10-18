@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.profile
 
 import android.content.Context
 import android.net.Uri
@@ -11,7 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.database.*
-import com.theandroiddev.riffking.HomeFragment.Companion.KEY_LAYOUT_MANAGER
+import com.theandroiddev.riffking.Helper
+import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.presentation.home.HomeFragment
+import com.theandroiddev.riffking.presentation.home.HomeFragment.Companion.KEY_LAYOUT_MANAGER
+import com.theandroiddev.riffking.presentation.thread.Thread
+import com.theandroiddev.riffking.presentation.thread.ThreadAdapter
 import kotlinx.android.synthetic.main.fragment_profile_videos.*
 import java.util.*
 

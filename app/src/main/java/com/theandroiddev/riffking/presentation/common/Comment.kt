@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.common
 
 class Comment(threadId: String, userId: String, content: String, date: String, var likes: Int) {
 

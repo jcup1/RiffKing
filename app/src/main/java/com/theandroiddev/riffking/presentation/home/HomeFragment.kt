@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.home
 
 import android.content.Context
 import android.net.Uri
@@ -15,6 +15,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.google.firebase.database.*
+import com.theandroiddev.riffking.Helper
+import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.Utility
+import com.theandroiddev.riffking.presentation.thread.Thread
+import com.theandroiddev.riffking.presentation.thread.ThreadAdapter
+import com.theandroiddev.riffking.presentation.upload.UploadFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
@@ -142,7 +148,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val rootView = inflater.inflate(com.theandroiddev.riffking.R.layout.fragment_home, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_home, container, false)
         rootView.tag = TAG
 
         if (savedInstanceState != null) {
@@ -167,7 +173,7 @@ class HomeFragment : Fragment() {
                 itemTouchHelper.attachToRecyclerView(recyclerView)
             }
 
-            helper?.setRecyclerViewLayoutManager(HomeFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER,
+            helper?.setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER,
                     recyclerView, activity, layoutManager, currentLayoutManagerType)
 
             threadAdapter?.notifyDataSetChanged()
@@ -237,7 +243,7 @@ class HomeFragment : Fragment() {
 
         val fragmentManager = (context as FragmentActivity).supportFragmentManager
         val transaction = fragmentManager.beginTransaction()
-        transaction.replace(com.theandroiddev.riffking.R.id.content_home, uploadFragment).addToBackStack(null)
+        transaction.replace(R.id.content_home, uploadFragment).addToBackStack(null)
         transaction.commit()
 
     }

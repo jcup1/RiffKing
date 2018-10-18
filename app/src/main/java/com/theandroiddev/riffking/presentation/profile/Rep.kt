@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.profile
 
 /**
  * Created by jakub on 01.10.17.

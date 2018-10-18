@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.profile
 
 import android.content.Context
 import android.net.Uri
@@ -12,6 +12,10 @@ import android.widget.Toast
 import com.google.firebase.database.*
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.squareup.picasso.Picasso
+import com.theandroiddev.riffking.Helper
+import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.User
+import com.theandroiddev.riffking.presentation.home.HomeActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 

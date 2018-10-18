@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.ranking
 
 import android.content.Context
 import android.os.Bundle
@@ -15,6 +15,12 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.squareup.picasso.Picasso
+import com.theandroiddev.riffking.Helper
+import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.User
+import com.theandroiddev.riffking.presentation.common.Comment
+import com.theandroiddev.riffking.presentation.home.HomeActivity
+import com.theandroiddev.riffking.presentation.profile.ProfileFragment
 
 /**
  * Created by jakub on 29.09.17.

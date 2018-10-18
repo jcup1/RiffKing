@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashActivity"
+            android:name=".presentation.splash.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -24,13 +24,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".presentation.authentication.LoginActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
             >
         </activity>
-        <activity android:name=".RegisterActivity"/>
+        <activity android:name=".presentation.authentication.RegisterActivity"/>
         <activity
-            android:name=".HomeActivity"
+            android:name=".presentation.home.HomeActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar"

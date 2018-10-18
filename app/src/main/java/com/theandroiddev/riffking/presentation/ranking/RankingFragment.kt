@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.ranking
 
 import android.content.Context
 import android.net.Uri
@@ -11,13 +11,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.database.*
-import com.theandroiddev.riffking.HomeFragment.Companion.KEY_LAYOUT_MANAGER
+import com.theandroiddev.riffking.Helper
+import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.User
+import com.theandroiddev.riffking.presentation.home.HomeFragment
+import com.theandroiddev.riffking.presentation.home.HomeFragment.Companion.KEY_LAYOUT_MANAGER
 import kotlinx.android.synthetic.main.fragment_ranking.*
 import java.util.ArrayList
 import kotlin.Comparator
-import kotlin.RuntimeException
-import kotlin.String
-import kotlin.toString
 
 
 class RankingFragment : Fragment(), HomeFragment.OnFragmentInteractionListener {

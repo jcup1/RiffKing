@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.authentication
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -16,6 +16,10 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
+import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.User
+import com.theandroiddev.riffking.Utility
+import com.theandroiddev.riffking.presentation.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -51,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    @OnClick(com.theandroiddev.riffking.R.id.login_guest)
+    @OnClick(R.id.login_guest)
     fun guest() {
         val i = Intent(this@LoginActivity, HomeActivity::class.java)
         i.putExtra("guestmode", true)
@@ -59,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    @OnClick(com.theandroiddev.riffking.R.id.signInButton)
+    @OnClick(R.id.signInButton)
     fun login() {
         if (Utility.isNetworkAvailable(applicationContext)) {
             val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
@@ -70,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.theandroiddev.riffking.R.layout.activity_login)
+        setContentView(R.layout.activity_login)
         ButterKnife.bind(this)
 
         //TODO finish ProgressDialog
@@ -95,7 +99,7 @@ class LoginActivity : AppCompatActivity() {
 
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(com.theandroiddev.riffking.R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
 

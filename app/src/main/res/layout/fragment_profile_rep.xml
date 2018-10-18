@@ -3,7 +3,7 @@
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-                                             tools:context=".ProfileRepFragment"
+                                             tools:context=".presentation.profile.ProfileRepFragment"
     android:id="@+id/profile_rep_layout">
 
     <com.theandroiddev.riffking.CustomEditText

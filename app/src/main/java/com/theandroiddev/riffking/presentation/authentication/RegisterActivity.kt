@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.authentication
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import butterknife.ButterKnife
 import butterknife.OnClick
+import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.SharedPrefManager
+import com.theandroiddev.riffking.presentation.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -13,14 +16,14 @@ class RegisterActivity : AppCompatActivity() {
     private var password: String? = null
     private var name: String? = null
 
-    @OnClick(com.theandroiddev.riffking.R.id.register_register_btn)
+    @OnClick(R.id.register_register_btn)
     fun register() {
 
         //tryToRegister(register_email_et, register_password_et);
 
     }
 
-    @OnClick(com.theandroiddev.riffking.R.id.register_login_tv)
+    @OnClick(R.id.register_login_tv)
     fun login() {
 
         startLoginActivity()
@@ -71,7 +74,7 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.theandroiddev.riffking.R.layout.activity_register)
+        setContentView(R.layout.activity_register)
 
         ButterKnife.bind(this)
 

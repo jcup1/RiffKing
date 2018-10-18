@@ -1,4 +1,4 @@
-package com.theandroiddev.riffking
+package com.theandroiddev.riffking.presentation.home
 
 import android.content.Context
 import android.content.Intent
@@ -21,6 +21,15 @@ import com.google.firebase.database.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
+import com.theandroiddev.riffking.R
+import com.theandroiddev.riffking.User
+import com.theandroiddev.riffking.Utility
+import com.theandroiddev.riffking.presentation.authentication.LoginActivity
+import com.theandroiddev.riffking.presentation.profile.*
+import com.theandroiddev.riffking.presentation.ranking.RankingFragment
+import com.theandroiddev.riffking.presentation.thread.Thread
+import com.theandroiddev.riffking.presentation.thread.ThreadFragment
+import com.theandroiddev.riffking.presentation.upload.UploadFragment
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.nav_header_home.*
 
