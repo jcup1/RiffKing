@@ -7,8 +7,6 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -55,16 +53,14 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    @OnClick(R.id.login_guest)
-    fun guest() {
+    private fun continueAsGuest() {
         val i = Intent(this@LoginActivity, HomeActivity::class.java)
         i.putExtra("guestmode", true)
         startActivity(i)
         finish()
     }
 
-    @OnClick(R.id.signInButton)
-    fun login() {
+    private fun continueAsUser() {
         if (Utility.isNetworkAvailable(applicationContext)) {
             val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
             startActivityForResult(signInIntent, RC_SIGN_IN)
@@ -75,7 +71,14 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        ButterKnife.bind(this)
+
+        login_guest.setOnClickListener {
+            continueAsGuest()
+        }
+
+        signInButton.setOnClickListener {
+            continueAsUser()
+        }
 
         //TODO finish ProgressDialog
         progress = ProgressDialog(applicationContext)

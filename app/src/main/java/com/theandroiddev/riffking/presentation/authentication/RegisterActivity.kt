@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.theandroiddev.riffking.R
 import com.theandroiddev.riffking.presentation.home.HomeActivity
 import com.theandroiddev.riffking.utils.SharedPrefManager
@@ -16,14 +14,12 @@ class RegisterActivity : AppCompatActivity() {
     private var password: String? = null
     private var name: String? = null
 
-    @OnClick(R.id.register_register_btn)
     fun register() {
 
         //tryToRegister(register_email_et, register_password_et);
 
     }
 
-    @OnClick(R.id.register_login_tv)
     fun login() {
 
         startLoginActivity()
@@ -57,13 +53,11 @@ class RegisterActivity : AppCompatActivity() {
     private fun nextActivity(id: Int, email: String) {
 
         SharedPrefManager(this).userLogin(id, email)
-        val intent: Intent
-        intent = Intent(this@RegisterActivity, HomeActivity::class.java)
+        val intent = Intent(this@RegisterActivity, HomeActivity::class.java)
         finish()
         startActivity(intent)
 
     }
-
 
     private fun startLoginActivity() {
         val loginIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
@@ -76,8 +70,13 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        ButterKnife.bind(this)
+        register_register_btn.setOnClickListener {
+            register()
+        }
 
+        register_login_tv.setOnClickListener {
+            login()
+        }
 
     }
 
