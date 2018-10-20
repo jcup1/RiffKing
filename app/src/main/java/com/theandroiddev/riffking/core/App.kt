@@ -1,11 +1,16 @@
 package com.theandroiddev.riffking.core
 
-import android.app.Application
 import com.theandroiddev.riffking.core.di.component.ApplicationComponent
 import com.theandroiddev.riffking.core.di.component.DaggerApplicationComponent
 import com.theandroiddev.riffking.core.di.module.ApplicationModule
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 
-open class App : Application() {
+class App : DaggerApplication() {
+
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerAppComponent.builder().application(this).build()
+    }
 
     companion object {
         lateinit var applicationComponent: ApplicationComponent

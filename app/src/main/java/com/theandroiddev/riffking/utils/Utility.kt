@@ -7,9 +7,9 @@ import android.net.ConnectivityManager
  * Created by jakub on 21.09.17.
  */
 
-object Utility {
+class Utility(val context: Context) {
 
-    fun isNetworkAvailable(context: Context): Boolean {
+    fun isNetworkAvailable(): Boolean {
 
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val netinfo = cm.activeNetworkInfo
